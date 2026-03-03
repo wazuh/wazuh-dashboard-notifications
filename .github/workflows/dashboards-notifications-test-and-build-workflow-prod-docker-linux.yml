@@ -5,7 +5,10 @@
 
 name: Test and Build Dashboards Notifications on prod docker linux
 
-on: [pull_request, push]
+on: 
+  pull_request:
+    branches: ['*']
+    types: [opened, synchronize, reopened, ready_for_review]
 
 env:
   PLUGIN_NAME: notifications-dashboards
@@ -20,6 +23,7 @@ jobs:
       product: opensearch-dashboards
 
   tests-linux:
+    if: github.event.pull_request.draft == false
     needs: Get-CI-Image-Tag
     env:
       JEST_TEST_ARGS: ${{ matrix.jest_test_args }}
