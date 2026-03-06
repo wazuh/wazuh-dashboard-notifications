@@ -68,7 +68,7 @@ export class notificationsDashboardsPlugin
     core.application.register({
       id: PLUGIN_NAME,
       title: this.title,
-      category: core.chrome?.navGroup?.getNavGroupEnabled() ? undefined : DEFAULT_APP_CATEGORIES.management,
+      category: DEFAULT_APP_CATEGORIES.explore,
       order: 9060,
       description: i18n.translate('dashboards-notifications.leftNav.notifications.description', {
         defaultMessage: 'Configure and organize notification channels.'
