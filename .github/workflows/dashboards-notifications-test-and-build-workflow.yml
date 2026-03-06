@@ -5,7 +5,10 @@
 
 name: Test and Build Dashboards Notifications
 
-on: [pull_request, push]
+on: 
+  pull_request:
+    branches: ['*']
+    types: [opened, synchronize, reopened, ready_for_review]
 
 env:
   PLUGIN_NAME: notifications-dashboards
@@ -13,6 +16,7 @@ env:
 
 jobs:
   tests:
+    if: github.event.pull_request.draft == false
     env:
       JEST_TEST_ARGS: ${{ matrix.jest_test_args }}
       # prevents extra Cypress installation progress messages

@@ -3,6 +3,14 @@
   "version": "3.5.0.0",
   "description": "OpenSearch Dashboards Notifications Plugin",
   "license": "Apache-2.0",
+  "opensearchDashboards": {
+    "version": "3.5.0",
+    "templateVersion": "3.5.0"
+  },
+  "wazuh": {
+    "version": "5.0.0",
+    "revision": "00"
+  },
   "main": "index.ts",
   "config": {
     "id": "notificationsDashboards",
