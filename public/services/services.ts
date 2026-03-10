@@ -10,4 +10,8 @@ const ServicesContext = createContext<BrowserServices | null>(null);
 
 const ServicesConsumer = ServicesContext.Consumer;
 
-export { ServicesContext, ServicesConsumer };
+// Wazuh active responses
+const ServicesProviderActiveResponseContext = createContext<BrowserServices | null>(null);
+const ServicesProviderActiveResponsesConsumer = ServicesProviderActiveResponseContext.Consumer;
+
+export { ServicesContext, ServicesConsumer, ServicesProviderActiveResponseContext, ServicesProviderActiveResponsesConsumer };

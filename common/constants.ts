@@ -6,6 +6,8 @@ export const BACKEND_CHANNEL_TYPE = Object.freeze({
   CUSTOM_WEBHOOK: 'webhook',
   SNS: 'sns',
   MATTERMOST: 'mattermost',
+  // Wazuh
+  ACTIVE_RESPONSE: 'active_response',
 });
 export const CHANNEL_TYPE = Object.freeze({
   [BACKEND_CHANNEL_TYPE.SLACK]: 'Slack',
@@ -15,6 +17,8 @@ export const CHANNEL_TYPE = Object.freeze({
   [BACKEND_CHANNEL_TYPE.CUSTOM_WEBHOOK]: 'Custom webhook',
   [BACKEND_CHANNEL_TYPE.SNS]: 'Amazon SNS',
   [BACKEND_CHANNEL_TYPE.MATTERMOST]: 'Mattermost',
+  // Wazuh
+  [BACKEND_CHANNEL_TYPE.ACTIVE_RESPONSE]: 'Active response',
 }) as {
   slack: string;
   email: string;
@@ -23,4 +27,6 @@ export const CHANNEL_TYPE = Object.freeze({
   webhook: string;
   sns: string;
   mattermost: string;
+  // Wazuh  
+  active_response: string;
 };

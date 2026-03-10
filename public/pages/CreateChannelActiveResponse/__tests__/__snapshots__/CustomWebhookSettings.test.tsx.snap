@@ -1,0 +1,323 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CustomWebhookSettings /> spec renders the component 1`] = `
+<div
+  class="euiFormRow euiFormRow--compressed"
+  id="random_html_id-row"
+  style="max-width: 700px;"
+>
+  <div
+    class="euiFormRow__labelWrapper"
+  >
+    <label
+      class="euiFormLabel euiFormRow__label"
+      for="random_html_id"
+    >
+      Method
+    </label>
+  </div>
+  <div
+    class="euiFormRow__fieldWrapper"
+  >
+    <div
+      class="euiPopover euiPopover--anchorDownLeft euiPopover--displayBlock euiInputPopover euiSuperSelect"
+    >
+      <div
+        class="euiPopover__anchor"
+      >
+        <div>
+          <input
+            id="random_html_id"
+            type="hidden"
+            value=""
+          />
+          <div
+            class="euiFormControlLayout euiFormControlLayout--compressed"
+          >
+            <div
+              class="euiFormControlLayout__childrenWrapper"
+            >
+              <span
+                class="euiScreenReaderOnly"
+                id="random_html_id"
+              >
+                Select an option: , is selected
+              </span>
+              <button
+                aria-haspopup="true"
+                aria-labelledby="random_html_id random_html_id"
+                class="euiSuperSelectControl euiSuperSelectControl--compressed"
+                type="button"
+              />
+              <div
+                class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+              >
+                <span
+                  class="euiFormControlLayoutCustomIcon"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="euiIcon euiIcon--small euiIcon-isLoading euiFormControlLayoutCustomIcon__icon"
+                    focusable="false"
+                    height="16"
+                    role="img"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.277 10.088c.02.014.04.03.057.047.582.55 1.134.812 1.666.812.586 0 1.84-.293 3.713-.88L9 6.212V2H7v4.212l-1.723 3.876Zm-.438.987L3.539 14h8.922l-1.32-2.969C9.096 11.677 7.733 12 7 12c-.74 0-1.463-.315-2.161-.925ZM6 2H5V1h6v1h-1v4l3.375 7.594A1 1 0 0 1 12.461 15H3.54a1 1 0 0 1-.914-1.406L6 6V2Z"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<CustomWebhookSettings /> spec renders the component 2`] = `
+<div
+  class="euiFormRow euiFormRow--compressed"
+  id="random_html_id-row"
+  style="max-width: 700px;"
+>
+  <div
+    class="euiFormRow__labelWrapper"
+  >
+    <label
+      class="euiFormLabel euiFormRow__label"
+      for="random_html_id"
+    >
+      Method
+    </label>
+  </div>
+  <div
+    class="euiFormRow__fieldWrapper"
+  >
+    <div
+      class="euiPopover euiPopover--anchorDownLeft euiPopover--displayBlock euiInputPopover euiSuperSelect"
+    >
+      <div
+        class="euiPopover__anchor"
+      >
+        <div>
+          <input
+            id="random_html_id"
+            type="hidden"
+            value=""
+          />
+          <div
+            class="euiFormControlLayout euiFormControlLayout--compressed"
+          >
+            <div
+              class="euiFormControlLayout__childrenWrapper"
+            >
+              <span
+                class="euiScreenReaderOnly"
+                id="random_html_id"
+              >
+                Select an option: , is selected
+              </span>
+              <button
+                aria-haspopup="true"
+                aria-labelledby="random_html_id random_html_id"
+                class="euiSuperSelectControl euiSuperSelectControl--compressed"
+                type="button"
+              />
+              <div
+                class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+              >
+                <span
+                  class="euiFormControlLayoutCustomIcon"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="euiIcon euiIcon--small euiIcon-isLoading euiFormControlLayoutCustomIcon__icon"
+                    focusable="false"
+                    height="16"
+                    role="img"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.277 10.088c.02.014.04.03.057.047.582.55 1.134.812 1.666.812.586 0 1.84-.293 3.713-.88L9 6.212V2H7v4.212l-1.723 3.876Zm-.438.987L3.539 14h8.922l-1.32-2.969C9.096 11.677 7.733 12 7 12c-.74 0-1.463-.315-2.161-.925ZM6 2H5V1h6v1h-1v4l3.375 7.594A1 1 0 0 1 12.461 15H3.54a1 1 0 0 1-.914-1.406L6 6V2Z"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<CustomWebhookSettings /> spec renders the component with errors 1`] = `
+<div
+  class="euiFormRow euiFormRow--compressed"
+  id="random_html_id-row"
+  style="max-width: 700px;"
+>
+  <div
+    class="euiFormRow__labelWrapper"
+  >
+    <label
+      class="euiFormLabel euiFormRow__label"
+      for="random_html_id"
+    >
+      Method
+    </label>
+  </div>
+  <div
+    class="euiFormRow__fieldWrapper"
+  >
+    <div
+      class="euiPopover euiPopover--anchorDownLeft euiPopover--displayBlock euiInputPopover euiSuperSelect"
+    >
+      <div
+        class="euiPopover__anchor"
+      >
+        <div>
+          <input
+            id="random_html_id"
+            type="hidden"
+            value=""
+          />
+          <div
+            class="euiFormControlLayout euiFormControlLayout--compressed"
+          >
+            <div
+              class="euiFormControlLayout__childrenWrapper"
+            >
+              <span
+                class="euiScreenReaderOnly"
+                id="random_html_id"
+              >
+                Select an option: , is selected
+              </span>
+              <button
+                aria-haspopup="true"
+                aria-labelledby="random_html_id random_html_id"
+                class="euiSuperSelectControl euiSuperSelectControl--compressed"
+                type="button"
+              />
+              <div
+                class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+              >
+                <span
+                  class="euiFormControlLayoutCustomIcon"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="euiIcon euiIcon--small euiFormControlLayoutCustomIcon__icon"
+                    focusable="false"
+                    height="16"
+                    role="img"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13.069 5.157 8.384 9.768a.546.546 0 0 1-.768 0L2.93 5.158a.552.552 0 0 0-.771 0 .53.53 0 0 0 0 .759l4.684 4.61c.641.631 1.672.63 2.312 0l4.684-4.61a.53.53 0 0 0 0-.76.552.552 0 0 0-.771 0Z"
+                      fill-rule="non-zero"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<CustomWebhookSettings /> spec renders the component with errors 2`] = `
+<div
+  class="euiFormRow euiFormRow--compressed"
+  id="random_html_id-row"
+  style="max-width: 700px;"
+>
+  <div
+    class="euiFormRow__labelWrapper"
+  >
+    <label
+      class="euiFormLabel euiFormRow__label"
+      for="random_html_id"
+    >
+      Method
+    </label>
+  </div>
+  <div
+    class="euiFormRow__fieldWrapper"
+  >
+    <div
+      class="euiPopover euiPopover--anchorDownLeft euiPopover--displayBlock euiInputPopover euiSuperSelect"
+    >
+      <div
+        class="euiPopover__anchor"
+      >
+        <div>
+          <input
+            id="random_html_id"
+            type="hidden"
+            value=""
+          />
+          <div
+            class="euiFormControlLayout euiFormControlLayout--compressed"
+          >
+            <div
+              class="euiFormControlLayout__childrenWrapper"
+            >
+              <span
+                class="euiScreenReaderOnly"
+                id="random_html_id"
+              >
+                Select an option: , is selected
+              </span>
+              <button
+                aria-haspopup="true"
+                aria-labelledby="random_html_id random_html_id"
+                class="euiSuperSelectControl euiSuperSelectControl--compressed"
+                type="button"
+              />
+              <div
+                class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+              >
+                <span
+                  class="euiFormControlLayoutCustomIcon"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="euiIcon euiIcon--small euiFormControlLayoutCustomIcon__icon"
+                    focusable="false"
+                    height="16"
+                    role="img"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13.069 5.157 8.384 9.768a.546.546 0 0 1-.768 0L2.93 5.158a.552.552 0 0 0-.771 0 .53.53 0 0 0 0 .759l4.684 4.61c.641.631 1.672.63 2.312 0l4.684-4.61a.53.53 0 0 0 0-.76.552.552 0 0 0-.771 0Z"
+                      fill-rule="non-zero"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
