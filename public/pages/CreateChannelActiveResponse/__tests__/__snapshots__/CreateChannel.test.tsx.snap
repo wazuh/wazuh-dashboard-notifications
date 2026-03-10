@@ -5,7 +5,7 @@ exports[`<CreateChannel/> spec renders the component 1`] = `
   class="euiText euiText--small"
 >
   <h1>
-    Create channel
+    Create active response
   </h1>
 </div>
 `;

@@ -10,7 +10,7 @@ import { CoreStart, MountPoint, SavedObject, HttpSetup } from '../../../../../sr
 import { CoreServicesConsumer } from '../../components/coreServices';
 import { ModalProvider, ModalRoot } from '../../components/Modal';
 import { BrowserServices } from '../../models/interfaces';
-import { ServicesProviderActiveResponseContext as ServicesContext, ServicesProviderActiveResponsesConsumer as ServicesConsumer } from '../../services/services';
+import { ServicesContext, ServicesConsumer } from '../../services';
 import { ROUTES, dataSourceObservable } from '../../utils/constants';
 import { CHANNEL_TYPE } from '../../../common/constants';
 import { Channels } from '../ActiveResponses/Channels';

@@ -5,105 +5,6 @@ exports[`<Main /> spec renders the component 1`] = `
   class="euiPage euiPage--paddingMedium euiPage--grow"
 >
   <div
-    class="euiPageSideBar"
-    style="min-width: 155px;"
-  >
-    <nav
-      class="euiSideNav"
-      style="width: 155px;"
-    >
-      <div
-        class="euiSideNav__content euiSideNav__contentMobile-xs euiSideNav__contentMobile-s"
-        id="random_html_id"
-      >
-        <div
-          class="euiSideNavItem euiSideNavItem--root euiSideNavItem--hasChildItems"
-        >
-          <a
-            class="euiSideNavItemButton euiSideNavItemButton--isClickable"
-            href="#/channels"
-            rel="noreferrer"
-          >
-            <span
-              class="euiSideNavItemButton__content"
-            >
-              <span
-                class="euiSideNavItemButton__label euiSideNavItemButton__label--truncated"
-                title="Notifications"
-              >
-                Notifications
-              </span>
-            </span>
-          </a>
-          <div
-            class="euiSideNavItem__items"
-          >
-            <div
-              class="euiSideNavItem euiSideNavItem--trunk"
-            >
-              <a
-                class="euiSideNavItemButton euiSideNavItemButton--isClickable"
-                href="#/channels"
-                rel="noreferrer"
-              >
-                <span
-                  class="euiSideNavItemButton__content"
-                >
-                  <span
-                    class="euiSideNavItemButton__label euiSideNavItemButton__label--truncated"
-                    title="Channels"
-                  >
-                    Channels
-                  </span>
-                </span>
-              </a>
-            </div>
-            <div
-              class="euiSideNavItem euiSideNavItem--trunk"
-            >
-              <a
-                class="euiSideNavItemButton euiSideNavItemButton--isClickable"
-                href="#/email-senders"
-                rel="noreferrer"
-              >
-                <span
-                  class="euiSideNavItemButton__content"
-                >
-                  <span
-                    class="euiSideNavItemButton__label euiSideNavItemButton__label--truncated"
-                    title="Email senders"
-                  >
-                    Email senders
-                  </span>
-                </span>
-              </a>
-            </div>
-            <div
-              class="euiSideNavItem euiSideNavItem--trunk"
-            >
-              <a
-                class="euiSideNavItemButton euiSideNavItemButton--isClickable"
-                href="#/email-recipient-groups"
-                rel="noreferrer"
-              >
-                <span
-                  class="euiSideNavItemButton__content"
-                >
-                  <span
-                    class="euiSideNavItemButton__label euiSideNavItemButton__label--truncated"
-                    title="Email recipient groups"
-                  >
-                    Email recipient groups
-                  </span>
-                </span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </div>
-  <div
     class="euiPageBody euiPageBody--borderRadiusNone"
   >
     <div
@@ -119,7 +20,7 @@ exports[`<Main /> spec renders the component 1`] = `
           <h2
             class="euiTitle euiTitle--small"
           >
-            Channels
+            Active responses
             <span
               style="color: rgb(159, 159, 159); font-weight: 300;"
             >
@@ -185,7 +86,7 @@ exports[`<Main /> spec renders the component 1`] = `
                 >
                   <a
                     class="euiButton euiButton--primary euiButton--small euiButton--fill"
-                    href="#/create-channel"
+                    href="#/create-active-response"
                     rel="noreferrer"
                   >
                     <span
@@ -194,7 +95,7 @@ exports[`<Main /> spec renders the component 1`] = `
                       <span
                         class="euiButton__text"
                       >
-                        Create channel
+                        Create active response
                       </span>
                     </span>
                   </a>
@@ -294,6 +195,56 @@ exports[`<Main /> spec renders the component 1`] = `
                           title="Status"
                         >
                           Status
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="euiFlexItem euiFlexItem--flexGrowZero"
+          >
+            <div
+              class="euiFilterGroup"
+            >
+              <div
+                class="euiPopover euiPopover--anchorDownCenter"
+              >
+                <div
+                  class="euiPopover__anchor"
+                >
+                  <button
+                    class="euiButtonEmpty euiButtonEmpty--text euiButtonEmpty--small euiFilterButton euiFilterButton--hasIcon euiFilterButton--noGrow"
+                    type="button"
+                  >
+                    <span
+                      class="euiButtonContent euiButtonContent--iconRight euiButtonEmpty__content"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="euiIcon euiIcon--medium euiIcon--inherit euiIcon-isLoading euiButtonContent__icon"
+                        focusable="false"
+                        height="16"
+                        role="img"
+                        viewBox="0 0 16 16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5.277 10.088c.02.014.04.03.057.047.582.55 1.134.812 1.666.812.586 0 1.84-.293 3.713-.88L9 6.212V2H7v4.212l-1.723 3.876Zm-.438.987L3.539 14h8.922l-1.32-2.969C9.096 11.677 7.733 12 7 12c-.74 0-1.463-.315-2.161-.925ZM6 2H5V1h6v1h-1v4l3.375 7.594A1 1 0 0 1 12.461 15H3.54a1 1 0 0 1-.914-1.406L6 6V2Z"
+                        />
+                      </svg>
+                      <span
+                        class="euiButtonEmpty__text"
+                      >
+                        <span
+                          class="euiFilterButton__textShift"
+                          data-text="Location"
+                          title="Location"
+                        >
+                          Location
                         </span>
                       </span>
                     </span>
@@ -516,6 +467,7 @@ exports[`<Main /> spec renders the component 1`] = `
                     data-test-subj="tableHeaderCell_is_enabled_1"
                     role="columnheader"
                     scope="col"
+                    style="width: 100px;"
                   >
                     <button
                       class="euiTableHeaderButton"
@@ -527,9 +479,9 @@ exports[`<Main /> spec renders the component 1`] = `
                       >
                         <span
                           class="euiTableCellContent__text"
-                          title="Notification status"
+                          title="Status"
                         >
-                          Notification status
+                          Status
                         </span>
                       </span>
                     </button>
@@ -538,7 +490,32 @@ exports[`<Main /> spec renders the component 1`] = `
                     aria-live="polite"
                     aria-sort="none"
                     class="euiTableHeaderCell"
-                    data-test-subj="tableHeaderCell_config_type_2"
+                    data-test-subj="tableHeaderCell_active_response.location_2"
+                    role="columnheader"
+                    scope="col"
+                  >
+                    <button
+                      class="euiTableHeaderButton"
+                      data-test-subj="tableHeaderSortButton"
+                      type="button"
+                    >
+                      <span
+                        class="euiTableCellContent"
+                      >
+                        <span
+                          class="euiTableCellContent__text"
+                          title="Location"
+                        >
+                          Location
+                        </span>
+                      </span>
+                    </button>
+                  </th>
+                  <th
+                    aria-live="polite"
+                    aria-sort="none"
+                    class="euiTableHeaderCell"
+                    data-test-subj="tableHeaderCell_active_response.type_3"
                     role="columnheader"
                     scope="col"
                   >
@@ -563,7 +540,7 @@ exports[`<Main /> spec renders the component 1`] = `
                     aria-live="polite"
                     aria-sort="none"
                     class="euiTableHeaderCell"
-                    data-test-subj="tableHeaderCell_description_3"
+                    data-test-subj="tableHeaderCell_description_4"
                     role="columnheader"
                     scope="col"
                   >
@@ -592,7 +569,7 @@ exports[`<Main /> spec renders the component 1`] = `
                 >
                   <td
                     class="euiTableRowCell euiTableRowCell--isMobileFullWidth"
-                    colspan="5"
+                    colspan="6"
                   >
                     <div
                       class="euiTableCellContent euiTableCellContent--alignCenter"
@@ -607,7 +584,7 @@ exports[`<Main /> spec renders the component 1`] = `
                             class="euiText euiText--small euiTitle euiTitle--medium"
                           >
                             <h2>
-                              No channels to display
+                              No active responses to display
                             </h2>
                           </div>
                           <span
@@ -622,7 +599,7 @@ exports[`<Main /> spec renders the component 1`] = `
                               <div
                                 class="euiText euiText--small"
                               >
-                                "To send or receive notifications, you will need to create a notification channel."
+                                "To response to events, you will need to create an active response."
                               </div>
                             </div>
                           </span>
@@ -631,7 +608,7 @@ exports[`<Main /> spec renders the component 1`] = `
                           />
                           <a
                             class="euiButton euiButton--primary euiButton--small"
-                            href="#/create-channel"
+                            href="#/create-active-response"
                             rel="noreferrer"
                           >
                             <span
@@ -640,7 +617,7 @@ exports[`<Main /> spec renders the component 1`] = `
                               <span
                                 class="euiButton__text"
                               >
-                                Create channel
+                                Create active response
                               </span>
                             </span>
                           </a>

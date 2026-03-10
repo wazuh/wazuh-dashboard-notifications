@@ -28,19 +28,19 @@ export function ChannelSettingsDetails(props: ChannelSettingsDetailsProps) {
         title: 'Active Response type',
         description: props.channel.active_response.type,
     },
-    ...(props.channel.active_response.type === 'stateful' ? {
+    ...(props.channel.active_response.type === 'stateful' ? [{
             title: 'Active Response timeout (seconds)',
             description: props.channel.active_response.timeout.toString(),
-        }
+        }]
         : []),
     {
         title: 'Active Response location',
         description: props.channel.active_response.location,
     },
-    ...(props.channel.active_response.location === 'defined-agent' ? {
+    ...(props.channel.active_response.location === 'defined-agent' ? [{
             title: 'Agent ID',
             description: props.channel.active_response.agent_id || '-',
-        }
+        }]
         : []),
   ];
   // const getModalComponent = (

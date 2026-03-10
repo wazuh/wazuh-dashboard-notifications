@@ -9,7 +9,7 @@ import { SERVER_DELAY } from '../../../../common';
 import { ChannelItemType } from '../../../../models/interfaces';
 import { CoreServicesContext } from '../../../components/coreServices';
 import { ModalConsumer } from '../../../components/Modal';
-import { ServicesProviderActiveResponseContext as ServicesContext } from '../../../services/services';
+import { ServicesContext } from '../../../services';
 import { ROUTES } from '../../../utils/constants';
 import { DeleteChannelModal } from './modals/DeleteChannelModal';
 import { MuteChannelModal } from './modals/MuteChannelModal';

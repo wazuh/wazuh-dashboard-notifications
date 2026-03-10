@@ -53,7 +53,7 @@ exports[`<ChannelNamePanel/> spec renders errors 1`] = `
               class="euiFieldText euiFieldText--compressed"
               data-test-subj="create-channel-name-input"
               id="random_html_id"
-              placeholder="Enter channel name"
+              placeholder="Enter active response name"
               type="text"
               value="test"
             />
@@ -95,7 +95,7 @@ exports[`<ChannelNamePanel/> spec renders errors 1`] = `
         <textarea
           class="euiTextArea euiTextArea--resizeVertical euiTextArea--compressed"
           data-test-subj="create-channel-description-input"
-          placeholder="What is the purpose of this channel?"
+          placeholder="What is the purpose of this active response?"
           rows="3"
           style="height: 4.1rem;"
         >
@@ -159,7 +159,7 @@ exports[`<ChannelNamePanel/> spec renders the component 1`] = `
               class="euiFieldText euiFieldText--compressed"
               data-test-subj="create-channel-name-input"
               id="random_html_id"
-              placeholder="Enter channel name"
+              placeholder="Enter active response name"
               type="text"
               value="test"
             />
@@ -194,7 +194,7 @@ exports[`<ChannelNamePanel/> spec renders the component 1`] = `
         <textarea
           class="euiTextArea euiTextArea--resizeVertical euiTextArea--compressed"
           data-test-subj="create-channel-description-input"
-          placeholder="What is the purpose of this channel?"
+          placeholder="What is the purpose of this active response?"
           rows="3"
           style="height: 4.1rem;"
         >

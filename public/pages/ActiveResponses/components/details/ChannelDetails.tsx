@@ -19,7 +19,7 @@ import { ChannelItemType } from '../../../../../models/interfaces';
 import { ContentPanel } from '../../../../components/ContentPanel';
 import { CoreServicesContext } from '../../../../components/coreServices';
 import { ModalConsumer } from '../../../../components/Modal';
-import { ServicesProviderActiveResponseContext as ServicesContext } from '../../../../services/services';
+import { ServicesContext } from '../../../../services';
 import {
   BREADCRUMBS,
   ROUTES,
@@ -154,7 +154,7 @@ export function ChannelDetails(props: ChannelDetailsProps) {
         <ModalConsumer>
           {({ onShow }) => (
             <EuiSmallButton
-              data-test-subj="active-response-details-mute-button"
+              data-test-subj="channel-details-mute-button"
               iconType={channel.is_enabled ? 'bellSlash' : 'bell'}
               onClick={() => {
                 if (channel.is_enabled) {

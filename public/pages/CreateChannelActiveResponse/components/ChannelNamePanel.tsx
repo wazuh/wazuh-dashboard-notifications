@@ -31,7 +31,7 @@ export function ChannelNamePanel(props: ChannelNamePanelProps) {
           isInvalid={context.inputErrors.name.length > 0}
         >
           <EuiCompressedFieldText
-            data-test-subj="create-active-response-name-input"
+            data-test-subj="create-channel-name-input"
             placeholder="Enter active response name"
             value={props.name}
             onChange={(e) => props.setName(e.target.value)}
@@ -53,7 +53,7 @@ export function ChannelNamePanel(props: ChannelNamePanelProps) {
         >
           <>
             <EuiCompressedTextArea
-              data-test-subj="create-active-response-description-input"
+              data-test-subj="create-channel-description-input"
               placeholder="What is the purpose of this active response?"
               style={{ height: '4.1rem' }}
               value={props.description}

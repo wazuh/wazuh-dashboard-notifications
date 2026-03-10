@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { RouteComponentProps } from 'react-router-dom';
-import { MOCK_DATA } from '../../../../test/mocks/mockData';
+import { MOCK_DATA_ACTIVE_RESPONSE } from '../../../../test/mocks/mockData';
 import {
   coreServicesMock,
   notificationServiceMock,
@@ -44,7 +44,7 @@ describe('<ChannelDetails/> spec', () => {
     const notificationServiceMock = jest.fn() as any;
     notificationServiceMock.notificationService = {
       getChannel: async (id: string) => {
-        return MOCK_DATA.chime;
+        return MOCK_DATA_ACTIVE_RESPONSE.activeResponse;
       },
     };
     let container = document.createElement('div');
@@ -98,7 +98,7 @@ describe('<ChannelDetails/> spec', () => {
     const notificationServiceMock = jest.fn() as any;
     notificationServiceMock.notificationService = {
       getChannel: async (id: string) => {
-        return MOCK_DATA.chime;
+        return MOCK_DATA_ACTIVE_RESPONSE.activeResponse;
       },
       updateConfig: jest.fn(),
     };
@@ -122,7 +122,7 @@ describe('<ChannelDetails/> spec', () => {
     const updateConfig = jest.fn(async () => Promise.resolve());
     notificationServiceMock.notificationService = {
       getChannel: async (id: string) => {
-        return MOCK_DATA.slack;
+        return MOCK_DATA_ACTIVE_RESPONSE.activeResponse;
       },
       updateConfig,
     };

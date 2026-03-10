@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<MicrosoftTeamsSettings /> spec renders the component 1`] = `
+exports[`<ChimeSettings /> spec renders the component 1`] = `
 <div
   class="euiFormRow euiFormRow--compressed"
   id="random_html_id-row"
@@ -14,7 +14,7 @@ exports[`<MicrosoftTeamsSettings /> spec renders the component 1`] = `
       class="euiFormLabel euiFormRow__label"
       for="random_html_id"
     >
-      Webhook URL
+      Executable name
     </label>
   </div>
   <div
@@ -28,11 +28,11 @@ exports[`<MicrosoftTeamsSettings /> spec renders the component 1`] = `
       >
         <input
           class="euiFieldText euiFieldText--fullWidth euiFieldText--compressed"
-          data-test-subj="create-channel-microsoftTeams-webhook-input"
+          data-test-subj="create-channel-active-response-executable-name"
           id="random_html_id"
-          placeholder="https://xxxxx.webhook.office.com/webhookb2/xxxxx/IncomingWebhook/xxxxx..."
+          placeholder="Executable name"
           type="text"
-          value="test webhook"
+          value="test.exe"
         />
       </div>
     </div>
@@ -40,7 +40,7 @@ exports[`<MicrosoftTeamsSettings /> spec renders the component 1`] = `
 </div>
 `;
 
-exports[`<MicrosoftTeamsSettings /> spec renders the component with error 1`] = `
+exports[`<ChimeSettings /> spec renders the component with error 1`] = `
 <div
   class="euiFormRow euiFormRow--compressed"
   id="random_html_id-row"
@@ -54,7 +54,7 @@ exports[`<MicrosoftTeamsSettings /> spec renders the component with error 1`] = 
       class="euiFormLabel euiFormRow__label euiFormLabel-isInvalid"
       for="random_html_id"
     >
-      Webhook URL
+      Executable name
     </label>
   </div>
   <div
@@ -69,11 +69,11 @@ exports[`<MicrosoftTeamsSettings /> spec renders the component with error 1`] = 
         <input
           aria-describedby="random_html_id-error-0"
           class="euiFieldText euiFieldText--fullWidth euiFieldText--compressed"
-          data-test-subj="create-channel-microsoftTeams-webhook-input"
+          data-test-subj="create-channel-active-response-executable-name"
           id="random_html_id"
-          placeholder="https://xxxxx.webhook.office.com/webhookb2/xxxxx/IncomingWebhook/xxxxx..."
+          placeholder="Executable name"
           type="text"
-          value="test webhook"
+          value=""
         />
       </div>
     </div>

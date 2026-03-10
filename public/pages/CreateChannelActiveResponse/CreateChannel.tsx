@@ -17,7 +17,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { SERVER_DELAY } from '../../../common';
 import { ContentPanel } from '../../components/ContentPanel';
 import { CoreServicesContext } from '../../components/coreServices';
-import { ServicesProviderActiveResponseContext as ServicesContext } from '../../services/services';
+import { ServicesContext } from '../../services';
 import {
   BREADCRUMBS,
   ROUTES,

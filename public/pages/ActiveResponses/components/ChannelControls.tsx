@@ -75,7 +75,6 @@ export const ChannelControls = (props: ChannelControlsProps) => {
     }
 
     const newFilters = _.clone(props.filters);
-    console.log({ newFilters });
     const checkedItems = newItems
       .filter((item) => item.checked === 'on')
       .map((item) => item.field);
@@ -97,7 +96,6 @@ export const ChannelControls = (props: ChannelControlsProps) => {
         break;
     }
 
-    console.log({ newFilters }, 'APPLYING FILTERS');
     props.onFiltersChange(newFilters);
   }
 

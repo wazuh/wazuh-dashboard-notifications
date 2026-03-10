@@ -58,12 +58,23 @@ describe('<ChannelControls /> spec', () => {
     fireEvent.click(utils.getByText('Status'));
     fireEvent.click(utils.getByText('Active'));
     expect(onFiltersChange).toBeCalledWith({ state: 'true' });
+    fireEvent.click(utils.getByText('Active'));
+    expect(onFiltersChange).toBeCalledWith({ });
 
     fireEvent.click(utils.getByText('Type'));
-    fireEvent.click(utils.getByText('Email'));
-    fireEvent.click(utils.getByText('Chime'));
-    expect(onFiltersChange).toBeCalledWith({ type: ['email', 'chime'] });
+    fireEvent.click(utils.getByText('Stateful'));
+    expect(onFiltersChange).toBeCalledWith({ type: 'stateful' });
+    fireEvent.click(utils.getByText('Stateless'));
+    expect(onFiltersChange).toBeCalledWith({ type: 'stateless' });
 
-    expect(onFiltersChange).toBeCalledTimes(3);
+    fireEvent.click(utils.getByText('Location'));
+    fireEvent.click(utils.getByText('All'));
+    expect(onFiltersChange).toBeCalledWith({ location: 'all' });
+    fireEvent.click(utils.getByText('Defined agent'));
+    expect(onFiltersChange).toBeCalledWith({ location: 'defined-agent' });
+    fireEvent.click(utils.getByText('Local'));
+    expect(onFiltersChange).toBeCalledWith({ location: 'local' });
+
+    expect(onFiltersChange).toBeCalledTimes(7);
   });
 });

@@ -44,7 +44,7 @@ describe('<ChannelNamePanel/> spec', () => {
         />
       </CreateChannelContext.Provider>
     );
-    const nameField = utils.getByPlaceholderText('Enter channel name');
+    const nameField = utils.getByPlaceholderText('Enter active response name');
     fireEvent.change(nameField, { target: { value: 'test name' } });
     fireEvent.blur(nameField);
     expect(setName).toBeCalledWith('test name');
