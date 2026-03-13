@@ -18,18 +18,18 @@ describe('<ChimeSettings /> spec', () => {
       <CreateChannelContext.Provider
         value={{
           edit: false,
-          inputErrors: { executableName: [], executableArgs: [], agentId: [], timeout: [], location: [], activeResponseType: []},
+          inputErrors: { executable: [], extraArgs: [], agentId: [], statefulTimeout: [], location: [], type: []},
           setInputErrors: jest.fn(),
         }}
       >
         <ActiveResponseSettings
           attributes={{
-            activeResponseType: 'stateful',
-            executableName: 'test.exe',
-            executableArgs: '--test',
+            type: 'stateful',
+            executable: 'test.exe',
+            extraArgs: '--test',
             location: 'defined-agent',
             agentId: '001',
-            timeout: 60,
+            statefulTimeout: 60,
           }}
           setAttribute={jest.fn()}
         />
@@ -43,18 +43,18 @@ describe('<ChimeSettings /> spec', () => {
       <CreateChannelContext.Provider
         value={{
           edit: false,
-          inputErrors: { executableName: ['test error'], executableArgs: [], agentId: ['test error'], timeout: [], location: [], activeResponseType: []},
+          inputErrors: { executable: ['test error'], extraArgs: [], agentId: ['test error'], statefulTimeout: [], location: [], type: []},
           setInputErrors: jest.fn(),
         }}
       >
         <ActiveResponseSettings
           attributes={{
-            activeResponseType: 'stateful',
-            executableName: '',
-            executableArgs: '--test',
+            type: 'stateful',
+            executable: '',
+            extraArgs: '--test',
             location: 'defined-agent',
             agentId: '',
-            timeout: 60,
+            statefulTimeout: 60,
           }}
           setAttribute={jest.fn()}
         />
@@ -70,27 +70,27 @@ describe('<ChimeSettings /> spec', () => {
       <CreateChannelContext.Provider
         value={{
           edit: false,
-          inputErrors: { executableName: [], executableArgs: [], agentId: [], timeout: [], location: [], activeResponseType: []},
+          inputErrors: { executable: [], extraArgs: [], agentId: [], statefulTimeout: [], location: [], type: []},
           setInputErrors: setInputErrors,
         }}
       >
         <ActiveResponseSettings
           attributes={{
-            activeResponseType: 'stateful',
-            executableName: 'test.exe',
-            executableArgs: '--test',
+            type: 'stateful',
+            executable: 'test.exe',
+            extraArgs: '--test',
             location: 'defined-agent',
             agentId: '001',
-            timeout: 60,
+            statefulTimeout: 60,
           }}
           setAttribute={setAttribute}
         />
       </CreateChannelContext.Provider>
     );
-    const input = utils.getByLabelText('Executable name');
+    const input = utils.getByLabelText('Executable');
     fireEvent.change(input, { target: { value: 'newExecutable.exe' } });
     fireEvent.blur(input);
-    expect(setAttribute).toBeCalledWith('executableName', 'newExecutable.exe');
+    expect(setAttribute).toBeCalledWith('executable', 'newExecutable.exe');
     expect(setInputErrors).toBeCalled();
   });
 });

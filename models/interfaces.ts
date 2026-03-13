@@ -68,10 +68,10 @@ export interface ChannelItemType extends ConfigType {
   }
   // Wazuh
   active_response?: {
-    executable_name: string;
-    executable_args: string;
+    executable: string;
+    extra_args: string;
     type: 'stateful' | 'stateless';
-    timeout?: number; // only for stateful active response
+    stateful_timeout?: number; // only for stateful active response
     location: 'all' | 'defined-agent' | 'local';
     agent_id?: string; // only required when location is defined-agent
   }

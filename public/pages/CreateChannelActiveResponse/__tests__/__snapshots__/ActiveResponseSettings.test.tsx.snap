@@ -14,7 +14,7 @@ exports[`<ChimeSettings /> spec renders the component 1`] = `
       class="euiFormLabel euiFormRow__label"
       for="random_html_id"
     >
-      Executable name
+      Executable
     </label>
   </div>
   <div
@@ -30,7 +30,7 @@ exports[`<ChimeSettings /> spec renders the component 1`] = `
           class="euiFieldText euiFieldText--fullWidth euiFieldText--compressed"
           data-test-subj="create-channel-active-response-executable-name"
           id="random_html_id"
-          placeholder="Executable name"
+          placeholder="Executable"
           type="text"
           value="test.exe"
         />
@@ -54,7 +54,7 @@ exports[`<ChimeSettings /> spec renders the component with error 1`] = `
       class="euiFormLabel euiFormRow__label euiFormLabel-isInvalid"
       for="random_html_id"
     >
-      Executable name
+      Executable
     </label>
   </div>
   <div
@@ -71,7 +71,7 @@ exports[`<ChimeSettings /> spec renders the component with error 1`] = `
           class="euiFieldText euiFieldText--fullWidth euiFieldText--compressed"
           data-test-subj="create-channel-active-response-executable-name"
           id="random_html_id"
-          placeholder="Executable name"
+          placeholder="Executable"
           type="text"
           value=""
         />

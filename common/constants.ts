@@ -30,3 +30,26 @@ export const CHANNEL_TYPE = Object.freeze({
   // Wazuh  
   active_response: string;
 };
+
+// Wazuh
+export const ACTIVE_RESPONSE_TYPE = Object.freeze({
+  STATELESS: 'stateless',
+  STATEFUL: 'stateful',
+});
+
+export const ACTIVE_RESPONSE_TYPE_LABEL = Object.freeze({
+  [ACTIVE_RESPONSE_TYPE.STATELESS]: 'Stateless',
+  [ACTIVE_RESPONSE_TYPE.STATEFUL]: 'Stateful',
+});
+
+export const ACTIVE_RESPONSE_LOCATION = Object.freeze({
+  ALL: 'all',
+  DEFINED_AGENT: 'defined-agent',
+  LOCAL: 'local',
+});
+
+export const ACTIVE_RESPONSE_LOCATION_LABEL = Object.freeze({
+  [ACTIVE_RESPONSE_LOCATION.ALL]: 'All',
+  [ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT]: 'Defined agent',
+  [ACTIVE_RESPONSE_LOCATION.LOCAL]: 'Local',
+});

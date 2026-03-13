@@ -13,11 +13,11 @@ import {
   EuiPopover,
 } from '@elastic/eui';
 import _ from 'lodash';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  CHANNEL_TYPE,
+  ACTIVE_RESPONSE_LOCATION,
+  ACTIVE_RESPONSE_TYPE,
 } from '../../../../common/constants';
-import { MainContext } from '../../MainActiveResponses/Main';
 import { ChannelFiltersType } from '../types';
 
 interface ChannelControlsProps {
@@ -27,7 +27,6 @@ interface ChannelControlsProps {
 }
 
 export const ChannelControls = (props: ChannelControlsProps) => {
-  const mainStateContext = useContext(MainContext)!;
   const [isStatePopoverOpen, setIsStatePopoverOpen] = useState(false);
   const [stateItems, setStateItems] = useState([
     { field: 'true', display: 'Active', checked: 'off' },
@@ -36,26 +35,19 @@ export const ChannelControls = (props: ChannelControlsProps) => {
   const [isTypePopoverOpen, setIsTypePopoverOpen] = useState(false);
   const [typeItems, setTypeItems] = useState(
     [
-      {field: 'stateful', display: 'Stateful', checked: 'off'},
-      {field: 'stateless', display: 'Stateless', checked: 'off'},
+      {field: ACTIVE_RESPONSE_TYPE.STATEFUL, display: 'Stateful', checked: 'off'},
+      {field: ACTIVE_RESPONSE_TYPE.STATELESS, display: 'Stateless', checked: 'off'},
     ]
   );
   const [isLocationPopoverOpen, setIsLocationPopoverOpen] = useState(false);
   const [locationItems, setLocationItems] = useState(
     [
-      {field: 'all', display: 'All', checked: 'off'},
-      {field: 'defined-agent', display: 'Defined agent', checked: 'off'},
-      {field: 'local', display: 'Local', checked: 'off'},
+      {field: ACTIVE_RESPONSE_LOCATION.ALL, display: 'All', checked: 'off'},
+      {field: ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT, display: 'Defined agent', checked: 'off'},
+      {field: ACTIVE_RESPONSE_LOCATION.LOCAL, display: 'Local', checked: 'off'},
     ]
   );
 
-  // useEffect(() => {
-  //   const newItems = typeItems.filter(
-  //     ({ field }) =>
-  //       !!mainStateContext.availableChannels[field as keyof typeof CHANNEL_TYPE]
-  //   );
-  //   if (newItems.length !== typeItems.length) setTypeItems(newItems);
-  // }, [mainStateContext.availableChannels]);
 
   function updateItem(
     items: Array<{ field: string; display: string; checked: string }>,

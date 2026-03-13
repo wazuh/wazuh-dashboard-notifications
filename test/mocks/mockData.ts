@@ -250,10 +250,10 @@ const mockActiveResponse: ChannelItemType = {
   config_type: 'active_response',
   is_enabled: true,
   active_response: {
-    executable_name: 'test_executable',
-    executable_args: '-arg1 -arg2',
+    executable: 'test_executable',
+    extra_args: '-arg1 -arg2',
     type: 'stateful',
-    timeout: 300,
+    stateful_timeout: 300,
     location: 'defined-agent',
     agent_id: '001',
   },

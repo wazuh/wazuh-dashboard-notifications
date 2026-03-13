@@ -10,11 +10,11 @@ import {
 
 describe('constructs active response objects', () => {
   const activeResponseItem: ChannelItemType['active_response'] = {
-    executable_name: 'test',
-    executable_args: '--test',
+    executable: 'test',
+    extra_args: '--test',
     location: 'defined-agent',
     agent_id: '001',
-    timeout: 60,
+    stateful_timeout: 60,
     type: 'stateful',
   };
 
@@ -22,11 +22,11 @@ describe('constructs active response objects', () => {
     // @ts-ignore
     const resultFromActiveResponse = constructActiveResponseObject({
       activeResponseType: 'stateful',
-      executableName: 'test',
-      executableArgs: '--test',
+      executable: 'test',
+      extraArgs: '--test',
       location: 'defined-agent',
       agentId: '001',
-      timeout: 60
+      statefulTimeout: 60
     });
     expect(resultFromActiveResponse).toEqual(activeResponseItem);
 

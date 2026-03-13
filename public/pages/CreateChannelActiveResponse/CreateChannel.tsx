@@ -31,10 +31,12 @@ import {
 import {
   validateAgentId,
   validateChannelName,
-  validateExecutableName,
+  validateExecutable,
+  validateStatefulTimeout,
 } from './utils/validationHelper';
 import { getUseUpdatedUx } from '../../services/utils/constants';
 import { ActiveResponseSettings } from './components/ActiveResponseSettings';
+import { ACTIVE_RESPONSE_TYPE } from '../../../common/constants';
 interface CreateChannelsProps extends RouteComponentProps<{ id?: string }> {
   edit?: boolean;
 }
@@ -42,7 +44,7 @@ interface CreateChannelsProps extends RouteComponentProps<{ id?: string }> {
 type InputErrorsType = { [key: string]: string[] };
 
 const DEFAULT_TIMEOUT = 180;
-const DEFAULT_ACTIVE_RESPONSE_TYPE = 'stateless';
+const DEFAULT_ACTIVE_RESPONSE_TYPE = ACTIVE_RESPONSE_TYPE.STATELESS;
 export const CreateChannelContext = createContext<{
   edit?: boolean;
   inputErrors: InputErrorsType;
@@ -55,8 +57,8 @@ export function CreateChannel(props: CreateChannelsProps) {
   const id = props.match.params.id;
   const prevURL =
     props.edit && queryString.parse(props.location.search).from === 'details'
-      ? `#${ROUTES.CHANNEL_DETAILS}/${id}`
-      : `#${ROUTES.CHANNELS}`;
+      ? `#${ROUTES.ACTIVE_RESPONSE_DETAILS}/${id}`
+      : `#${ROUTES.ACTIVE_RESPONSES}`;
 
   const [isEnabled, setIsEnabled] = useState(true); // should be true unless editing muted channel
   const [loading, setLoading] = useState(false);
@@ -65,21 +67,21 @@ export function CreateChannel(props: CreateChannelsProps) {
   const [description, setDescription] = useState('');
 
   // Wazuh active response specific states
-  const [executableName, setExecutableName] = useState('');
-  const [executableArgs, setExecutableArgs] = useState('');
+  const [executable, setExecutable] = useState('');
+  const [extraArgs, setExtraArgs] = useState('');
   const [location, setLocation] = useState('all');
   const [agentId, setAgentId] = useState('');
   const [activeResponseType, setActiveResponseType] = useState<'stateless' | 'stateful'>(DEFAULT_ACTIVE_RESPONSE_TYPE);
-  const [timeout, setTimeout] = useState(DEFAULT_TIMEOUT);
+  const [statefulTimeout, setStatefulTimeout] = useState(DEFAULT_TIMEOUT);
 
   const [inputErrors, setInputErrors] = useState<InputErrorsType>({
     name: [],
-    executableName: [],
-    executableArgs: [],
+    executable: [],
+    extraArgs: [],
     location: [],
     agentId: [],
-    activeResponseType: [],
-    timeout: [],
+    type: [],
+    statefulTimeout: [],
   });
 
   // Initial load: fetch channel data and set up page
@@ -118,12 +120,12 @@ export function CreateChannel(props: CreateChannelsProps) {
       setDescription(response.description || '');
       
       // Active response specific fields
-      setActiveResponseType(response.active_response?.type || 'stateless');
-      setExecutableName(response.active_response?.executable_name || '');
-      setExecutableArgs(response.active_response?.executable_args || '');
+      setActiveResponseType(response.active_response?.type || '');
+      setExecutable(response.active_response?.executable || '');
+      setExtraArgs(response.active_response?.extra_args || '');
       setLocation(response.active_response?.location || '');
       setAgentId(response.active_response?.agent_id || '');
-      setTimeout(response.active_response?.timeout);
+      setStatefulTimeout(response.active_response?.stateful_timeout);
 
     } catch (error) {
       coreContext.notifications.toasts.addDanger(
@@ -135,12 +137,12 @@ export function CreateChannel(props: CreateChannelsProps) {
   const isInputValid = (): boolean => {
     const errors: InputErrorsType = {
       name: validateChannelName(name),
-      executableName: validateExecutableName(executableName),
-      executableArgs: [], // no validation for args since it can be any string
+      executable: validateExecutable(executable),
+      extraArgs: [], // no validation for args since it can be any string
       location: [], // no validation since it's a select with fixed options
-      agentId: validateAgentId(agentId),
-      activeResponseType: [], // no validation since it's a select with fixed options
-      timeout: [], // no validation since it's optional and has a default value
+      agentId: location === 'defined-agent' ? validateAgentId(agentId) : [], // only validate agentId when location is defined-agent
+      type: [], // no validation since it's a select with fixed options
+      statefulTimeout: activeResponseType === 'stateful' ? validateStatefulTimeout(statefulTimeout) : [], // only validate statefulTimeout when type is stateful
     };
     setInputErrors(errors);
     return !Object.values(errors).reduce(
@@ -157,63 +159,15 @@ export function CreateChannel(props: CreateChannelsProps) {
       is_enabled: isEnabled,
       active_response: constructActiveResponseObject({
         activeResponseType,
-        executableName,
-        executableArgs,
+        executable,
+        extraArgs,
         location,
         agentId,
-        timeout: timeout || DEFAULT_TIMEOUT,
+        statefulTimeout: statefulTimeout,
       }),
     };
 
     return config;
-  };
-
-  const sendTestMessage = async () => {
-    const config = createConfigObject();
-    config.name = 'temp-' + config.name;
-    let tempChannelId;
-    try {
-      tempChannelId = await servicesContext.notificationService
-        .createConfig(config)
-        .then((response) => {
-          console.info(
-            'Created temporary active response to test send message:',
-            response
-          );
-          return response.config_id;
-        })
-        .catch((error) => {
-          error.message =
-            'Failed to create temporary active response for test message. ' +
-            error.message;
-          throw error;
-        });
-
-      await servicesContext.notificationService.sendTestMessage(
-        tempChannelId,
-      );
-      coreContext.notifications.toasts.addSuccess(
-        'Successfully sent a test message.'
-      );
-    } catch (error: any) {
-      coreContext.notifications.toasts.addError(error?.body || error, {
-        title: 'Failed to send the test message.',
-        toastMessage: 'View error details and adjust the active response settings.',
-      });
-    } finally {
-      if (tempChannelId) {
-        servicesContext.notificationService
-          .deleteConfigs([tempChannelId])
-          .then((response) => {
-            console.info('Deleted temporary active response:', response);
-          })
-          .catch((error) => {
-            coreContext.notifications.toasts.addError(error?.body || error, {
-              title: 'Failed to delete temporary active response for test message.',
-            });
-          });
-      }
-    }
   };
 
   return (
@@ -245,20 +199,20 @@ export function CreateChannel(props: CreateChannelsProps) {
         >
           <ActiveResponseSettings
             attributes={{
-              activeResponseType,
-              executableName,
-              executableArgs,
+              type: activeResponseType,
+              executable,
+              extraArgs,
               location,
               agentId,
-              timeout: timeout,
+              statefulTimeout,
             }}
             setAttribute={(name, value) => {
-              name === 'executableName' && setExecutableName(value as string);
-              name === 'executableArgs' && setExecutableArgs(value as string);
-              name === 'activeResponseType' && setActiveResponseType(value as string);
+              name === 'executable' && setExecutable(value as string);
+              name === 'extraArgs' && setExtraArgs(value as string);
+              name === 'type' && setActiveResponseType(value as string);
               name === 'location' && setLocation(value as string);
               name === 'agentId' && setAgentId(value as string);
-              name === 'timeout' && setTimeout(value as number);
+              name === 'statefulTimeout' && setStatefulTimeout(value as number);
             }}
           />
         </ContentPanel>
@@ -267,22 +221,6 @@ export function CreateChannel(props: CreateChannelsProps) {
         <EuiFlexGroup gutterSize="m" justifyContent="flexEnd">
           <EuiFlexItem grow={false}>
             <EuiSmallButtonEmpty href={prevURL}>Cancel</EuiSmallButtonEmpty>
-          </EuiFlexItem>
-          <EuiFlexItem grow={false}>
-            <EuiSmallButton
-              data-test-subj="create-channel-send-test-message-button"
-              onClick={() => {
-                if (!isInputValid()) {
-                  coreContext.notifications.toasts.addDanger(
-                    'Some fields are invalid. Fix all highlighted error(s) before continuing.'
-                  );
-                  return;
-                }
-                sendTestMessage();
-              }}
-            >
-              Send test message
-            </EuiSmallButton>
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
             <EuiSmallButton
@@ -310,7 +248,9 @@ export function CreateChannel(props: CreateChannelsProps) {
                       `Active response ${name} successfully ${props.edit ? 'updated' : 'created'
                       }.`
                     );
-                    setTimeout(() => (location.hash = prevURL), SERVER_DELAY);
+                    setTimeout(() => {
+                      (window.location.hash = prevURL);
+                    }, SERVER_DELAY);
                   })
                   .catch((error) => {
                     setLoading(false);

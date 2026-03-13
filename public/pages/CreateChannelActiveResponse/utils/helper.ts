@@ -5,25 +5,33 @@
 
 export const constructActiveResponseObject = ({
   activeResponseType,
-  executableName,
-  executableArgs,
+  executable,
+  extraArgs,
   location,
   agentId,
-  timeout
+  statefulTimeout
 }: {
   activeResponseType: string,
-  executableName: string,
-  executableArgs: string,
+  executable: string,
+  extraArgs: string,
   location: string,
   agentId: string,
-  timeout: number
+  statefulTimeout: number
 }) => {
-  return {
+  const activeResponseObject: any = {
     type: activeResponseType,
-    executable_name: executableName,
-    executable_args: executableArgs,
+    executable: executable,
+    extra_args: extraArgs,
     location,
-    agent_id: location === 'defined-agent' ? agentId : null, // agentId is only required when location is defined-agent
-    timeout: activeResponseType === 'stateful' ? timeout : null, // timeout is only required for stateful active response
   };
+
+  if (location === 'defined-agent') {
+    activeResponseObject.agent_id = agentId;
+  }
+
+  if (activeResponseType === 'stateful') {
+    activeResponseObject.stateful_timeout = statefulTimeout;
+  }
+
+  return activeResponseObject;
 }

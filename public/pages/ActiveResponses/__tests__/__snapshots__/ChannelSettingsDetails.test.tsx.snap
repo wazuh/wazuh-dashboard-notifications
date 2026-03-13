@@ -18,7 +18,7 @@ exports[`<ChannelSettingsDetails /> spec renders Active Response channel 1`] = `
         <dt
           class="euiDescriptionList__title"
         >
-          Executable name
+          Executable
         </dt>
         <dd
           class="euiDescriptionList__description"
@@ -37,7 +37,7 @@ exports[`<ChannelSettingsDetails /> spec renders Active Response channel 1`] = `
         <dt
           class="euiDescriptionList__title"
         >
-          Executable args
+          Extra args
         </dt>
         <dd
           class="euiDescriptionList__description"
@@ -56,12 +56,12 @@ exports[`<ChannelSettingsDetails /> spec renders Active Response channel 1`] = `
         <dt
           class="euiDescriptionList__title"
         >
-          Active Response type
+          Type
         </dt>
         <dd
           class="euiDescriptionList__description"
         >
-          stateful
+          Stateful
         </dd>
       </dl>
     </div>

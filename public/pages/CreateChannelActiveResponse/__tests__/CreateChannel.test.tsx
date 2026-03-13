@@ -41,7 +41,6 @@ describe('<CreateChannel/> spec', () => {
       </MainContext.Provider>
     );
     utils.getByTestId('create-channel-create-button').click();
-    utils.getByTestId('create-channel-send-test-message-button').click();
     expect(utils.container.firstChild).toMatchSnapshot();
   });
 
@@ -76,7 +75,6 @@ describe('<CreateChannel/> spec', () => {
     });
 
     utilsSlack.getByTestId('create-channel-create-button').click();
-    utilsSlack.getByTestId('create-channel-send-test-message-button').click();
     await waitFor(() => {
       expect(updateConfigSuccess).toBeCalled();
     });

@@ -61,7 +61,6 @@ describe('<ChannelDetailsActions /> spec', () => {
     utils.getByText('Actions').click();
     utils.getByText('Edit').click();
     utils.getByText('Actions').click();
-    utils.getByText('Send test message').click();
     utils.getByText('Actions').click();
     utils.getByText('Delete').click();
     expect(utils.container.firstChild).toMatchSnapshot();

@@ -4,9 +4,11 @@
  */
 
 import React from 'react';
+import _ from 'lodash';
 import { ChannelItemType } from '../../../../../models/interfaces';
 import { ListItemType } from '../../types';
 import { ChannelDetailItems } from './ChannelDetailItems';
+import { ACTIVE_RESPONSE_LOCATION_LABEL, ACTIVE_RESPONSE_TYPE_LABEL } from '../../../../../common/constants';
 
 interface ChannelSettingsDetailsProps {
   channel: ChannelItemType | undefined;
@@ -17,25 +19,25 @@ export function ChannelSettingsDetails(props: ChannelSettingsDetailsProps) {
 
   const settingsList: Array<ListItemType> = [
     {
-        title: 'Executable name',
-        description: props.channel.active_response.executable_name,
+        title: 'Executable',
+        description: props.channel.active_response.executable,
     },
     {
-        title: 'Executable args',
-        description: props.channel.active_response.executable_args,
+        title: 'Extra args',
+        description: props.channel.active_response.extra_args,
     },
     {
-        title: 'Active Response type',
-        description: props.channel.active_response.type,
+        title: 'Type',
+        description: _.get(ACTIVE_RESPONSE_TYPE_LABEL, props.channel.active_response.type, '-'),
     },
     ...(props.channel.active_response.type === 'stateful' ? [{
-            title: 'Active Response timeout (seconds)',
-            description: props.channel.active_response.timeout.toString(),
+            title: 'Stateful timeout (seconds)',
+            description: props.channel.active_response.stateful_timeout.toString(),
         }]
         : []),
     {
-        title: 'Active Response location',
-        description: props.channel.active_response.location,
+        title: 'Location',
+        description: _.get(ACTIVE_RESPONSE_LOCATION_LABEL, props.channel.active_response.location, '-'),
     },
     ...(props.channel.active_response.location === 'defined-agent' ? [{
             title: 'Agent ID',
@@ -43,54 +45,6 @@ export function ChannelSettingsDetails(props: ChannelSettingsDetailsProps) {
         }]
         : []),
   ];
-  // const getModalComponent = (
-  //   items: string[] | HeaderItemType[],
-  //   header: string,
-  //   title?: string,
-  //   separator = ', ',
-  //   isParameters?: boolean
-  // ) => {
-  //   return (
-  //     <>
-  //       <div style={{ whiteSpace: 'pre-line' }}>
-  //         {items
-  //           .slice(0, 5)
-  //           .map((item: string | HeaderItemType) =>
-  //             typeof item === 'string' ? item : `${item.key}: ${item.value}`
-  //           )
-  //           .join(separator) || '-'}
-  //       </div>
-  //       {items.length > 5 && (
-  //         <>
-  //           {' '}
-  //           <ModalConsumer>
-  //             {({ onShow }) => (
-  //               <EuiLink
-  //                 onClick={
-  //                   typeof items[0] === 'string'
-  //                     ? () =>
-  //                         onShow(DetailsListModal, {
-  //                           header: `${header} (${items.length})`,
-  //                           title: title,
-  //                           items: items,
-  //                         })
-  //                     : () =>
-  //                         onShow(DetailsTableModal, {
-  //                           header: `${header} (${items.length})`,
-  //                           isParameters,
-  //                           items: items,
-  //                         })
-  //                 }
-  //               >
-  //                 {items.length - 5} more
-  //               </EuiLink>
-  //             )}
-  //           </ModalConsumer>
-  //         </>
-  //       )}
-  //     </>
-  //   );
-  // };
 
   return (
     <>

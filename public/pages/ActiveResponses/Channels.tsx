@@ -33,7 +33,8 @@ import {
   setBreadcrumbsActiveResponse as setBreadcrumbs,
 } from '../../utils/constants';
 import {
-  CHANNEL_TYPE,
+  ACTIVE_RESPONSE_LOCATION_LABEL,
+  ACTIVE_RESPONSE_TYPE_LABEL,
 } from '../../../common/constants';
 import { getErrorMessage } from '../../utils/helpers';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '../Notifications/utils/constants';
@@ -106,14 +107,14 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
         name: 'Location',
         sortable: true,
         truncateText: false,
-        render: (value: string) => value || '-',
+        render: (value: string) =>  _.get(ACTIVE_RESPONSE_LOCATION_LABEL, value, '-'),
       },
       {
         field: 'active_response.type',
         name: 'Type',
         sortable: true,
         truncateText: false,
-        render: (value: string) => value || '-',
+        render: (value: string) =>  _.get(ACTIVE_RESPONSE_TYPE_LABEL, value, '-'),
       },
       {
         field: 'description',
@@ -150,8 +151,7 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
       from_index: state.from,
       max_items: state.size,
       query: state.search,
-      // config_type: 'active_response', // only get active response channels
-      config_type: 'webhook', // only get active response channels
+      config_type: 'active_response', // only get active response channels
       sort_field: state.sortField,
       sort_order: state.sortDirection,
     };

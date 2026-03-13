@@ -5,7 +5,7 @@
 
 import {
   validateChannelName,
-  validateExecutableName,
+  validateExecutable,
   validateAgentId
 } from '../utils/validationHelper';
 
@@ -18,8 +18,8 @@ describe('test create channel validation helpers', () => {
   });
 
   it('validates executable name', () => {
-    const pass = validateExecutableName('test.exe');
-    const fail = validateExecutableName('');
+    const pass = validateExecutable('test.exe');
+    const fail = validateExecutable('');
     expect(pass).toHaveLength(0);
     expect(fail).toHaveLength(1);
   });

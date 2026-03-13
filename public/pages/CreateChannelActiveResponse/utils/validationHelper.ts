@@ -7,11 +7,11 @@ import _ from 'lodash';
 
 export const validateChannelName = (name: string) => {
   const errors = [];
-  if (_.trim(name).length === 0) errors.push('Channel name cannot be empty.');
+  if (_.trim(name).length === 0) errors.push('Active response name cannot be empty.');
   return errors;
 };
 
-export const validateExecutableName = (name: string) => {
+export const validateExecutable = (name: string) => {
   const errors = [];
   if (_.trim(name).length === 0) errors.push('Executable name cannot be empty.');
   return errors;
@@ -24,3 +24,9 @@ export const validateAgentId = (agentId: string) => {
   return errors;
 }
 
+export const validateStatefulTimeout = (timeout: number) => {
+  const errors = [];
+  if (isNaN(timeout)) errors.push('Stateful timeout must be a number.');
+  else if (timeout <= 0) errors.push('Stateful timeout must be greater than 0.');
+  return errors;
+}
