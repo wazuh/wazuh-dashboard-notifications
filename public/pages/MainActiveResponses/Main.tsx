@@ -114,6 +114,7 @@ export default class Main extends Component<MainProps, MainState> {
       'smtp_account',
       'ses_account',
       'email_group',
+      'active_response' // Wazuh
     ];
 
     let newState = {

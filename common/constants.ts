@@ -53,3 +53,12 @@ export const ACTIVE_RESPONSE_LOCATION_LABEL = Object.freeze({
   [ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT]: 'Defined agent',
   [ACTIVE_RESPONSE_LOCATION.LOCAL]: 'Local',
 });
+
+/* This constant defines the categories of channels that are considered "managed" by the system.
+Managed channels are those that have specific handling, as opposed
+to generic notification channels. By categorizing channels into managed and notification types,
+the system can apply different logic or UI elements based on the channel category. */
+export const MANAGED_CHANNEL_CATEGORIES = Object.freeze([BACKEND_CHANNEL_TYPE.ACTIVE_RESPONSE] as const); 
+
+// This constant defines the default category for channels that do not fall under the managed categories.
+export const DEFAULT_CHANNEL_CATEGORY = 'notification';

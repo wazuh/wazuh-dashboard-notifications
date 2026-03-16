@@ -85,6 +85,8 @@ export class notificationsDashboardsPlugin
     });
 
     // Wazuh - Register Active Responses application
+    /** TODO: this should be registered is the config type is enabled in the backend,
+     * but for now we can assume if the plugin is installed, the config type is enabled */
     core.application.register({
       id: PLUGIN_ACTIVE_RESPONSES_ID,
       title: i18n.translate('notification.activeResponsesTitle', {
