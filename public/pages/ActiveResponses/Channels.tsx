@@ -107,14 +107,14 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
         name: 'Location',
         sortable: true,
         truncateText: false,
-        render: (value: string) =>  _.get(ACTIVE_RESPONSE_LOCATION_LABEL, value, '-'),
+        render: (value: string) => _.get(ACTIVE_RESPONSE_LOCATION_LABEL, value, '-'),
       },
       {
         field: 'active_response.type',
         name: 'Type',
         sortable: true,
         truncateText: false,
-        render: (value: string) =>  _.get(ACTIVE_RESPONSE_TYPE_LABEL, value, '-'),
+        render: (value: string) => _.get(ACTIVE_RESPONSE_TYPE_LABEL, value, '-'),
       },
       {
         field: 'description',
@@ -209,6 +209,20 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
     const filterIsApplied = !!this.state.search;
     const page = Math.floor(this.state.from / this.state.size);
 
+    const filteredItems = this.state.items.filter((item) => {
+      if (
+        this.state.filters.type &&
+        item.active_response?.type !== this.state.filters.type
+      )
+        return false;
+      if (
+        this.state.filters.location &&
+        item.active_response?.location !== this.state.filters.location
+      )
+        return false;
+      return true;
+    });
+
     const pagination: Pagination = {
       pageIndex: page,
       pageSize: this.state.size,
@@ -260,7 +274,7 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
 
     const basicTableComponent = <EuiBasicTable
       columns={this.columns}
-      items={this.state.items}
+      items={filteredItems}
       itemId="config_id"
       isSelectable={true}
       selection={selection}
@@ -278,54 +292,54 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
 
     return (
       <>
-      {getUseUpdatedUx() ? (
-        <>
-          <PageHeader
-            appRightControls={headerControls}
-            appLeftControls={[{ renderComponent: totalChannels }]}
-          />
-          <ContentPanel panelStyles={{ padding: this.state.total < 1? '16px 16px 0px' : '16px' }}>
-            <div style={{ marginBottom: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                {channelControlsComponent}
-                <div style={{ marginLeft: '16px' }}>
-                  {channelActionsComponent}
+        {getUseUpdatedUx() ? (
+          <>
+            <PageHeader
+              appRightControls={headerControls}
+              appLeftControls={[{ renderComponent: totalChannels }]}
+            />
+            <ContentPanel panelStyles={{ padding: this.state.total < 1 ? '16px 16px 0px' : '16px' }}>
+              <div style={{ marginBottom: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  {channelControlsComponent}
+                  <div style={{ marginLeft: '16px' }}>
+                    {channelActionsComponent}
+                  </div>
                 </div>
               </div>
-            </div>
+              <EuiHorizontalRule margin="s" />
+              {basicTableComponent}
+            </ContentPanel>
+          </>
+        ) : (
+          <ContentPanel
+            actions={
+              <ContentPanelActions
+                actions={[
+                  {
+                    component: channelActionsComponent,
+                  },
+                  {
+                    component: (
+                      <EuiSmallButton fill href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}>
+                        Create active response
+                      </EuiSmallButton>
+                    ),
+                  },
+                ]}
+              />
+            }
+            bodyStyles={{ padding: 'initial' }}
+            title="Active responses"
+            titleSize="s"
+            total={this.state.total}
+          >
+            {channelControlsComponent}
             <EuiHorizontalRule margin="s" />
             {basicTableComponent}
           </ContentPanel>
-        </>
-      ) : (
-        <ContentPanel
-          actions={
-            <ContentPanelActions
-              actions={[
-                {
-                  component: channelActionsComponent,
-                },
-                {
-                  component: (
-                    <EuiSmallButton fill href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}>
-                      Create active response
-                    </EuiSmallButton>
-                  ),
-                },
-              ]}
-            />
-          }
-          bodyStyles={{ padding: 'initial' }}
-          title="Active responses"
-          titleSize="s"
-          total={this.state.total}
-        >
-          {channelControlsComponent}
-          <EuiHorizontalRule margin="s" />
-          {basicTableComponent}
-        </ContentPanel>
-      )}
-    </>
+        )}
+      </>
 
     );
   }
