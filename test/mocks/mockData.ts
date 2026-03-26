@@ -242,3 +242,29 @@ export const MOCK_DATA = {
     total: 1,
   },
 };
+
+// Wazuh
+const mockActiveResponse: ChannelItemType = {
+  name: 'Test active response',
+  description: 'test description',
+  config_type: 'active_response',
+  is_enabled: true,
+  active_response: {
+    executable: 'test_executable',
+    extra_args: '-arg1 -arg2',
+    type: 'stateful',
+    stateful_timeout: 300,
+    location: 'defined-agent',
+    agent_id: '001',
+  },
+  config_id: 'test-active-response',
+  created_time_ms: 1622670451891,
+  last_updated_time_ms: 1622670451891,
+}
+
+export const MOCK_DATA_ACTIVE_RESPONSE = {
+  channels: {
+    items: [mockActiveResponse]
+  },
+  activeResponse: mockActiveResponse,
+}

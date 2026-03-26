@@ -1,5 +1,5 @@
 /*
- * Copyright OpenSearch Contributors
+ * Copyright Wazuh Contributors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -10,17 +10,12 @@ import { CoreStart, MountPoint, SavedObject, HttpSetup } from '../../../../../sr
 import { CoreServicesConsumer } from '../../components/coreServices';
 import { ModalProvider, ModalRoot } from '../../components/Modal';
 import { BrowserServices } from '../../models/interfaces';
-import { ServicesConsumer, ServicesContext } from '../../services/services';
+import { ServicesContext, ServicesConsumer } from '../../services';
 import { ROUTES, dataSourceObservable } from '../../utils/constants';
 import { CHANNEL_TYPE } from '../../../common/constants';
-import { Channels } from '../Channels/Channels';
-import { ChannelDetails } from '../Channels/components/details/ChannelDetails';
-import { CreateChannel } from '../CreateChannel/CreateChannel';
-import { CreateRecipientGroup } from '../Emails/CreateRecipientGroup';
-import { CreateSender } from '../Emails/CreateSender';
-import { CreateSESSender } from '../Emails/CreateSESSender';
-import { EmailGroups } from '../Emails/EmailGroups';
-import { EmailSenders } from '../Emails/EmailSenders';
+import { Channels } from '../ActiveResponses/Channels';
+import { ChannelDetails } from '../ActiveResponses/components/details/ChannelDetails';
+import { CreateChannel } from '../CreateChannelActiveResponse/CreateChannel';
 import { DataSourceMenuContext, DataSourceMenuProperties } from "../../services/DataSourceMenuContext";
 import queryString from "query-string";
 import {
@@ -37,18 +32,6 @@ import { NotificationService } from '../../services';
 import * as pluginManifest from "../../../opensearch_dashboards.json";
 import { DataSourceAttributes } from "../../../../../src/plugins/data_source/common/data_sources";
 import semver from "semver";
-import { BehaviorSubject } from 'rxjs';
-
-enum Navigation {
-  Notifications = 'Notifications',
-  Channels = 'Channels',
-  EmailSenders = 'Email senders',
-  EmailGroups = 'Email recipient groups',
-}
-
-enum Pathname {
-  Channels = '/channels',
-}
 
 interface MainProps extends RouteComponentProps {
   setActionMenu: (menuMount: MountPoint | undefined) => void;
@@ -231,35 +214,6 @@ export default class Main extends Component<MainProps, MainState> {
           },
         ];
     }
-
-    const sideNav = [
-      {
-        name: Navigation.Notifications,
-        id: 0,
-        href: `#${Pathname.Channels}`,
-        items: [
-          {
-            name: Navigation.Channels,
-            id: 2,
-            href: `#${Pathname.Channels}`,
-            isSelected: pathname === Pathname.Channels,
-          },
-          {
-            name: Navigation.EmailSenders,
-            id: 3,
-            href: `#${ROUTES.EMAIL_SENDERS}`,
-            isSelected: pathname === ROUTES.EMAIL_SENDERS,
-          },
-          {
-            name: Navigation.EmailGroups,
-            id: 4,
-            href: `#${ROUTES.EMAIL_GROUPS}`,
-            isSelected: pathname === ROUTES.EMAIL_GROUPS,
-          },
-        ],
-      },
-    ];
-
     return (
       <CoreServicesConsumer>
         {(core: CoreStart | null) => (
@@ -365,7 +319,7 @@ export default class Main extends Component<MainProps, MainState> {
                             {!this.state.dataSourceLoading && (
                               <>
                                 <ModalRoot services={services} />
-                                {pathname !== ROUTES.CREATE_CHANNEL &&
+                                {/* {pathname !== ROUTES.CREATE_CHANNEL &&
                                   !pathname.startsWith(ROUTES.EDIT_CHANNEL) &&
                                   !pathname.startsWith(ROUTES.CHANNEL_DETAILS) &&
                                   pathname !== ROUTES.CREATE_SENDER &&
@@ -381,11 +335,11 @@ export default class Main extends Component<MainProps, MainState> {
                                         items={sideNav}
                                       />
                                     </EuiPageSideBar>
-                                  )}
+                                  )} */}
                                 <EuiPageBody>
                                   <Switch>
                                     <Route
-                                      path={ROUTES.CREATE_CHANNEL}
+                                      path={ROUTES.ACTIVE_RESPONSE_CREATE}
                                       render={(routeProps: RouteComponentProps) => (
                                         <CreateChannel
                                           {...routeProps}
@@ -393,7 +347,7 @@ export default class Main extends Component<MainProps, MainState> {
                                       )}
                                     />
                                     <Route
-                                      path={`${ROUTES.EDIT_CHANNEL}/:id`}
+                                      path={`${ROUTES.ACTIVE_RESPONSE_EDIT}/:id`}
                                       render={(routeProps: RouteComponentProps<{ id: string }>) => (
                                         <CreateChannel
                                           {...routeProps}
@@ -402,7 +356,7 @@ export default class Main extends Component<MainProps, MainState> {
                                       )}
                                     />
                                     <Route
-                                      path={`${ROUTES.CHANNEL_DETAILS}/:id`}
+                                      path={`${ROUTES.ACTIVE_RESPONSE_DETAILS}/:id`}
                                       render={(routeProps: RouteComponentProps<{ id: string }>) => (
                                         <ChannelDetails
                                           {...routeProps}
@@ -410,7 +364,7 @@ export default class Main extends Component<MainProps, MainState> {
                                       )}
                                     />
                                     <Route
-                                      path={ROUTES.CHANNELS}
+                                      path={ROUTES.ACTIVE_RESPONSES}
                                       render={(routeProps: RouteComponentProps) => (
                                         <Channels
                                           {...routeProps}
@@ -418,76 +372,7 @@ export default class Main extends Component<MainProps, MainState> {
                                         />
                                       )}
                                     />
-                                    <Route
-                                      path={ROUTES.EMAIL_SENDERS}
-                                      render={(routeProps: RouteComponentProps) => (
-                                        <EmailSenders
-                                          {...routeProps}
-                                          notificationService={services?.notificationService as NotificationService}
-                                        />
-                                      )}
-                                    />
-                                    <Route
-                                      path={ROUTES.EMAIL_GROUPS}
-                                      render={(routeProps: RouteComponentProps) => (
-                                        <EmailGroups
-                                          {...routeProps}
-                                          notificationService={services?.notificationService as NotificationService}
-                                        />
-                                      )}
-                                    />
-                                    <Route
-                                      path={ROUTES.CREATE_SENDER}
-                                      render={(routeProps: RouteComponentProps) => (
-                                        <CreateSender
-                                          {...routeProps}
-                                        />
-                                      )}
-                                    />
-                                    <Route
-                                      path={`${ROUTES.EDIT_SENDER}/:id`}
-                                      render={(routeProps: RouteComponentProps) => (
-                                        <CreateSender
-                                          {...routeProps}
-                                          edit={true}
-                                        />
-                                      )}
-                                    />
-                                    <Route
-                                      path={ROUTES.CREATE_SES_SENDER}
-                                      render={(routeProps: RouteComponentProps) => (
-                                        <CreateSESSender
-                                          {...routeProps}
-                                        />
-                                      )}
-                                    />
-                                    <Route
-                                      path={`${ROUTES.EDIT_SES_SENDER}/:id`}
-                                      render={(routeProps: RouteComponentProps) => (
-                                        <CreateSESSender
-                                          {...routeProps}
-                                          edit={true}
-                                        />
-                                      )}
-                                    />
-                                    <Route
-                                      path={ROUTES.CREATE_RECIPIENT_GROUP}
-                                      render={(routeProps: RouteComponentProps) => (
-                                        <CreateRecipientGroup
-                                          {...routeProps}
-                                        />
-                                      )}
-                                    />
-                                    <Route
-                                      path={`${ROUTES.EDIT_RECIPIENT_GROUP}/:id`}
-                                      render={(routeProps: RouteComponentProps) => (
-                                        <CreateRecipientGroup
-                                          {...routeProps}
-                                          edit={true}
-                                        />
-                                      )}
-                                    />
-                                    <Redirect from="/" to={core.chrome?.navGroup?.getNavGroupEnabled() ? this.props.defaultRoute : ROUTES.CHANNELS} />
+                                    <Redirect from="/" to={core.chrome?.navGroup?.getNavGroupEnabled() ? this.props.defaultRoute : ROUTES.ACTIVE_RESPONSES} />
                                   </Switch>
                                 </EuiPageBody>
                               </>

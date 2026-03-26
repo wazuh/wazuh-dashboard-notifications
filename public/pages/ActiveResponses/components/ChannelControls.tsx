@@ -1,5 +1,5 @@
 /*
- * Copyright OpenSearch Contributors
+ * Copyright Wazuh Contributors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -13,13 +13,12 @@ import {
   EuiPopover,
 } from '@elastic/eui';
 import _ from 'lodash';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  CHANNEL_TYPE,
+  ACTIVE_RESPONSE_LOCATION,
+  ACTIVE_RESPONSE_TYPE,
 } from '../../../../common/constants';
-import { MainContext } from '../../Main/Main';
 import { ChannelFiltersType } from '../types';
-import { isManagedChannelType } from '../../../../common/utils';
 
 interface ChannelControlsProps {
   onSearchChange: (search: string) => void;
@@ -28,7 +27,6 @@ interface ChannelControlsProps {
 }
 
 export const ChannelControls = (props: ChannelControlsProps) => {
-  const mainStateContext = useContext(MainContext)!;
   const [isStatePopoverOpen, setIsStatePopoverOpen] = useState(false);
   const [stateItems, setStateItems] = useState([
     { field: 'true', display: 'Active', checked: 'off' },
@@ -36,30 +34,25 @@ export const ChannelControls = (props: ChannelControlsProps) => {
   ]);
   const [isTypePopoverOpen, setIsTypePopoverOpen] = useState(false);
   const [typeItems, setTypeItems] = useState(
-    Object.entries(mainStateContext.availableChannels)
-      .filter(([key]) => !isManagedChannelType(key)) // Wazuh
-      .map(([key, value]) => ({
-        field: key,
-        display: value,
-        checked: 'off',
-      }))
+    [
+      {field: ACTIVE_RESPONSE_TYPE.STATEFUL, display: 'Stateful', checked: 'off'},
+      {field: ACTIVE_RESPONSE_TYPE.STATELESS, display: 'Stateless', checked: 'off'},
+    ]
+  );
+  const [isLocationPopoverOpen, setIsLocationPopoverOpen] = useState(false);
+  const [locationItems, setLocationItems] = useState(
+    [
+      {field: ACTIVE_RESPONSE_LOCATION.ALL, display: 'All', checked: 'off'},
+      {field: ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT, display: 'Defined agent', checked: 'off'},
+      {field: ACTIVE_RESPONSE_LOCATION.LOCAL, display: 'Local', checked: 'off'},
+    ]
   );
 
-  useEffect(() => {
-    const newItems = typeItems.filter(
-      ({ field }) => {
-        // Wazuh
-        const channel = mainStateContext.availableChannels?.[field as keyof typeof CHANNEL_TYPE]
-        return !!channel && !isManagedChannelType(channel)
-      }
-    );
-    if (newItems.length !== typeItems.length) setTypeItems(newItems);
-  }, [mainStateContext.availableChannels]);
 
   function updateItem(
     items: Array<{ field: string; display: string; checked: string }>,
     index: number,
-    type: 'state' | 'type' | 'source',
+    type: 'state' | 'type' | 'location',
     singleSelect?: boolean
   ) {
     if (!items[index]) return;
@@ -85,11 +78,16 @@ export const ChannelControls = (props: ChannelControlsProps) => {
         break;
       case 'type':
         setTypeItems(newItems);
-        newFilters.type = checkedItems;
+        newFilters.type = checkedItems[0];
+        break;
+      case 'location':
+        setLocationItems(newItems);
+        newFilters.location = checkedItems[0];
         break;
       default:
         break;
     }
+
     props.onFiltersChange(newFilters);
   }
 
@@ -151,6 +149,36 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                onClick={() => setIsLocationPopoverOpen(!isLocationPopoverOpen)}
+              >
+                {isItemSelected(locationItems) ? <b>Location</b> : 'Location'}
+              </EuiSmallFilterButton>
+            }
+            isOpen={isLocationPopoverOpen}
+            closePopover={() => setIsLocationPopoverOpen(false)}
+            panelPaddingSize="none"
+          >
+            {locationItems.map((item, index) => {
+              return (
+                <EuiFilterSelectItem
+                  key={`active-response-location-filter-${index}`}
+                  checked={item.checked === 'on' ? 'on' : undefined}
+                  onClick={() => updateItem(locationItems, index, 'location', true)}
+                >
+                  {item.display}
+                </EuiFilterSelectItem>
+              );
+            })}
+          </EuiPopover>
+        </EuiFilterGroup>
+      </EuiFlexItem>
+      <EuiFlexItem grow={false}>
+        <EuiFilterGroup>
+          <EuiPopover
+            button={
+              <EuiSmallFilterButton
+                iconType="arrowDown"
+                grow={false}
                 onClick={() => setIsTypePopoverOpen(!isTypePopoverOpen)}
               >
                 {isItemSelected(typeItems) ? <b>Type</b> : 'Type'}
@@ -163,9 +191,9 @@ export const ChannelControls = (props: ChannelControlsProps) => {
             {typeItems.map((item, index) => {
               return (
                 <EuiFilterSelectItem
-                  key={`channel-type-filter-${index}`}
+                  key={`active-response-type-filter-${index}`}
                   checked={item.checked === 'on' ? 'on' : undefined}
-                  onClick={() => updateItem(typeItems, index, 'type')}
+                  onClick={() => updateItem(typeItems, index, 'type', true)}
                 >
                   {item.display}
                 </EuiFilterSelectItem>

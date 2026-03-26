@@ -20,7 +20,7 @@ import {
   notificationsDashboardsPluginStart,
   NotificationsDashboardsSetupDeps,
 } from './types';
-import { PLUGIN_NAME } from '../common';
+import { PLUGIN_ACTIVE_RESPONSES_ID, PLUGIN_NAME } from '../common';
 import { ROUTES, dataSourceObservable } from './utils/constants';
 import { setApplication, setBreadCrumbsSetter, setNavigationUI, setUISettings } from './services/utils/constants';
 import { BehaviorSubject } from "rxjs";
@@ -83,6 +83,32 @@ export class notificationsDashboardsPlugin
         return renderApp(coreStart, params, dataSourceManagement!, depsStart, ROUTES.CHANNELS);
       },
     });
+
+    // Wazuh - Register Active Responses application
+    /** TODO: this should be registered is the config type is enabled in the backend,
+     * but for now we can assume if the plugin is installed, the config type is enabled */
+    core.application.register({
+      id: PLUGIN_ACTIVE_RESPONSES_ID,
+      title: i18n.translate('notification.activeResponsesTitle', {
+        defaultMessage: 'Active Responses',
+      }),
+      category: DEFAULT_APP_CATEGORIES.explore,
+      order: 9061,
+      description: i18n.translate('dashboards-notifications.leftNav.activeResponses.description', {
+          defaultMessage: 'Configure and organize active responses.'
+      }),
+      workspaceAvailability: WorkspaceAvailability.outsideWorkspace,
+      async mount(params: AppMountParameters) {
+        // Load application bundle
+        const { renderApp } = await import('./active-responses/application');
+        // Get start services as specified in opensearch_dashboards.json
+        const [coreStart, depsStart] = await core.getStartServices();
+        // Render the application
+        return renderApp(coreStart, params, dataSourceManagement!, depsStart, ROUTES.ACTIVE_RESPONSES);
+      },
+    });
+
+
 
     if (managementOverview) {
       managementOverview.register({

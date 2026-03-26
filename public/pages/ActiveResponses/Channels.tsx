@@ -1,5 +1,5 @@
 /*
- * Copyright OpenSearch Contributors
+ * Copyright Wazuh Contributors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -29,13 +29,12 @@ import {
 import { CoreServicesContext } from '../../components/coreServices';
 import { NotificationService } from '../../services';
 import {
-  BREADCRUMBS,
   ROUTES,
-  setBreadcrumbs,
+  setBreadcrumbsActiveResponse as setBreadcrumbs,
 } from '../../utils/constants';
 import {
-  BACKEND_CHANNEL_TYPE,
-  CHANNEL_TYPE,
+  ACTIVE_RESPONSE_LOCATION_LABEL,
+  ACTIVE_RESPONSE_TYPE_LABEL,
 } from '../../../common/constants';
 import { getErrorMessage } from '../../utils/helpers';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '../Notifications/utils/constants';
@@ -87,15 +86,16 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
         sortable: true,
         truncateText: true,
         render: (name: string, item: ChannelItemType) => (
-          <EuiLink href={`#${ROUTES.CHANNEL_DETAILS}/${item.config_id}`}>
+          <EuiLink href={`#${ROUTES.ACTIVE_RESPONSE_DETAILS}/${item.config_id}`}>
             {name}
           </EuiLink>
         ),
       },
       {
         field: 'is_enabled',
-        name: 'Notification status',
+        name: 'Status',
         sortable: true,
+        width: '100px',
         render: (enabled: boolean) => {
           const color = enabled ? 'success' : 'subdued';
           const label = enabled ? 'Active' : 'Muted';
@@ -103,11 +103,18 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
         },
       },
       {
-        field: 'config_type',
+        field: 'active_response.location',
+        name: 'Location',
+        sortable: true,
+        truncateText: false,
+        render: (value: string) => _.get(ACTIVE_RESPONSE_LOCATION_LABEL, value, '-'),
+      },
+      {
+        field: 'active_response.type',
         name: 'Type',
         sortable: true,
         truncateText: false,
-        render: (type: string) => _.get(CHANNEL_TYPE, type, '-'),
+        render: (value: string) => _.get(ACTIVE_RESPONSE_TYPE_LABEL, value, '-'),
       },
       {
         field: 'description',
@@ -122,10 +129,7 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
   }
 
   async componentDidMount() {
-    setBreadcrumbs([
-      BREADCRUMBS.NOTIFICATIONS,
-      BREADCRUMBS.CHANNELS,
-    ]);
+    setBreadcrumbs([]);
     window.scrollTo(0, 0);
     await this.refresh();
   }
@@ -143,21 +147,21 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
   }
 
   getQueryObjectFromState(state: ChannelsState) {
-    const config_type = _.isEmpty(state.filters.type)
-      // Wazuh: avoid retrieve the active responses
-      ? Object.keys(CHANNEL_TYPE)
-        .filter(key => key !== BACKEND_CHANNEL_TYPE.ACTIVE_RESPONSE) // by default get all channels but not email senders/groups and active responses
-      : state.filters.type;
     const queryObject: any = {
       from_index: state.from,
       max_items: state.size,
       query: state.search,
-      config_type,
+      config_type: 'active_response', // only get active response channels
       sort_field: state.sortField,
       sort_order: state.sortDirection,
     };
     if (state.filters.state != undefined)
       queryObject.is_enabled = state.filters.state;
+    // TODO: update backend to filter by active response type and location
+    // if (state.filters.type != undefined)
+    //   queryObject.active_response_type = state.filters.type;
+    // if (state.filters.location != undefined)
+    //   queryObject.active_response_location = state.filters.location;
     return queryObject;
   }
 
@@ -204,6 +208,20 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
   render() {
     const filterIsApplied = !!this.state.search;
     const page = Math.floor(this.state.from / this.state.size);
+
+    const filteredItems = this.state.items.filter((item) => {
+      if (
+        this.state.filters.type &&
+        item.active_response?.type !== this.state.filters.type
+      )
+        return false;
+      if (
+        this.state.filters.location &&
+        item.active_response?.location !== this.state.filters.location
+      )
+        return false;
+      return true;
+    });
 
     const pagination: Pagination = {
       pageIndex: page,
@@ -256,15 +274,15 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
 
     const basicTableComponent = <EuiBasicTable
       columns={this.columns}
-      items={this.state.items}
+      items={filteredItems}
       itemId="config_id"
       isSelectable={true}
       selection={selection}
       noItemsMessage={<EuiEmptyPrompt
-        title={<EuiText size="s"><h2>No channels to display</h2></EuiText>}
-        body={<EuiText size="s">"To send or receive notifications, you will need to create a notification channel."</EuiText>}
-        actions={<EuiSmallButton href={`#${ROUTES.CREATE_CHANNEL}`}>
-          Create channel
+        title={<EuiText size="s"><h2>No active responses to display</h2></EuiText>}
+        body={<EuiText size="s">"To response to events, you will need to create an active response."</EuiText>}
+        actions={<EuiSmallButton href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}>
+          Create active response
         </EuiSmallButton>} />}
       onChange={this.onTableChange}
       pagination={pagination}
@@ -274,54 +292,54 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
 
     return (
       <>
-      {getUseUpdatedUx() ? (
-        <>
-          <PageHeader
-            appRightControls={headerControls}
-            appLeftControls={[{ renderComponent: totalChannels }]}
-          />
-          <ContentPanel panelStyles={{ padding: this.state.total < 1? '16px 16px 0px' : '16px' }}>
-            <div style={{ marginBottom: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                {channelControlsComponent}
-                <div style={{ marginLeft: '16px' }}>
-                  {channelActionsComponent}
+        {getUseUpdatedUx() ? (
+          <>
+            <PageHeader
+              appRightControls={headerControls}
+              appLeftControls={[{ renderComponent: totalChannels }]}
+            />
+            <ContentPanel panelStyles={{ padding: this.state.total < 1 ? '16px 16px 0px' : '16px' }}>
+              <div style={{ marginBottom: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  {channelControlsComponent}
+                  <div style={{ marginLeft: '16px' }}>
+                    {channelActionsComponent}
+                  </div>
                 </div>
               </div>
-            </div>
+              <EuiHorizontalRule margin="s" />
+              {basicTableComponent}
+            </ContentPanel>
+          </>
+        ) : (
+          <ContentPanel
+            actions={
+              <ContentPanelActions
+                actions={[
+                  {
+                    component: channelActionsComponent,
+                  },
+                  {
+                    component: (
+                      <EuiSmallButton fill href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}>
+                        Create active response
+                      </EuiSmallButton>
+                    ),
+                  },
+                ]}
+              />
+            }
+            bodyStyles={{ padding: 'initial' }}
+            title="Active responses"
+            titleSize="s"
+            total={this.state.total}
+          >
+            {channelControlsComponent}
             <EuiHorizontalRule margin="s" />
             {basicTableComponent}
           </ContentPanel>
-        </>
-      ) : (
-        <ContentPanel
-          actions={
-            <ContentPanelActions
-              actions={[
-                {
-                  component: channelActionsComponent,
-                },
-                {
-                  component: (
-                    <EuiSmallButton fill href={`#${ROUTES.CREATE_CHANNEL}`}>
-                      Create channel
-                    </EuiSmallButton>
-                  ),
-                },
-              ]}
-            />
-          }
-          bodyStyles={{ padding: 'initial' }}
-          title="Channels"
-          titleSize="s"
-          total={this.state.total}
-        >
-          {channelControlsComponent}
-          <EuiHorizontalRule margin="s" />
-          {basicTableComponent}
-        </ContentPanel>
-      )}
-    </>
+        )}
+      </>
 
     );
   }

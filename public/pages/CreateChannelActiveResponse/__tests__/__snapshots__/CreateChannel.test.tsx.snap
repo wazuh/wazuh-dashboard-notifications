@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CreateChannel/> spec renders the component 1`] = `
+<div
+  class="euiText euiText--small"
+>
+  <h1>
+    Create active response
+  </h1>
+</div>
+`;

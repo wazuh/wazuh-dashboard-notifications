@@ -57,6 +57,8 @@ import {
   validateWebhookURL,
 } from './utils/validationHelper';
 import { getUseUpdatedUx } from '../../services/utils/constants';
+// Wazuh
+import { isManagedChannelType } from '../../../common/utils';
 interface CreateChannelsProps extends RouteComponentProps<{ id?: string }> {
   edit?: boolean;
 }
@@ -87,12 +89,14 @@ export function CreateChannel(props: CreateChannelsProps) {
 
   const channelTypeOptions: Array<EuiSuperSelectOption<
     keyof typeof CHANNEL_TYPE
-  >> = Object.entries(mainStateContext.availableChannels).map(
-    ([key, value]) => ({
-      value: key as keyof typeof CHANNEL_TYPE,
-      inputDisplay: value,
-    })
-  );
+  >> = Object.entries(mainStateContext.availableChannels)
+    .filter(([key]) => !isManagedChannelType(key)) // Wazuh
+    .map(
+      ([key, value]) => ({
+        value: key as keyof typeof CHANNEL_TYPE,
+        inputDisplay: value,
+      })
+    );
   const [channelType, setChannelType] = useState(channelTypeOptions[0].value);
 
   const [slackWebhook, setSlackWebhook] = useState('');
