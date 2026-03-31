@@ -69,7 +69,7 @@ export function CreateChannel(props: CreateChannelsProps) {
   // Wazuh active response specific states
   const [executable, setExecutable] = useState('');
   const [extraArgs, setExtraArgs] = useState('');
-  const [location, setLocation] = useState('all');
+  const [location, setLocation] = useState('local');
   const [agentId, setAgentId] = useState('');
   const [activeResponseType, setActiveResponseType] = useState<'stateless' | 'stateful'>(DEFAULT_ACTIVE_RESPONSE_TYPE);
   const [statefulTimeout, setStatefulTimeout] = useState(DEFAULT_TIMEOUT);
@@ -118,7 +118,7 @@ export function CreateChannel(props: CreateChannelsProps) {
       setIsEnabled(response.is_enabled);
       setName(response.name);
       setDescription(response.description || '');
-      
+
       // Active response specific fields
       setActiveResponseType(response.active_response?.type || '');
       setExecutable(response.active_response?.executable || '');
@@ -201,7 +201,7 @@ export function CreateChannel(props: CreateChannelsProps) {
             attributes={{
               type: activeResponseType,
               executable,
-              extraArgs,
+              extraArgs: extraArgs.trim() === '' ? null : extraArgs,
               location,
               agentId,
               statefulTimeout,
