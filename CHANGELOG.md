@@ -7,6 +7,7 @@ All notable changes to the Wazuh dashboard notifications plugin will be document
 ### Added
 
 - Support for Wazuh 5.0.0
+- Added Active responses app [#7](https://github.com/wazuh/wazuh-dashboard-notifications/pull/7) [#18](https://github.com/wazuh/wazuh-dashboard-notifications/pull/18)
 
 ### Changed
 

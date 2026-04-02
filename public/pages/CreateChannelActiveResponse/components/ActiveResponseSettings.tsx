@@ -25,12 +25,14 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
   const context = useContext(CreateChannelContext)!;
 
   return (
-    <>
+    <div
+            style={{maxWidth: '700px'}}
+        >
         <EuiCompressedFormRow
             label="Executable"
-            style={{ maxWidth: '700px' }}
             error={context.inputErrors.executable.join(' ')}
             isInvalid={context.inputErrors.executable.length > 0}
+            fullWidth
         >
             <EuiCompressedFieldText
                 fullWidth
@@ -48,10 +50,14 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
             />
         </EuiCompressedFormRow>
         <EuiCompressedFormRow
-            label="Extra arguments"
-            style={{ maxWidth: '700px' }}
+            label={
+                <span>
+                    Extra arguments - <i style={{ fontWeight: 'normal' }}>optional</i>
+                </span>
+            }
             error={context.inputErrors.extraArgs.join(' ')}
             isInvalid={context.inputErrors.extraArgs.length > 0}
+            fullWidth
         >
             <EuiCompressedTextArea
                 style={{ height: '4.1rem' }}
@@ -62,6 +68,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                 onChange={(e) => props.setAttribute('extraArgs', e.target.value)}
             />
         </EuiCompressedFormRow>
+        
         <EuiCompressedFormRow
             label="Type"
             labelAppend={
@@ -70,9 +77,9 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                     position="right"
                 />
             }
-            style={{ maxWidth: '300px' }}
             error={context.inputErrors.type.join(' ')}
             isInvalid={context.inputErrors.type.length > 0}
+            fullWidth
         >
             <EuiCompressedSuperSelect
                 data-test-subj="create-channel-active-response-type"
@@ -82,6 +89,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                 ]}
                 valueOfSelected={props.attributes.type}
                 onChange={(value) => props.setAttribute('type', value)}
+                fullWidth
             />
         </EuiCompressedFormRow>
         {
@@ -94,10 +102,11 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                             position="right"
                         />
                     }
-                    style={{ maxWidth: '300px' }}
+                    
                     error={context.inputErrors.statefulTimeout.join(' ')}
                     isInvalid={context.inputErrors.statefulTimeout.length > 0}
-
+                    fullWidth
+                    
                 >
                     <EuiCompressedFieldNumber
                         data-test-subj="create-channel-active-response-timeout"
@@ -106,6 +115,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                         onChange={(e) => props.setAttribute('statefulTimeout', Number(e.target.value))}
                         isInvalid={context.inputErrors.statefulTimeout.length > 0}
                         min={0}
+                        fullWidth
                     />
                 </EuiCompressedFormRow>
             )
@@ -118,9 +128,9 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                     position="right"
                 />
             }
-            style={{ maxWidth: '300px' }}
             error={context.inputErrors.location.join(' ')}
             isInvalid={context.inputErrors.location.length > 0}
+            fullWidth
         >
             <EuiCompressedSuperSelect
                 data-test-subj="create-channel-active-response-location"
@@ -131,6 +141,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                 ]}
                 valueOfSelected={props.attributes.location}
                 onChange={(value) => props.setAttribute('location', value)}
+                fullWidth
             />
         </EuiCompressedFormRow>
         {
@@ -143,9 +154,9 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                             position="right"
                         />
                     }
-                    style={{ maxWidth: '300px' }}
                     error={context.inputErrors.agentId.join(' ')}
                     isInvalid={context.inputErrors.agentId.length > 0}
+                    fullWidth
                 >
                     <EuiCompressedFieldText
                         fullWidth
@@ -161,13 +172,9 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                             });
                         }}
                     />
-
                 </EuiCompressedFormRow>
-
             )
         }
-               
-    </>
-    
+    </div>
   );
 }
