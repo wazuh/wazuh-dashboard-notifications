@@ -464,9 +464,8 @@ update_branch_reference_defaults() {
 
   local bump_string="$VERSION"
   local files=(
+    "${REPO_PATH}/.github/workflows/5_builderpackage_notifications_plugin.yml"
     "${REPO_PATH}/.github/workflows/5_builderprecompiled_base-dev-environment.yml"
-    "${REPO_PATH}/.github/workflows/dashboards-notifications-test-and-build-workflow.yml"
-    "${REPO_PATH}/.github/workflows/dashboards-notifications-test-and-build-workflow-prod-docker-linux.yml"
   )
   local f
   for f in "${files[@]}"; do
@@ -478,16 +477,6 @@ update_branch_reference_defaults() {
     log "Replacing branch refs main with ${bump_string} in $f (where applicable)"
 
     sed_inplace "s/^\\([[:space:]]*default:[[:space:]]*\\)main\\([[:space:]]*\\)$/\\1${bump_string}\\2/" "$f"
-    sed_inplace "s/^\\([[:space:]]*default:[[:space:]]*'\\)main'\\([[:space:]]*\\)$/\\1${bump_string}'\\2/" "$f"
-    sed_inplace "s/^\\([[:space:]]*default:[[:space:]]*\"\\)main\"\\([[:space:]]*\\)$/\\1${bump_string}\"\\2/" "$f"
-
-    sed_inplace "s/^\\([[:space:]]*NOTIFICATIONS_PLUGIN_VERSION:[[:space:]]*\\)main\\([[:space:]]*\\)$/\\1${bump_string}\\2/" "$f"
-    sed_inplace "s/^\\([[:space:]]*NOTIFICATIONS_PLUGIN_VERSION:[[:space:]]*'\\)main'\\([[:space:]]*\\)$/\\1${bump_string}'\\2/" "$f"
-    sed_inplace "s/^\\([[:space:]]*NOTIFICATIONS_PLUGIN_VERSION:[[:space:]]*\"\\)main\"\\([[:space:]]*\\)$/\\1${bump_string}\"\\2/" "$f"
-
-    sed_inplace "s/^\\([[:space:]]*OPENSEARCH_DASHBOARDS_VERSION:[[:space:]]*\\)main\\([[:space:]]*\\)$/\\1${bump_string}\\2/" "$f"
-    sed_inplace "s/^\\([[:space:]]*OPENSEARCH_DASHBOARDS_VERSION:[[:space:]]*'\\)main'\\([[:space:]]*\\)$/\\1${bump_string}'\\2/" "$f"
-    sed_inplace "s/^\\([[:space:]]*OPENSEARCH_DASHBOARDS_VERSION:[[:space:]]*\"\\)main\"\\([[:space:]]*\\)$/\\1${bump_string}\"\\2/" "$f"
   done
 }
 
