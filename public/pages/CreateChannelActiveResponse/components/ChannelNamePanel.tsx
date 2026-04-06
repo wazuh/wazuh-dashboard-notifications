@@ -19,49 +19,47 @@ interface ChannelNamePanelProps {
 export function ChannelNamePanel(props: ChannelNamePanelProps) {
   const context = useContext(CreateChannelContext)!;
   return (
-    <>
-      <ContentPanel
-        bodyStyles={{ padding: 'initial' }}
-        title="Name and description"
-        titleSize="s"
+    <div style={{ maxWidth: '700px' }}>
+      <EuiCompressedFormRow
+        label="Name"
+        error={context.inputErrors.name.join(' ')}
+        isInvalid={context.inputErrors.name.length > 0}
+        fullWidth
       >
-        <EuiCompressedFormRow
-          label="Name"
-          error={context.inputErrors.name.join(' ')}
+        <EuiCompressedFieldText
+          data-test-subj="create-channel-name-input"
+          placeholder="Enter active response name"
+          value={props.name}
+          onChange={(e) => props.setName(e.target.value)}
           isInvalid={context.inputErrors.name.length > 0}
-        >
-          <EuiCompressedFieldText
-            data-test-subj="create-channel-name-input"
-            placeholder="Enter active response name"
-            value={props.name}
-            onChange={(e) => props.setName(e.target.value)}
-            isInvalid={context.inputErrors.name.length > 0}
-            onBlur={() => {
-              context.setInputErrors({
-                ...context.inputErrors,
-                name: validateChannelName(props.name),
-              });
-            }}
+          onBlur={() => {
+            context.setInputErrors({
+              ...context.inputErrors,
+              name: validateChannelName(props.name),
+            });
+          }}
+          fullWidth
+        />
+      </EuiCompressedFormRow>
+      <EuiCompressedFormRow
+        label={
+          <span>
+            Description - <i style={{ fontWeight: 'normal' }}>optional</i>
+          </span>
+        }
+        fullWidth
+      >
+        <>
+          <EuiCompressedTextArea
+            data-test-subj="create-channel-description-input"
+            placeholder="What is the purpose of this active response?"
+            style={{ height: '4.1rem' }}
+            value={props.description}
+            onChange={(e) => props.setDescription(e.target.value)}
+            fullWidth
           />
-        </EuiCompressedFormRow>
-        <EuiCompressedFormRow
-          label={
-            <span>
-              Description - <i style={{ fontWeight: 'normal' }}>optional</i>
-            </span>
-          }
-        >
-          <>
-            <EuiCompressedTextArea
-              data-test-subj="create-channel-description-input"
-              placeholder="What is the purpose of this active response?"
-              style={{ height: '4.1rem' }}
-              value={props.description}
-              onChange={(e) => props.setDescription(e.target.value)}
-            />
-          </>
-        </EuiCompressedFormRow>
-      </ContentPanel>
-    </>
+        </>
+      </EuiCompressedFormRow>
+    </div>
   );
 }
