@@ -183,13 +183,18 @@ export function CreateChannel(props: CreateChannelsProps) {
             <EuiSpacer />
           </>
         )}
-
-        <ChannelNamePanel
-          name={name}
-          setName={setName}
-          description={description}
-          setDescription={setDescription}
-        />
+        <ContentPanel
+          bodyStyles={{ padding: 'initial' }}
+          title="Name and description"
+          titleSize="s"
+        >
+          <ChannelNamePanel
+            name={name}
+            setName={setName}
+            description={description}
+            setDescription={setDescription}
+          />
+        </ContentPanel>
 
         <EuiSpacer />
         <ContentPanel

@@ -2,106 +2,85 @@
 
 exports[`<ChannelNamePanel/> spec renders errors 1`] = `
 <div
-  class="euiPanel euiPanel--paddingMedium euiPanel--borderRadiusMedium euiPanel--plain euiPanel--hasShadow"
+  style="max-width: 700px;"
 >
   <div
-    class="euiFlexGroup euiFlexGroup--gutterLarge euiFlexGroup--alignItemsCenter euiFlexGroup--justifyContentSpaceBetween euiFlexGroup--directionRow euiFlexGroup--responsive"
-    style="padding: 0px 0px;"
+    class="euiFormRow euiFormRow--fullWidth euiFormRow--compressed"
+    id="random_html_id-row"
   >
     <div
-      class="euiFlexItem"
+      class="euiFormRow__labelWrapper"
     >
-      <h2
-        class="euiTitle euiTitle--small"
+      <label
+        aria-invalid="true"
+        class="euiFormLabel euiFormRow__label euiFormLabel-isInvalid"
+        for="random_html_id"
       >
-        Name and description
-      </h2>
+        Name
+      </label>
+    </div>
+    <div
+      class="euiFormRow__fieldWrapper"
+    >
+      <div
+        class="euiFormControlLayout euiFormControlLayout--fullWidth euiFormControlLayout--compressed"
+      >
+        <div
+          class="euiFormControlLayout__childrenWrapper"
+        >
+          <input
+            aria-describedby="random_html_id-error-0"
+            class="euiFieldText euiFieldText--fullWidth euiFieldText--compressed"
+            data-test-subj="create-channel-name-input"
+            id="random_html_id"
+            placeholder="Enter active response name"
+            type="text"
+            value="test"
+          />
+        </div>
+      </div>
+      <div
+        aria-live="polite"
+        class="euiFormErrorText euiFormRow__text"
+        id="random_html_id-error-0"
+      >
+        test error
+      </div>
     </div>
   </div>
-  <hr
-    class="euiHorizontalRule euiHorizontalRule--full euiHorizontalRule--marginSmall"
-  />
   <div
-    style="padding: initial;"
+    class="euiFormRow euiFormRow--fullWidth euiFormRow--compressed"
+    id="random_html_id-row"
   >
     <div
-      class="euiFormRow euiFormRow--compressed"
-      id="random_html_id-row"
+      class="euiFormRow__labelWrapper"
     >
-      <div
-        class="euiFormRow__labelWrapper"
+      <label
+        class="euiFormLabel euiFormRow__label"
+        for="random_html_id"
       >
-        <label
-          aria-invalid="true"
-          class="euiFormLabel euiFormRow__label euiFormLabel-isInvalid"
-          for="random_html_id"
-        >
-          Name
-        </label>
-      </div>
-      <div
-        class="euiFormRow__fieldWrapper"
-      >
-        <div
-          class="euiFormControlLayout euiFormControlLayout--compressed"
-        >
-          <div
-            class="euiFormControlLayout__childrenWrapper"
+        <span>
+          Description - 
+          <i
+            style="font-weight: normal;"
           >
-            <input
-              aria-describedby="random_html_id-error-0"
-              class="euiFieldText euiFieldText--compressed"
-              data-test-subj="create-channel-name-input"
-              id="random_html_id"
-              placeholder="Enter active response name"
-              type="text"
-              value="test"
-            />
-          </div>
-        </div>
-        <div
-          aria-live="polite"
-          class="euiFormErrorText euiFormRow__text"
-          id="random_html_id-error-0"
-        >
-          test error
-        </div>
-      </div>
+            optional
+          </i>
+        </span>
+      </label>
     </div>
     <div
-      class="euiFormRow euiFormRow--compressed"
-      id="random_html_id-row"
+      class="euiFormRow__fieldWrapper"
     >
-      <div
-        class="euiFormRow__labelWrapper"
+      <textarea
+        class="euiTextArea euiTextArea--resizeVertical euiTextArea--fullWidth euiTextArea--compressed"
+        data-test-subj="create-channel-description-input"
+        placeholder="What is the purpose of this active response?"
+        rows="3"
+        style="height: 4.1rem;"
       >
-        <label
-          class="euiFormLabel euiFormRow__label"
-          for="random_html_id"
-        >
-          <span>
-            Description - 
-            <i
-              style="font-weight: normal;"
-            >
-              optional
-            </i>
-          </span>
-        </label>
-      </div>
-      <div
-        class="euiFormRow__fieldWrapper"
-      >
-        <textarea
-          class="euiTextArea euiTextArea--resizeVertical euiTextArea--compressed"
-          data-test-subj="create-channel-description-input"
-          placeholder="What is the purpose of this active response?"
-          rows="3"
-          style="height: 4.1rem;"
-        >
-          test description
-        </textarea>
-      </div>
+        test description
+      </textarea>
     </div>
   </div>
 </div>
@@ -109,98 +88,77 @@ exports[`<ChannelNamePanel/> spec renders errors 1`] = `
 
 exports[`<ChannelNamePanel/> spec renders the component 1`] = `
 <div
-  class="euiPanel euiPanel--paddingMedium euiPanel--borderRadiusMedium euiPanel--plain euiPanel--hasShadow"
+  style="max-width: 700px;"
 >
   <div
-    class="euiFlexGroup euiFlexGroup--gutterLarge euiFlexGroup--alignItemsCenter euiFlexGroup--justifyContentSpaceBetween euiFlexGroup--directionRow euiFlexGroup--responsive"
-    style="padding: 0px 0px;"
+    class="euiFormRow euiFormRow--fullWidth euiFormRow--compressed"
+    id="random_html_id-row"
   >
     <div
-      class="euiFlexItem"
+      class="euiFormRow__labelWrapper"
     >
-      <h2
-        class="euiTitle euiTitle--small"
+      <label
+        aria-invalid="false"
+        class="euiFormLabel euiFormRow__label"
+        for="random_html_id"
       >
-        Name and description
-      </h2>
+        Name
+      </label>
     </div>
-  </div>
-  <hr
-    class="euiHorizontalRule euiHorizontalRule--full euiHorizontalRule--marginSmall"
-  />
-  <div
-    style="padding: initial;"
-  >
     <div
-      class="euiFormRow euiFormRow--compressed"
-      id="random_html_id-row"
+      class="euiFormRow__fieldWrapper"
     >
       <div
-        class="euiFormRow__labelWrapper"
-      >
-        <label
-          aria-invalid="false"
-          class="euiFormLabel euiFormRow__label"
-          for="random_html_id"
-        >
-          Name
-        </label>
-      </div>
-      <div
-        class="euiFormRow__fieldWrapper"
+        class="euiFormControlLayout euiFormControlLayout--fullWidth euiFormControlLayout--compressed"
       >
         <div
-          class="euiFormControlLayout euiFormControlLayout--compressed"
+          class="euiFormControlLayout__childrenWrapper"
         >
-          <div
-            class="euiFormControlLayout__childrenWrapper"
-          >
-            <input
-              class="euiFieldText euiFieldText--compressed"
-              data-test-subj="create-channel-name-input"
-              id="random_html_id"
-              placeholder="Enter active response name"
-              type="text"
-              value="test"
-            />
-          </div>
+          <input
+            class="euiFieldText euiFieldText--fullWidth euiFieldText--compressed"
+            data-test-subj="create-channel-name-input"
+            id="random_html_id"
+            placeholder="Enter active response name"
+            type="text"
+            value="test"
+          />
         </div>
       </div>
     </div>
+  </div>
+  <div
+    class="euiFormRow euiFormRow--fullWidth euiFormRow--compressed"
+    id="random_html_id-row"
+  >
     <div
-      class="euiFormRow euiFormRow--compressed"
-      id="random_html_id-row"
+      class="euiFormRow__labelWrapper"
     >
-      <div
-        class="euiFormRow__labelWrapper"
+      <label
+        class="euiFormLabel euiFormRow__label"
+        for="random_html_id"
       >
-        <label
-          class="euiFormLabel euiFormRow__label"
-          for="random_html_id"
-        >
-          <span>
-            Description - 
-            <i
-              style="font-weight: normal;"
-            >
-              optional
-            </i>
-          </span>
-        </label>
-      </div>
-      <div
-        class="euiFormRow__fieldWrapper"
+        <span>
+          Description - 
+          <i
+            style="font-weight: normal;"
+          >
+            optional
+          </i>
+        </span>
+      </label>
+    </div>
+    <div
+      class="euiFormRow__fieldWrapper"
+    >
+      <textarea
+        class="euiTextArea euiTextArea--resizeVertical euiTextArea--fullWidth euiTextArea--compressed"
+        data-test-subj="create-channel-description-input"
+        placeholder="What is the purpose of this active response?"
+        rows="3"
+        style="height: 4.1rem;"
       >
-        <textarea
-          class="euiTextArea euiTextArea--resizeVertical euiTextArea--compressed"
-          data-test-subj="create-channel-description-input"
-          placeholder="What is the purpose of this active response?"
-          rows="3"
-          style="height: 4.1rem;"
-        >
-          test description
-        </textarea>
-      </div>
+        test description
+      </textarea>
     </div>
   </div>
 </div>
