@@ -118,7 +118,7 @@ export function CreateChannel(props: CreateChannelsProps) {
       setIsEnabled(response.is_enabled);
       setName(response.name);
       setDescription(response.description || '');
-      
+
       // Active response specific fields
       setActiveResponseType(response.active_response?.type || '');
       setExecutable(response.active_response?.executable || '');

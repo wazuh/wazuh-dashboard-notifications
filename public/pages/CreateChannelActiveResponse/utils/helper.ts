@@ -9,19 +9,18 @@ export const constructActiveResponseObject = ({
   extraArgs,
   location,
   agentId,
-  statefulTimeout
+  statefulTimeout,
 }: {
-  activeResponseType: string,
-  executable: string,
-  extraArgs: string,
-  location: string,
-  agentId: string,
-  statefulTimeout: number
+  activeResponseType: string;
+  executable: string;
+  extraArgs: string;
+  location: string;
+  agentId: string;
+  statefulTimeout: number;
 }) => {
   const activeResponseObject: any = {
     type: activeResponseType,
     executable: executable,
-    extra_args: extraArgs,
     location,
   };
 
@@ -33,5 +32,9 @@ export const constructActiveResponseObject = ({
     activeResponseObject.stateful_timeout = statefulTimeout;
   }
 
+  if (extraArgs.trim() !== '') {
+    activeResponseObject.extra_args = extraArgs;
+  }
+
   return activeResponseObject;
-}
+};
