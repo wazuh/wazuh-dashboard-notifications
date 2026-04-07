@@ -206,7 +206,7 @@ export function CreateChannel(props: CreateChannelsProps) {
             attributes={{
               type: activeResponseType,
               executable,
-              extraArgs: extraArgs.trim() === '' ? null : extraArgs,
+              extraArgs,
               location,
               agentId,
               statefulTimeout,
