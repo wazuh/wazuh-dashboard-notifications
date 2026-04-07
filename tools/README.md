@@ -7,7 +7,7 @@ This script automates the process of updating the version and stage in the Wazuh
 ### Usage
 
 ```bash
-./repository_bumper.sh --version VERSION --stage STAGE [--tag] [--help]
+./repository_bumper.sh --version VERSION --stage STAGE [--tag] [--set-as-main] [--help]
 ```
 
 #### Parameters
@@ -23,6 +23,9 @@ This script automates the process of updating the version and stage in the Wazuh
 - `--tag`
   Generate a tag version format.
 
+- `--set-as-main`
+  Enable main branch mode: bump version values but keep branch references pointing to `main`.
+
 - `--help`
   Shows help and exits.
 
@@ -31,6 +34,7 @@ This script automates the process of updating the version and stage in the Wazuh
 ```bash
 ./repository_bumper.sh --version 5.0.0 --stage alpha0
 ./repository_bumper.sh --version 5.0.0 --stage beta1
+./repository_bumper.sh --version 5.1.0 --stage alpha0 --set-as-main
 ./repository_bumper.sh --tag --stage alpha1
 ./repository_bumper.sh --tag
 ```
@@ -47,7 +51,10 @@ This script automates the process of updating the version and stage in the Wazuh
    - `package.json`: Changes the `version` and `revision` fields inside the `wazuh` object.
    - `.github/workflows/5_builderpackage_notifications_plugin.yml`: Updates the default value of the `reference` input.
    - `CHANGELOG.md`: Inserts or updates a changelog entry.
-5. **Logs all actions** to a log file in the `tools` directory.
+5. **Handles branch reference replacements**:
+   - If `--set-as-main` is used, branch references to `main` are preserved.
+   - Otherwise, `main` references in supported workflow fields are replaced with the target version.
+6. **Logs all actions** to a log file in the `tools` directory.
 
 ### Notes
 
@@ -60,6 +67,10 @@ This script automates the process of updating the version and stage in the Wazuh
 - `CHANGELOG.md`
 - `VERSION.json`
 - `package.json`
+- `.github/workflows/5_builderpackage_notifications_plugin.yml`
+- `.github/workflows/5_builderprecompiled_base-dev-environment.yml` (only when not using `--set-as-main`)
+- `.github/workflows/dashboards-notifications-test-and-build-workflow.yml` (only when not using `--set-as-main`)
+- `.github/workflows/dashboards-notifications-test-and-build-workflow-prod-docker-linux.yml` (only when not using `--set-as-main`)
 
 ### Log
 
