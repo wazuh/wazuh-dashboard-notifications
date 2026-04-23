@@ -19,6 +19,7 @@ import {
 } from '../../../../common/constants';
 import { MainContext } from '../../Main/Main';
 import { ChannelFiltersType } from '../types';
+import { isManagedChannelType } from '../../../../common/utils';
 
 interface ChannelControlsProps {
   onSearchChange: (search: string) => void;
@@ -35,17 +36,22 @@ export const ChannelControls = (props: ChannelControlsProps) => {
   ]);
   const [isTypePopoverOpen, setIsTypePopoverOpen] = useState(false);
   const [typeItems, setTypeItems] = useState(
-    Object.entries(mainStateContext.availableChannels).map(([key, value]) => ({
-      field: key,
-      display: value,
-      checked: 'off',
-    }))
+    Object.entries(mainStateContext.availableChannels)
+      .filter(([key]) => !isManagedChannelType(key)) // Wazuh
+      .map(([key, value]) => ({
+        field: key,
+        display: value,
+        checked: 'off',
+      }))
   );
 
   useEffect(() => {
     const newItems = typeItems.filter(
-      ({ field }) =>
-        !!mainStateContext.availableChannels[field as keyof typeof CHANNEL_TYPE]
+      ({ field }) => {
+        // Wazuh
+        const channel = mainStateContext.availableChannels?.[field as keyof typeof CHANNEL_TYPE]
+        return !!channel && !isManagedChannelType(channel)
+      }
     );
     if (newItems.length !== typeItems.length) setTypeItems(newItems);
   }, [mainStateContext.availableChannels]);

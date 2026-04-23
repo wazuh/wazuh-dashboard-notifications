@@ -27,6 +27,11 @@ export const ROUTES = Object.freeze({
   EDIT_SES_SENDER: '/edit-ses-sender',
   CREATE_RECIPIENT_GROUP: '/create-recipient-group',
   EDIT_RECIPIENT_GROUP: '/edit-recipient-group',
+  // Wazuh
+  ACTIVE_RESPONSES: '/active-responses',
+  ACTIVE_RESPONSE_DETAILS: '/active-response-details',
+  ACTIVE_RESPONSE_CREATE: '/create-active-response',
+  ACTIVE_RESPONSE_EDIT: '/edit-active-response',
 });
 
 export const BREADCRUMBS = Object.freeze({
@@ -60,6 +65,15 @@ export const BREADCRUMBS = Object.freeze({
     text: name,
     href: `#${ROUTES.EDIT_RECIPIENT_GROUP}`,
   }),
+  // Wazuh
+  ACTIVE_RESPONSES: { text: 'Active responses', href: `#${ROUTES.ACTIVE_RESPONSES}` },
+  ACTIVE_RESPONSE_DETAILS: { text: 'Active response details', href: `#${ROUTES.ACTIVE_RESPONSE_DETAILS}` },
+  ACTIVE_RESPONSE_CREATE: { text: 'Create active response', href: `#${ROUTES.ACTIVE_RESPONSE_CREATE}` },
+  ACTIVE_RESPONSE_EDIT: { text: 'Edit active response', href: `#${ROUTES.ACTIVE_RESPONSE_EDIT}` },
+  ACTIVE_RESPONSE_EDIT_DETAILS: (name: string) => ({
+    text: name,
+    href: `#${ROUTES.ACTIVE_RESPONSE_EDIT}`,
+  }),
 });
 
 export const ENCRYPTION_TYPE = Object.freeze({
@@ -82,6 +96,11 @@ export const CUSTOM_WEBHOOK_ENDPOINT_TYPE = Object.freeze({
 
 export function setBreadcrumbs(crumbs: ChromeBreadcrumb[]) {
   getBreadCrumbsSetter()(getUseUpdatedUx() ? crumbs : [BREADCRUMBS.NOTIFICATIONS, ...crumbs]);
+}
+
+// Wazuh
+export function setBreadcrumbsActiveResponse(crumbs: ChromeBreadcrumb[]) {
+  getBreadCrumbsSetter()(getUseUpdatedUx() ? crumbs : [BREADCRUMBS.ACTIVE_RESPONSES, ...crumbs]);
 }
 
 const LocalCluster: DataSourceOption = {
