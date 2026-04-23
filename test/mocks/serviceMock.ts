@@ -50,6 +50,7 @@ const mainStateMock: MainState = {
     'smtp_account',
     'ses_account',
     'email_group',
+    'active_response' // Wazuh
   ],
   tooltipSupport: true,
 };

@@ -32,6 +32,7 @@ describe('<EmailSenders/> spec', () => {
         'smtp_account',
         'ses_account',
         'email_group',
+        'active_response' // Wazuh
       ],
     };
     const routerComponentPropsMock = {
