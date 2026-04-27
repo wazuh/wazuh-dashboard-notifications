@@ -72,7 +72,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ env.GH_TOKEN }}
 
       - name: Determine branch name
         id: vars
