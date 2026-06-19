@@ -34,6 +34,7 @@ import {
   setBreadcrumbs,
 } from '../../utils/constants';
 import {
+  BACKEND_CHANNEL_TYPE,
   CHANNEL_TYPE,
 } from '../../../common/constants';
 import { getErrorMessage } from '../../utils/helpers';
@@ -143,7 +144,9 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
 
   getQueryObjectFromState(state: ChannelsState) {
     const config_type = _.isEmpty(state.filters.type)
-      ? Object.keys(CHANNEL_TYPE) // by default get all channels but not email senders/groups
+      // Wazuh: avoid retrieve the active responses
+      ? Object.keys(CHANNEL_TYPE)
+        .filter(key => key !== BACKEND_CHANNEL_TYPE.ACTIVE_RESPONSE) // by default get all channels but not email senders/groups and active responses
       : state.filters.type;
     const queryObject: any = {
       from_index: state.from,

@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ChannelSettingsDetails /> spec renders Active Response channel 1`] = `
+<div>
+  <div
+    class="euiSpacer euiSpacer--s"
+  />
+  <div
+    class="euiFlexGroup euiFlexGroup--gutterLarge euiFlexGroup--directionRow euiFlexGroup--responsive"
+  >
+    <div
+      class="euiFlexItem"
+    >
+      <dl
+        class="euiDescriptionList euiDescriptionList--row"
+        style="word-break: break-word; white-space: pre-line;"
+      >
+        <dt
+          class="euiDescriptionList__title"
+        >
+          Executable
+        </dt>
+        <dd
+          class="euiDescriptionList__description"
+        >
+          test_executable
+        </dd>
+      </dl>
+    </div>
+    <div
+      class="euiFlexItem"
+    >
+      <dl
+        class="euiDescriptionList euiDescriptionList--row"
+        style="word-break: break-word; white-space: pre-line;"
+      >
+        <dt
+          class="euiDescriptionList__title"
+        >
+          Extra args
+        </dt>
+        <dd
+          class="euiDescriptionList__description"
+        >
+          -arg1 -arg2
+        </dd>
+      </dl>
+    </div>
+    <div
+      class="euiFlexItem"
+    >
+      <dl
+        class="euiDescriptionList euiDescriptionList--row"
+        style="word-break: break-word; white-space: pre-line;"
+      >
+        <dt
+          class="euiDescriptionList__title"
+        >
+          Type
+        </dt>
+        <dd
+          class="euiDescriptionList__description"
+        >
+          Stateful
+        </dd>
+      </dl>
+    </div>
+  </div>
+  <div
+    class="euiSpacer euiSpacer--m"
+  />
+</div>
+`;
+
+exports[`<ChannelSettingsDetails /> spec renders the empty component 1`] = `null`;
