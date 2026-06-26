@@ -41,4 +41,5 @@ jobs:
       command: 'yarn build'
       artifact_name: 'notifications-dashboards'
       artifact_path: './wazuh-dashboard-notifications/build'
+      workflow_run: 5_builderpackage_notifications_plugin
     secrets: inherit
