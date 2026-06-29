@@ -8,6 +8,7 @@ import {
   EuiSmallButtonEmpty,
   EuiFlexGroup,
   EuiFlexItem,
+  EuiLink,
   EuiSpacer,
   EuiText,
 } from '@elastic/eui';
@@ -23,7 +24,12 @@ import {
   ROUTES,
   setBreadcrumbsActiveResponse as setBreadcrumbs
 } from '../../utils/constants';
-import { getErrorMessage } from '../../utils/helpers';
+import {
+  getErrorMessage,
+  getMonitorsAppUrl,
+  handleMonitorsLinkClick,
+} from '../../utils/helpers';
+import ReactDOM from 'react-dom';
 import { ChannelNamePanel } from './components/ChannelNamePanel';
 import {
   constructActiveResponseObject,
@@ -249,10 +255,30 @@ export function CreateChannel(props: CreateChannelsProps) {
                   : servicesContext.notificationService.createConfig(config);
                 await request
                   .then((response) => {
-                    coreContext.notifications.toasts.addSuccess(
-                      `Active response ${name} successfully ${props.edit ? 'updated' : 'created'
-                      }.`
-                    );
+                    coreContext.notifications.toasts.addSuccess({
+                      title: `Active response ${name} successfully ${props.edit ? 'updated' : 'created'
+                    }.`,
+                      text: (element: HTMLElement) => {
+                        ReactDOM.render(
+                          <>
+                            <EuiText size="s">
+                              It runs as an action of an Alerting monitor.
+                              Create or edit a monitor to trigger it.
+                            </EuiText>
+                            <EuiSpacer size="s" />
+                            <EuiLink
+                              href={getMonitorsAppUrl()}
+                              onClick={handleMonitorsLinkClick}
+                            >
+                              Go to Monitors
+                            </EuiLink>
+                          </>,
+                          element
+                        );
+                        return () =>
+                          ReactDOM.unmountComponentAtNode(element);
+                      },
+                    });
                     setTimeout(() => {
                       (window.location.hash = prevURL);
                     }, SERVER_DELAY);

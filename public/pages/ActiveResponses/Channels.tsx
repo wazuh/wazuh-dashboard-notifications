@@ -40,6 +40,7 @@ import { getErrorMessage } from '../../utils/helpers';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '../Notifications/utils/constants';
 import { ChannelActions } from './components/ChannelActions';
 import { ChannelControls } from './components/ChannelControls';
+import { MonitorsShortcut } from './components/MonitorsShortcut';
 import { ChannelFiltersType } from './types';
 import { DataSourceMenuProperties } from '../../services/DataSourceMenuContext';
 import MDSEnabledComponent, {
@@ -252,6 +253,9 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
         testId: 'createButton',
         controlType: 'button',
       } as TopNavControlButtonData,
+      {
+        renderComponent: <MonitorsShortcut />,
+      },
     ];
 
     const totalChannels = (
@@ -325,6 +329,9 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
                         Create active response
                       </EuiSmallButton>
                     ),
+                  },
+                  {
+                    component: <MonitorsShortcut />,
                   },
                 ]}
               />
