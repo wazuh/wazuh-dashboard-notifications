@@ -584,7 +584,7 @@ exports[`<Main /> spec renders the component 1`] = `
                             class="euiText euiText--small euiTitle euiTitle--medium"
                           >
                             <h2>
-                              No active responses to display
+                              No active responses configured
                             </h2>
                           </div>
                           <span
@@ -599,7 +599,7 @@ exports[`<Main /> spec renders the component 1`] = `
                               <div
                                 class="euiText euiText--small"
                               >
-                                "To response to events, you will need to create an active response."
+                                Active responses are not configured. Create one to automatically react to security events.
                               </div>
                             </div>
                           </span>
