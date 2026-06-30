@@ -283,8 +283,8 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
       isSelectable={true}
       selection={selection}
       noItemsMessage={<EuiEmptyPrompt
-        title={<EuiText size="s"><h2>No active responses to display</h2></EuiText>}
-        body={<EuiText size="s">"To response to events, you will need to create an active response."</EuiText>}
+        title={<EuiText size="s"><h2>No active responses configured</h2></EuiText>}
+        body={<EuiText size="s">Active responses are not configured. Create one to automatically react to security events.</EuiText>}
         actions={<EuiSmallButton href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}>
           Create active response
         </EuiSmallButton>} />}
