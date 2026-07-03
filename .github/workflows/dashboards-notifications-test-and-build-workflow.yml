@@ -34,11 +34,12 @@ jobs:
       matrix:
         # TODO: macos-latest was removed due to CI flakiness, we can revisit adding it back later
         include:
-          - os: windows-latest
-            os_build_args: -x integTest -x jacocoTestReport
-            working_directory: X:\
-            os_java_options: -Xmx4096M
-            cypress_cache_folder: ~/AppData/Local/Cypress/Cache
+          # Wazuh Dashboard Notifications plugin is not compatible with Windows, so we are skipping it for now
+          # - os: windows-latest
+          #   os_build_args: -x integTest -x jacocoTestReport
+          #   working_directory: X:\
+          #   os_java_options: -Xmx4096M
+          #   cypress_cache_folder: ~/AppData/Local/Cypress/Cache
           - os: ubuntu-latest
             os_build_args: -x integTest -x jacocoTestReport
             jest_test_args: --coverage

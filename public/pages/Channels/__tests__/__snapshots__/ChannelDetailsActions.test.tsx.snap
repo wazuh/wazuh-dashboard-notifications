@@ -2,7 +2,7 @@
 
 exports[`<ChannelDetailsActions /> spec clicks buttons in popover 1`] = `
 <div
-  class="euiPopover euiPopover--anchorDownCenter euiPopover-isOpen"
+  class="euiPopover euiPopover--anchorDownCenter"
 >
   <div
     class="euiPopover__anchor"
