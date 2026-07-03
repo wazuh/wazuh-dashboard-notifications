@@ -16,8 +16,8 @@ concurrency:
 
 env:
   PLUGIN_NAME: notifications-dashboards
-  OPENSEARCH_DASHBOARDS_VERSION: 'main'
-  NOTIFICATIONS_PLUGIN_VERSION: 'main'
+  OPENSEARCH_DASHBOARDS_VERSION: '3.6.0'
+  NOTIFICATIONS_PLUGIN_VERSION: '3.6.0.0'
   # OPENSEARCH_VERSION is set dynamically from opensearch_dashboards.json in the workflow
 
 jobs:

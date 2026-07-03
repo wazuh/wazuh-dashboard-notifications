@@ -16,7 +16,7 @@ concurrency:
 
 env:
   PLUGIN_NAME: notifications-dashboards
-  NOTIFICATIONS_PLUGIN_VERSION: 'main'
+  NOTIFICATIONS_PLUGIN_VERSION: '3.6.0.0'
 
 jobs:
   tests:
