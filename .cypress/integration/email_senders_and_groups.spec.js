@@ -23,7 +23,6 @@ describe('Test create email senders', () => {
         'opensearchDashboards'
       )}/app/notifications-dashboards#email-senders`
     );
-    cy.reload(true);
     cy.wait(delay * 5);
   });
 
@@ -116,7 +115,6 @@ describe('Test edit senders', () => {
         'opensearchDashboards'
       )}/app/notifications-dashboards#email-senders`
     );
-    cy.reload(true);
     cy.wait(delay * 5);
   });
 
@@ -161,7 +159,6 @@ describe('Test delete senders', () => {
         'opensearchDashboards'
       )}/app/notifications-dashboards#email-senders`
     );
-    cy.reload(true);
     cy.wait(delay * 5);
   });
 
@@ -202,7 +199,6 @@ describe('Test create, edit and delete recipient group', () => {
         'opensearchDashboards'
       )}/app/notifications-dashboards#email-recipient-groups`
     );
-    cy.reload(true);
     cy.wait(delay * 5);
   });
 
