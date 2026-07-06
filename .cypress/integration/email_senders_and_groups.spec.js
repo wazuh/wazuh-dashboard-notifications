@@ -24,7 +24,7 @@ describe('Test create email senders', () => {
       )}/app/notifications-dashboards#email-senders`
     );
     cy.reload(true);
-    cy.wait(delay * 10);
+    cy.wait(delay * 5);
   });
 
   it('creates ssl sender', () => {

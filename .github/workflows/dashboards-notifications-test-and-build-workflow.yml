@@ -87,7 +87,7 @@ jobs:
           # Extract major.minor version (e.g., 3.3.0 -> 3.3)
           BRANCH_VERSION=$(echo $PLUGIN_VERSION | cut -d. -f1,2)
           echo "Branch version: $BRANCH_VERSION"
-          echo "OPENSEARCH_DASHBOARDS_VERSION=$BRANCH_VERSION" >> $GITHUB_OUTPUT
+          echo "OPENSEARCH_DASHBOARDS_VERSION=$PLUGIN_VERSION" >> $GITHUB_OUTPUT
           echo "OPENSEARCH_VERSION=$PLUGIN_VERSION-SNAPSHOT" >> $GITHUB_OUTPUT
         shell: bash
 
