@@ -36,7 +36,7 @@ describe('<ChannelDetailsActions /> spec', () => {
     expect(utils.container.firstChild).toMatchSnapshot();
   });
 
-  it('opens popover', () => {
+  it('opens popover', async () => {
     const channel = MOCK_DATA.chime;
     const utils = render(
       <ServicesContext.Provider value={notificationServiceMock}>
@@ -45,7 +45,7 @@ describe('<ChannelDetailsActions /> spec', () => {
         </CoreServicesContext.Provider>
       </ServicesContext.Provider>
     );
-    utils.getByText('Actions').click();
+    await act(async () => fireEvent.click(utils.getByText('Actions')));
     expect(utils.container.firstChild).toMatchSnapshot();
   });
 
