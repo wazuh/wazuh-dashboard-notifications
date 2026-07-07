@@ -23,6 +23,7 @@ describe('Test create email senders', () => {
         'opensearchDashboards'
       )}/app/notifications-dashboards#email-senders`
     );
+    cy.reload(true);
     cy.wait(delay * 5);
   });
 
@@ -66,9 +67,7 @@ describe('Test create email senders', () => {
       force: true,
     });
     cy.wait(delay);
-    cy.get('.euiContextMenuItem__text')
-      .contains('STARTTLS')
-      .click({ force: true });
+    cy.get('.euiContextMenuItem__text').contains('STARTTLS').click({ force: true });
     cy.wait(delay);
 
     cy.get('.euiButton__text').contains('Create').click({ force: true });
@@ -115,6 +114,7 @@ describe('Test edit senders', () => {
         'opensearchDashboards'
       )}/app/notifications-dashboards#email-senders`
     );
+    cy.reload(true);
     cy.wait(delay * 5);
   });
 
@@ -159,14 +159,13 @@ describe('Test delete senders', () => {
         'opensearchDashboards'
       )}/app/notifications-dashboards#email-senders`
     );
+    cy.reload(true);
     cy.wait(delay * 5);
   });
 
   it('deletes smtp senders', () => {
     cy.get('.euiCheckbox__input[aria-label="Select this row"]').eq(0).click(); // ssl sender
-    cy.get('[data-test-subj="senders-table-delete-button"]').click({
-      force: true,
-    });
+    cy.get('[data-test-subj="senders-table-delete-button"]').click({ force: true });
     cy.get('input[placeholder="delete"]').type('delete');
     cy.wait(delay);
     cy.get('[data-test-subj="delete-sender-modal-delete-button"]').click();
@@ -175,9 +174,7 @@ describe('Test delete senders', () => {
 
   it('deletes ses senders', () => {
     cy.get('.euiCheckbox__input[aria-label="Select this row"]').last().click(); // ses sender
-    cy.get('[data-test-subj="ses-senders-table-delete-button"]').click({
-      force: true,
-    });
+    cy.get('[data-test-subj="ses-senders-table-delete-button"]').click({ force: true });
     cy.get('input[placeholder="delete"]').type('delete');
     cy.wait(delay);
     cy.get('[data-test-subj="delete-sender-modal-delete-button"]').click();
@@ -199,6 +196,7 @@ describe('Test create, edit and delete recipient group', () => {
         'opensearchDashboards'
       )}/app/notifications-dashboards#email-recipient-groups`
     );
+    cy.reload(true);
     cy.wait(delay * 5);
   });
 
@@ -242,12 +240,8 @@ describe('Test create, edit and delete recipient group', () => {
   });
 
   it('edits recipient group description', () => {
-    cy.get('.euiCheckbox__input[aria-label="Select this row"]')
-      .last()
-      .click({ force: true }); // recipient group
-    cy.get('[data-test-subj="recipient-groups-table-edit-button"]').click({
-      force: true,
-    });
+    cy.get('.euiCheckbox__input[aria-label="Select this row"]').last().click({ force: true }); // recipient group
+    cy.get('[data-test-subj="recipient-groups-table-edit-button"]').click({ force: true });
     cy.get(
       '[data-test-subj="create-recipient-group-form-description-input"]'
     ).type('{selectall}{backspace}Updated group description');
