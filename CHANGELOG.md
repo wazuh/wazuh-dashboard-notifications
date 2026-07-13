@@ -1,20 +1,6 @@
 # Change Log
 
-All notable changes to the Wazuh dashboard notifications plugin will be documented in this file.
-
-## Wazuh dashboard v5.1.0 - OpenSearch Dashboards 3.6.0 - Revision 00
-
-### Added
-
-- Support for Wazuh 5.1.0
-
-## Wazuh dashboard v5.0.1 - OpenSearch Dashboards 3.6.0 - Revision 00
-
-### Added
-
-- Support for Wazuh 5.0.1
-
-## Wazuh dashboard v5.0.0 - OpenSearch Dashboards 3.6.0 - Revision 04
+## [v5.0.0]
 
 ### Added
 
@@ -24,3 +10,5 @@ All notable changes to the Wazuh dashboard notifications plugin will be document
 ### Changed
 
 - Changed category in the side menu to `Explore` [#4](https://github.com/wazuh/wazuh-dashboard-notifications/pull/4)
+
+## Prior versions
