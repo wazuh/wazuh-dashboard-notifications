@@ -5,19 +5,24 @@
 
 name: Test and Build Dashboards Notifications on prod docker linux
 
-on: 
+on:
   pull_request:
     branches: ['*']
     types: [opened, synchronize, reopened, ready_for_review]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   PLUGIN_NAME: notifications-dashboards
-  OPENSEARCH_DASHBOARDS_VERSION: 'main'
-  NOTIFICATIONS_PLUGIN_VERSION: 'main'
+  OPENSEARCH_DASHBOARDS_VERSION: '3.6.0'
+  NOTIFICATIONS_PLUGIN_VERSION: '3.6.0.0'
   # OPENSEARCH_VERSION is set dynamically from opensearch_dashboards.json in the workflow
 
 jobs:
   Get-CI-Image-Tag:
+    if: github.event.pull_request.draft == false
     uses: opensearch-project/opensearch-build/.github/workflows/get-ci-image-tag.yml@main
     with:
       product: opensearch-dashboards
