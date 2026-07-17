@@ -133,7 +133,16 @@ Enforced by tooling — run the linter/formatter, don't hand-format:
   `plugin:@elastic/eui/recommended` (a legacy YAML `.eslintrc` is also present). It
   enforces the short SPDX **license header** on every `.js`/`.ts`/`.tsx` file
   (`@osd/eslint/require-license-header`), so new files must start with:
+  
+  - Provided by Wazuh team (repository fork)
+  ```js
+  /*
+   * Copyright Wazuh Contributors
+   * SPDX-License-Identifier: Apache-2.0
+   */
+  ```
 
+  - Provided by upstream
   ```js
   /*
    * Copyright OpenSearch Contributors
