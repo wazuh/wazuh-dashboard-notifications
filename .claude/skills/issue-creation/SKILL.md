@@ -16,7 +16,7 @@ Copy this checklist and track progress:
 - [ ] 1. Classify intent → choose issue template (ask only if ambiguous)
 - [ ] 2. Issue-first check: search existing issues for duplicates
 - [ ] 3. Fill the chosen .github/ISSUE_TEMPLATE/*.md verbatim
-- [ ] 4. Keep the template's default labels; add a triage label only if named
+- [ ] 4. Apply the real Wazuh label for the intent (`type/bug` / `type/enhancement` / `level/task`) + `untriaged`; ignore stale frontmatter labels
 - [ ] 5. Emit the ready-to-file body + report (default stop; gh issue create only if asked)
 ```
 
@@ -56,15 +56,11 @@ fill it verbatim; do not inline template bodies in this skill.
 > is `type/bug`, `type/enhancement`, `type/maintenance`, `level/task`,
 > `request/operational`, `untriaged`, etc. — there is **no** bare `bug` or
 > `enhancement` label. `bug_report.md` and `feature_request.md` still carry the
-> stale upstream `bug` / `enhancement` names in their frontmatter; applying them
-> via `gh issue create --label` will fail (unknown label) even though GitHub's
-> own template picker applies them fine from the web UI. `compatibility_request.md`
-> and `task_template.md`'s labels (`request/operational`, `level/task`,
+> stale upstream `bug` / `enhancement` names in their frontmatter — see step 4
+> for the real labels to apply instead. `compatibility_request.md` and
+> `task_template.md`'s labels (`request/operational`, `level/task`,
 > `type/maintenance`) all exist as-is. `bug_report.md` and `feature_request.md`
 > use the frontmatter `title` prefix (`[BUG]` / `[FEATURE]`) — keep it.
-> Do not invent a replacement label mapping — surface this mismatch to the user
-> and let them decide (e.g. file via the web UI, or swap in `type/bug` /
-> `type/enhancement` manually) rather than silently substituting labels.
 > [`.github/workflows/add-untriaged.yml`](../../../.github/workflows/add-untriaged.yml)
 > auto-applies the `untriaged` label to every opened/reopened/transferred issue,
 > regardless of the template's own labels — so `untriaged` will end up on the
@@ -75,8 +71,21 @@ fill it verbatim; do not inline template bodies in this skill.
 
 ### 4. Labels
 
-Keep the template's default labels as-is; add an extra triage label only if
-the user explicitly names one. Do not invent labels or an approval workflow.
+Several issue templates in this repo were inherited from the upstream
+OpenSearch Dashboards fork and still declare stale labels in their
+frontmatter (bare `bug`, `enhancement`) that don't exist as real labels here
+— GitHub silently drops any label that doesn't exist instead of erroring, so
+filing the template as-is can result in no type label at all. Standardize on
+the real Wazuh label set instead of trusting the frontmatter verbatim:
+
+| Intent | Real label to apply |
+|--------|--------|
+| Bug / defect | `type/bug` |
+| Feature / enhancement | `type/enhancement` |
+| Engineering task / chore | `level/task` |
+| Every issue | `untriaged` — applied automatically on open/reopen/transfer by `.github/workflows/add-untriaged.yml`, no manual action needed |
+
+Do not invent labels beyond this set, and do not invent an approval workflow.
 
 ### 5. Emit the ready-to-file body + report
 
