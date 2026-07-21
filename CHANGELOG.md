@@ -10,3 +10,4 @@
 - Changed category in the side menu to `Explore` [#4](https://github.com/wazuh/wazuh-dashboard-notifications/pull/4)
 
 ## Prior versions
+
