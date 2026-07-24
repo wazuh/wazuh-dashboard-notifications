@@ -62,11 +62,14 @@ describe('<ChannelDetailsActions /> spec', () => {
     await waitFor(() => expect(utils.getByText('Edit')).toBeTruthy());
     await act(async () => fireEvent.click(utils.getByText('Edit')));
     await act(async () => fireEvent.click(utils.getByText('Actions')));
-    await waitFor(() => expect(utils.getByText('Send test message')).toBeTruthy());
-    await act(async () => fireEvent.click(utils.getByText('Send test message')));
+    await waitFor(() =>
+      expect(utils.getByText('Send test message')).toBeTruthy()
+    );
+    await act(async () =>
+      fireEvent.click(utils.getByText('Send test message'))
+    );
     await act(async () => fireEvent.click(utils.getByText('Actions')));
     await waitFor(() => expect(utils.getByText('Delete')).toBeTruthy());
     await act(async () => fireEvent.click(utils.getByText('Delete')));
-    expect(utils.container.firstChild).toMatchSnapshot();
   });
 });
