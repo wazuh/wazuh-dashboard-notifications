@@ -63,7 +63,9 @@ describe('Test create email senders', () => {
       force: true,
     });
     cy.wait(delay);
-    cy.contains('button', 'STARTTLS').click({ force: true });
+    cy.get('.euiContextMenuItem__text')
+      .contains('STARTTLS')
+      .click({ force: true });
     cy.wait(delay);
 
     cy.contains('button', 'Create').click({ force: true });
@@ -158,7 +160,7 @@ describe('Test delete senders', () => {
   });
 
   it('deletes smtp senders', () => {
-    cy.get('[data-test-subj^="checkboxSelectRow"]').eq(0).click(); // ssl sender
+    cy.get('.euiCheckbox__input[aria-label="Select this row"]').eq(0).click(); // ssl sender
     cy.get('[data-test-subj="senders-table-delete-button"]').click({
       force: true,
     });
@@ -169,7 +171,7 @@ describe('Test delete senders', () => {
   });
 
   it('deletes ses senders', () => {
-    cy.get('[data-test-subj^="checkboxSelectRow"]').last().click(); // ses sender
+    cy.get('.euiCheckbox__input[aria-label="Select this row"]').last().click(); // ses sender
     cy.get('[data-test-subj="ses-senders-table-delete-button"]').click({
       force: true,
     });
@@ -236,7 +238,7 @@ describe('Test create, edit and delete recipient group', () => {
   });
 
   it('edits recipient group description', () => {
-    cy.get('[data-test-subj^="checkboxSelectRow"]')
+    cy.get('.euiCheckbox__input[aria-label="Select this row"]')
       .last()
       .click({ force: true }); // recipient group
     cy.get('[data-test-subj="recipient-groups-table-edit-button"]').click({
