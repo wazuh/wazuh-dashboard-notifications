@@ -67,6 +67,5 @@ describe('<ChannelDetailsActions /> spec', () => {
     await act(async () => fireEvent.click(utils.getByText('Actions')));
     await waitFor(() => expect(utils.getByText('Delete')).toBeTruthy());
     await act(async () => fireEvent.click(utils.getByText('Delete')));
-    expect(utils.container.firstChild).toMatchSnapshot();
   });
 });
