@@ -32,9 +32,7 @@ export function navigateToMonitorsApp(): void {
   }
 }
 
-export function handleMonitorsLinkClick(
-  event: MouseEvent<HTMLElement>
-): void {
+export function handleMonitorsLinkClick(event: MouseEvent<HTMLElement>): void {
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
     return; // let the browser handle open in new tab
   }

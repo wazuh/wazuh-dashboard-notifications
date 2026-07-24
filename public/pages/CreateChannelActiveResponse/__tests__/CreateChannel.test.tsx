@@ -6,7 +6,10 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { MOCK_DATA, MOCK_DATA_ACTIVE_RESPONSE } from '../../../../test/mocks/mockData';
+import {
+  MOCK_DATA,
+  MOCK_DATA_ACTIVE_RESPONSE,
+} from '../../../../test/mocks/mockData';
 import {
   coreServicesMock,
   mainStateMock,
@@ -93,7 +96,9 @@ describe('<CreateChannel/> spec', () => {
       <MainContext.Provider value={mainStateMock}>
         <ServicesContext.Provider value={notificationServiceMockCreate}>
           <CoreServicesContext.Provider value={coreServicesMock}>
-            <CreateChannel {...(props as RouteComponentProps<{ id: string }>)} />
+            <CreateChannel
+              {...(props as RouteComponentProps<{ id: string }>)}
+            />
           </CoreServicesContext.Provider>
         </ServicesContext.Provider>
       </MainContext.Provider>
