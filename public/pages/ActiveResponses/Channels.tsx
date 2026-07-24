@@ -56,7 +56,8 @@ interface ChannelsProps extends RouteComponentProps, DataSourceMenuProperties {
 }
 
 interface ChannelsState
-  extends TableState<ChannelItemType>, DataSourceMenuProperties {
+  extends TableState<ChannelItemType>,
+    DataSourceMenuProperties {
   filters: ChannelFiltersType;
 }
 
@@ -178,8 +179,9 @@ export class Channels extends MDSEnabledComponent<
     this.setState({ loading: true });
     try {
       const queryObject = this.getQueryObjectFromState(this.state);
-      const channels =
-        await this.props.notificationService.getChannels(queryObject);
+      const channels = await this.props.notificationService.getChannels(
+        queryObject
+      );
       this.setState({ items: channels.items, total: channels.total });
     } catch (error) {
       if (isDataSourceError(error)) {
