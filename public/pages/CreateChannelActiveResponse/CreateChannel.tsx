@@ -8,6 +8,7 @@ import {
   EuiSmallButtonEmpty,
   EuiFlexGroup,
   EuiFlexItem,
+  EuiLink,
   EuiSpacer,
   EuiText,
 } from '@elastic/eui';
@@ -21,13 +22,16 @@ import { ServicesContext } from '../../services';
 import {
   BREADCRUMBS,
   ROUTES,
-  setBreadcrumbsActiveResponse as setBreadcrumbs
+  setBreadcrumbsActiveResponse as setBreadcrumbs,
 } from '../../utils/constants';
-import { getErrorMessage } from '../../utils/helpers';
-import { ChannelNamePanel } from './components/ChannelNamePanel';
 import {
-  constructActiveResponseObject,
-} from './utils/helper';
+  getErrorMessage,
+  getMonitorsAppUrl,
+  handleMonitorsLinkClick,
+} from '../../utils/helpers';
+import ReactDOM from 'react-dom';
+import { ChannelNamePanel } from './components/ChannelNamePanel';
+import { constructActiveResponseObject } from './utils/helper';
 import {
   validateAgentId,
   validateChannelName,
@@ -71,7 +75,9 @@ export function CreateChannel(props: CreateChannelsProps) {
   const [extraArgs, setExtraArgs] = useState('');
   const [location, setLocation] = useState('local');
   const [agentId, setAgentId] = useState('');
-  const [activeResponseType, setActiveResponseType] = useState<'stateless' | 'stateful'>(DEFAULT_ACTIVE_RESPONSE_TYPE);
+  const [activeResponseType, setActiveResponseType] = useState<
+    'stateless' | 'stateful'
+  >(DEFAULT_ACTIVE_RESPONSE_TYPE);
   const [statefulTimeout, setStatefulTimeout] = useState(DEFAULT_TIMEOUT);
 
   const [inputErrors, setInputErrors] = useState<InputErrorsType>({
@@ -95,15 +101,14 @@ export function CreateChannel(props: CreateChannelsProps) {
   // Update breadcrumbs when name changes
   useEffect(() => {
     const { edit } = props;
-    const breadcrumbs = [
-    ];
+    const breadcrumbs = [];
     if (edit) {
       if (getUseUpdatedUx()) {
-        breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_EDIT_DETAILS(name))
+        breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_EDIT_DETAILS(name));
       }
-      breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_EDIT)
+      breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_EDIT);
     } else {
-      breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_CREATE)
+      breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_CREATE);
     }
     setBreadcrumbs(breadcrumbs);
   }, [name, props.edit]);
@@ -113,8 +118,7 @@ export function CreateChannel(props: CreateChannelsProps) {
     if (typeof id !== 'string') return;
 
     try {
-      const response = await servicesContext.notificationService
-        .getChannel(id);
+      const response = await servicesContext.notificationService.getChannel(id);
       setIsEnabled(response.is_enabled);
       setName(response.name);
       setDescription(response.description || '');
@@ -126,7 +130,6 @@ export function CreateChannel(props: CreateChannelsProps) {
       setLocation(response.active_response?.location || '');
       setAgentId(response.active_response?.agent_id || '');
       setStatefulTimeout(response.active_response?.stateful_timeout);
-
     } catch (error) {
       coreContext.notifications.toasts.addDanger(
         getErrorMessage(error, 'There was a problem loading channel.')
@@ -142,7 +145,10 @@ export function CreateChannel(props: CreateChannelsProps) {
       location: [], // no validation since it's a select with fixed options
       agentId: location === 'defined-agent' ? validateAgentId(agentId) : [], // only validate agentId when location is defined-agent
       type: [], // no validation since it's a select with fixed options
-      statefulTimeout: activeResponseType === 'stateful' ? validateStatefulTimeout(statefulTimeout) : [], // only validate statefulTimeout when type is stateful
+      statefulTimeout:
+        activeResponseType === 'stateful'
+          ? validateStatefulTimeout(statefulTimeout)
+          : [], // only validate statefulTimeout when type is stateful
     };
     setInputErrors(errors);
     return !Object.values(errors).reduce(
@@ -243,18 +249,38 @@ export function CreateChannel(props: CreateChannelsProps) {
                 const config = createConfigObject();
                 const request = props.edit
                   ? servicesContext.notificationService.updateConfig(
-                    id!,
-                    config
-                  )
+                      id!,
+                      config
+                    )
                   : servicesContext.notificationService.createConfig(config);
                 await request
                   .then((response) => {
-                    coreContext.notifications.toasts.addSuccess(
-                      `Active response ${name} successfully ${props.edit ? 'updated' : 'created'
-                      }.`
-                    );
+                    coreContext.notifications.toasts.addSuccess({
+                      title: `Active response ${name} successfully ${
+                        props.edit ? 'updated' : 'created'
+                      }.`,
+                      text: (element: HTMLElement) => {
+                        ReactDOM.render(
+                          <>
+                            <EuiText size="s">
+                              It runs as an action of an Alerting monitor.
+                              Create or edit a monitor to trigger it.
+                            </EuiText>
+                            <EuiSpacer size="s" />
+                            <EuiLink
+                              href={getMonitorsAppUrl()}
+                              onClick={handleMonitorsLinkClick}
+                            >
+                              Go to Monitors
+                            </EuiLink>
+                          </>,
+                          element
+                        );
+                        return () => ReactDOM.unmountComponentAtNode(element);
+                      },
+                    });
                     setTimeout(() => {
-                      (window.location.hash = prevURL);
+                      window.location.hash = prevURL;
                     }, SERVER_DELAY);
                   })
                   .catch((error) => {
@@ -262,8 +288,9 @@ export function CreateChannel(props: CreateChannelsProps) {
                     coreContext.notifications.toasts.addError(
                       error?.body || error,
                       {
-                        title: `Failed to ${props.edit ? 'update' : 'create'
-                          } active response.`,
+                        title: `Failed to ${
+                          props.edit ? 'update' : 'create'
+                        } active response.`,
                       }
                     );
                   });

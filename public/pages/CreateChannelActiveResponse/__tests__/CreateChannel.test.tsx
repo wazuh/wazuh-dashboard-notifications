@@ -3,10 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { MOCK_DATA, MOCK_DATA_ACTIVE_RESPONSE } from '../../../../test/mocks/mockData';
+import {
+  MOCK_DATA,
+  MOCK_DATA_ACTIVE_RESPONSE,
+} from '../../../../test/mocks/mockData';
 import {
   coreServicesMock,
   mainStateMock,
@@ -78,5 +81,45 @@ describe('<CreateChannel/> spec', () => {
     await waitFor(() => {
       expect(updateConfigSuccess).toBeCalled();
     });
+  });
+
+  it('shows an enriched success toast with a Monitors link on create', async () => {
+    const createConfig = jest.fn(async (config: any) => Promise.resolve());
+    const notificationServiceMockCreate = {
+      notificationService: { createConfig },
+    } as any;
+    const props = {
+      location: { search: '' },
+      match: { params: {} },
+    };
+    const utils = render(
+      <MainContext.Provider value={mainStateMock}>
+        <ServicesContext.Provider value={notificationServiceMockCreate}>
+          <CoreServicesContext.Provider value={coreServicesMock}>
+            <CreateChannel
+              {...(props as RouteComponentProps<{ id: string }>)}
+            />
+          </CoreServicesContext.Provider>
+        </ServicesContext.Provider>
+      </MainContext.Provider>
+    );
+
+    fireEvent.change(utils.getByTestId('create-channel-name-input'), {
+      target: { value: 'my-active-response' },
+    });
+    fireEvent.change(
+      utils.getByTestId('create-channel-active-response-executable-name'),
+      { target: { value: 'restart.sh' } }
+    );
+
+    utils.getByTestId('create-channel-create-button').click();
+
+    await waitFor(() => expect(createConfig).toBeCalled());
+    expect(coreServicesMock.notifications.toasts.addSuccess).toBeCalledWith(
+      expect.objectContaining({
+        title: expect.stringContaining('created'),
+        text: expect.anything(),
+      })
+    );
   });
 });

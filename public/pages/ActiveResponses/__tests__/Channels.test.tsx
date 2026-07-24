@@ -66,4 +66,29 @@ describe('<Channels/> spec', () => {
       )
     );
   });
+
+  it('renders the Monitors shortcut with an info popover', () => {
+    const notificationServiceMock = jest.fn() as any;
+    notificationServiceMock.notificationService = {
+      getChannels: jest.fn(async () => []),
+    };
+    const utils = render(
+      <MainContext.Provider value={mainStateMock}>
+        <CoreServicesContext.Provider value={coreServicesMock}>
+          <Channels
+            {...routerComponentPropsMock}
+            notificationService={notificationServiceMock}
+          />
+        </CoreServicesContext.Provider>
+      </MainContext.Provider>
+    );
+
+    // Shortcut button is present.
+    expect(utils.getByTestId('monitors-shortcut-button')).toBeTruthy();
+
+    // The info popover is closed until the icon is clicked.
+    expect(utils.queryByText('Active responses & monitors')).toBeNull();
+    fireEvent.click(utils.getByTestId('monitors-shortcut-info-button'));
+    expect(utils.getByText('Active responses & monitors')).toBeTruthy();
+  });
 });
