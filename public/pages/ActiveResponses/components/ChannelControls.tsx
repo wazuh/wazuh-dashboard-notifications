@@ -82,7 +82,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
         break;
       case 'location':
         setLocationItems(newItems);
-        newFilters.location = checkedItems[0];
+        newFilters.location = checkedItems.length > 0 ? checkedItems : undefined;
         break;
       default:
         break;
@@ -167,7 +167,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 <EuiFilterSelectItem
                   key={`active-response-location-filter-${index}`}
                   checked={item.checked === 'on' ? 'on' : undefined}
-                  onClick={() => updateItem(locationItems, index, 'location', true)}
+                  onClick={() => updateItem(locationItems, index, 'location')}
                 >
                   {item.display}
                 </EuiFilterSelectItem>

@@ -69,12 +69,14 @@ describe('<ChannelControls /> spec', () => {
 
     fireEvent.click(utils.getByText('Location'));
     fireEvent.click(utils.getByText('All'));
-    expect(onFiltersChange).toBeCalledWith({ location: 'all' });
+    expect(onFiltersChange).toBeCalledWith({ location: ['all'] });
     fireEvent.click(utils.getByText('Defined agent'));
-    expect(onFiltersChange).toBeCalledWith({ location: 'defined-agent' });
+    expect(onFiltersChange).toBeCalledWith({ location: ['all', 'defined-agent'] });
     fireEvent.click(utils.getByText('Local'));
-    expect(onFiltersChange).toBeCalledWith({ location: 'local' });
+    expect(onFiltersChange).toBeCalledWith({ location: ['all', 'defined-agent', 'local'] });
+    fireEvent.click(utils.getByText('All'));
+    expect(onFiltersChange).toBeCalledWith({ location: ['defined-agent', 'local'] });
 
-    expect(onFiltersChange).toBeCalledTimes(7);
+    expect(onFiltersChange).toBeCalledTimes(8);
   });
 });
