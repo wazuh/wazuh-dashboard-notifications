@@ -161,8 +161,8 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
       sort_field: state.sortField,
       sort_order: state.sortDirection,
     };
-    if (state.filters.state != undefined)
-      queryObject.is_enabled = state.filters.state;
+    if (state.filters.state?.length === 1)
+      queryObject.is_enabled = state.filters.state[0];
     if (state.filters.type != undefined)
       queryObject['active_response.type'] = state.filters.type;
     if (state.filters.location != undefined)

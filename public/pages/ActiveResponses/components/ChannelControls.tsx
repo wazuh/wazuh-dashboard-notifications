@@ -75,7 +75,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
     switch (type) {
       case 'state':
         setStateItems(newItems);
-        newFilters.state = checkedItems.length === 1 ? checkedItems[0] : undefined;
+        newFilters.state = checkedItems.length > 0 ? checkedItems : undefined;
         break;
       case 'type':
         setTypeItems(newItems);

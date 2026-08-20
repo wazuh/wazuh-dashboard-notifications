@@ -14,7 +14,7 @@ export interface HeaderItemType {
 }
 
 export interface ChannelFiltersType {
-  state?: string;
+  state?: string[];
   type?: string[];
   location?: string[];
 }

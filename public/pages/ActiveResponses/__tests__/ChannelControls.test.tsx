@@ -57,11 +57,11 @@ describe('<ChannelControls /> spec', () => {
     );
     fireEvent.click(utils.getByText('Status'));
     fireEvent.click(utils.getByText('Active'));
-    expect(onFiltersChange).toBeCalledWith({ state: 'true' });
+    expect(onFiltersChange).toBeCalledWith({ state: ['true'] });
     fireEvent.click(utils.getByText('Muted'));
-    expect(onFiltersChange).toBeCalledWith({ });
+    expect(onFiltersChange).toBeCalledWith({ state: ['true', 'false'] });
     fireEvent.click(utils.getByText('Active'));
-    expect(onFiltersChange).toBeCalledWith({ state: 'false' });
+    expect(onFiltersChange).toBeCalledWith({ state: ['false'] });
 
     fireEvent.click(utils.getByText('Type'));
     fireEvent.click(utils.getByText('Stateful'));
