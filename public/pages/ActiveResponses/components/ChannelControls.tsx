@@ -79,7 +79,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
         break;
       case 'type':
         setTypeItems(newItems);
-        newFilters.type = checkedItems[0];
+        newFilters.type = checkedItems.length > 0 ? checkedItems : undefined;
         break;
       case 'location':
         setLocationItems(newItems);
@@ -200,7 +200,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 <EuiFilterSelectItem
                   key={`active-response-type-filter-${index}`}
                   checked={item.checked === 'on' ? 'on' : undefined}
-                  onClick={() => updateItem(typeItems, index, 'type', true)}
+                  onClick={() => updateItem(typeItems, index, 'type')}
                 >
                   {item.display}
                 </EuiFilterSelectItem>

@@ -63,9 +63,11 @@ describe('<ChannelControls /> spec', () => {
 
     fireEvent.click(utils.getByText('Type'));
     fireEvent.click(utils.getByText('Stateful'));
-    expect(onFiltersChange).toBeCalledWith({ type: 'stateful' });
+    expect(onFiltersChange).toBeCalledWith({ type: ['stateful'] });
     fireEvent.click(utils.getByText('Stateless'));
-    expect(onFiltersChange).toBeCalledWith({ type: 'stateless' });
+    expect(onFiltersChange).toBeCalledWith({ type: ['stateful', 'stateless'] });
+    fireEvent.click(utils.getByText('Stateful'));
+    expect(onFiltersChange).toBeCalledWith({ type: ['stateless'] });
 
     fireEvent.click(utils.getByText('Location'));
     fireEvent.click(utils.getByText('All agents'));
@@ -77,6 +79,6 @@ describe('<ChannelControls /> spec', () => {
     fireEvent.click(utils.getByText('All agents'));
     expect(onFiltersChange).toBeCalledWith({ location: ['defined-agent', 'local'] });
 
-    expect(onFiltersChange).toBeCalledTimes(8);
+    expect(onFiltersChange).toBeCalledTimes(9);
   });
 });
