@@ -16,6 +16,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import {
   ACTIVE_RESPONSE_LOCATION,
+  ACTIVE_RESPONSE_LOCATION_LABEL,
   ACTIVE_RESPONSE_TYPE,
 } from '../../../../common/constants';
 import { ChannelFiltersType } from '../types';
@@ -42,9 +43,9 @@ export const ChannelControls = (props: ChannelControlsProps) => {
   const [isLocationPopoverOpen, setIsLocationPopoverOpen] = useState(false);
   const [locationItems, setLocationItems] = useState(
     [
-      {field: ACTIVE_RESPONSE_LOCATION.ALL, display: 'All', checked: 'off'},
-      {field: ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT, display: 'Defined agent', checked: 'off'},
-      {field: ACTIVE_RESPONSE_LOCATION.LOCAL, display: 'Local', checked: 'off'},
+      {field: ACTIVE_RESPONSE_LOCATION.ALL, display: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.ALL], checked: 'off'},
+      {field: ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT, display: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT], checked: 'off'},
+      {field: ACTIVE_RESPONSE_LOCATION.LOCAL, display: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.LOCAL], checked: 'off'},
     ]
   );
 
