@@ -21,6 +21,7 @@ export function ChannelNamePanel(props: ChannelNamePanelProps) {
   return (
     <div style={{ maxWidth: '700px' }}>
       <EuiCompressedFormRow
+        id="name"
         label="Name"
         error={context.inputErrors.name.join(' ')}
         isInvalid={context.inputErrors.name.length > 0}

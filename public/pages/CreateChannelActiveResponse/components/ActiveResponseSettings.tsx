@@ -6,7 +6,7 @@
 import { EuiCallOut, EuiCompressedFieldNumber, EuiCompressedFieldText, EuiIconTip, EuiCompressedSuperSelect, EuiCompressedTextArea, EuiCompressedFormRow, EuiSpacer, EuiText } from '@elastic/eui';
 import React, { useContext } from 'react';
 import { CreateChannelContext } from '../CreateChannel';
-import { validateAgentId, validateExecutable } from '../utils/validationHelper';
+import { validateAgentId, validateExecutable, validateStatefulTimeout } from '../utils/validationHelper';
 import { secondsToMinutesLabel } from '../utils/helper';
 import { ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT, ACTIVE_RESPONSE_LOCATION, ACTIVE_RESPONSE_LOCATION_LABEL, ACTIVE_RESPONSE_TYPE } from '../../../../common/constants';
 
@@ -32,6 +32,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
             style={{maxWidth: '700px'}}
         >
         <EuiCompressedFormRow
+            id="executable"
             label="Executable"
             error={context.inputErrors.executable.join(' ')}
             isInvalid={context.inputErrors.executable.length > 0}
@@ -54,6 +55,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
             />
         </EuiCompressedFormRow>
         <EuiCompressedFormRow
+            id="extraArgs"
             label={
                 <span>
                     Extra arguments - <i style={{ fontWeight: 'normal' }}>optional</i>
@@ -75,6 +77,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
         </EuiCompressedFormRow>
         
         <EuiCompressedFormRow
+            id="type"
             label="Type"
             error={context.inputErrors.type.join(' ')}
             isInvalid={context.inputErrors.type.length > 0}
@@ -122,6 +125,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
         {
             props.attributes.type === ACTIVE_RESPONSE_TYPE.STATEFUL && (
                 <EuiCompressedFormRow
+                    id="statefulTimeout"
                     label="Stateful timeout"
                     labelAppend={
                         <EuiIconTip
@@ -140,6 +144,12 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                         placeholder="Timeout in seconds"
                         value={props.attributes.statefulTimeout}
                         onChange={(e) => props.setAttribute('statefulTimeout', Number(e.target.value))}
+                        onBlur={() => {
+                            context.setInputErrors({
+                                ...context.inputErrors,
+                                statefulTimeout: validateStatefulTimeout(props.attributes.statefulTimeout),
+                            });
+                        }}
                         isInvalid={context.inputErrors.statefulTimeout.length > 0}
                         append="seconds"
                         min={1}
@@ -149,6 +159,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
             )
         }
         <EuiCompressedFormRow
+            id="location"
             label="Location"
             error={context.inputErrors.location.join(' ')}
             isInvalid={context.inputErrors.location.length > 0}
@@ -227,6 +238,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
         {
             props.attributes.location === ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT && (
                 <EuiCompressedFormRow
+                    id="agentId"
                     label="Agent ID"
                     labelAppend={
                         <EuiIconTip
