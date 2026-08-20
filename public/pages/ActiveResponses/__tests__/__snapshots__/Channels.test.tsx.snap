@@ -128,7 +128,7 @@ exports[`<Channels/> spec renders the empty component 1`] = `
                       <span
                         class="euiButton__text"
                       >
-                        Manage Monitors
+                        Manage monitors
                       </span>
                     </span>
                   </button>

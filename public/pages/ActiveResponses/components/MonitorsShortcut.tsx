@@ -36,7 +36,7 @@ export function MonitorsShortcut() {
           onClick={handleMonitorsLinkClick}
           data-test-subj="monitors-shortcut-button"
         >
-          Manage Monitors
+          Manage monitors
         </EuiSmallButton>
       </EuiFlexItem>
       <EuiFlexItem grow={false}>

@@ -246,10 +246,10 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
     const headerControls = [
       {
         id: 'Create Channel',
-        label: 'Create channel',
+        label: 'Create active response',
         iconType: 'plus',
         fill: true,
-        href: `#${ROUTES.CREATE_CHANNEL}`,
+        href: `#${ROUTES.ACTIVE_RESPONSE_CREATE}`,
         testId: 'createButton',
         controlType: 'button',
       } as TopNavControlButtonData,
