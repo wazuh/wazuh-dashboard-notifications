@@ -30,23 +30,28 @@ interface MuteChannelModalProps extends ModalRootProps {
 }
 
 export const MuteChannelModal = (props: MuteChannelModalProps) => {
-  if (props.selected.length !== 1) return null;
+  if (!props.selected.length) return null;
 
   const coreContext = useContext(CoreServicesContext)!;
+  const num = props.selected.length;
+  const name = num >= 2 ? `${num} channels` : props.selected[0].name;
+
   return (
     <EuiOverlayMask>
       <EuiModal onClose={props.onClose} maxWidth={500}>
         <EuiModalHeader>
           <EuiModalHeaderTitle>
             <EuiText size="s">
-              <h2>{`Mute ${props.selected[0].name}?`}</h2>
+              <h2>{`Mute ${name}?`}</h2>
             </EuiText>
           </EuiModalHeaderTitle>
         </EuiModalHeader>
         <EuiModalBody>
           <EuiText size="s">
-            This channel will stop sending notifications to its recipients.
-            However, the channel will remain available for selection.
+            {num >= 2 ? 'These channels' : 'This channel'} will stop sending
+            notifications to {num >= 2 ? 'their' : 'its'} recipients. However,{' '}
+            {num >= 2 ? 'they' : 'the channel'} will remain available for
+            selection.
           </EuiText>
         </EuiModalBody>
         <EuiModalFooter>
@@ -59,22 +64,39 @@ export const MuteChannelModal = (props: MuteChannelModalProps) => {
                 fill
                 data-test-subj="mute-channel-modal-mute-button"
                 onClick={async () => {
-                  const channel = { ...props.selected[0], is_enabled: false };
-                  await props.services.notificationService
-                    .updateConfig(channel.config_id, channel)
-                    .then((resp) => {
-                      coreContext.notifications.toasts.addSuccess(
-                        `Channel ${channel.name} successfully muted.`
-                      );
-                      props.setSelected([channel]);
-                      if (props.refresh)
-                        setTimeout(() => props.refresh!(), SERVER_DELAY);
-                    })
-                    .catch((error) => {
-                      coreContext.notifications.toasts.addError(error?.body || error, {
-                        title: 'Failed to mute channel',
-                      });
-                    });
+                  const mutedChannels = props.selected.map((channel) => ({
+                    ...channel,
+                    is_enabled: false,
+                  }));
+                  const results = await Promise.allSettled(
+                    mutedChannels.map((channel) =>
+                      props.services.notificationService.updateConfig(
+                        channel.config_id,
+                        channel
+                      )
+                    )
+                  );
+                  const failedCount = results.filter(
+                    (result) => result.status === 'rejected'
+                  ).length;
+                  if (failedCount === 0) {
+                    coreContext.notifications.toasts.addSuccess(
+                      `${
+                        num >= 2
+                          ? num + ' channels'
+                          : 'Channel ' + props.selected[0].name
+                      } successfully muted.`
+                    );
+                  } else {
+                    coreContext.notifications.toasts.addDanger(
+                      `Failed to mute ${failedCount} of ${num} channel${
+                        num === 1 ? '' : 's'
+                      }.`
+                    );
+                  }
+                  props.setSelected(mutedChannels);
+                  if (props.refresh)
+                    setTimeout(() => props.refresh!(), SERVER_DELAY);
                   props.onClose();
                 }}
               >
