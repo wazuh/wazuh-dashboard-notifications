@@ -42,14 +42,14 @@ import {
 } from './utils/validationHelper';
 import { getUseUpdatedUx } from '../../services/utils/constants';
 import { ActiveResponseSettings } from './components/ActiveResponseSettings';
-import { ACTIVE_RESPONSE_TYPE } from '../../../common/constants';
+import { ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT, ACTIVE_RESPONSE_TYPE } from '../../../common/constants';
 interface CreateChannelsProps extends RouteComponentProps<{ id?: string }> {
   edit?: boolean;
 }
 
 type InputErrorsType = { [key: string]: string[] };
 
-const DEFAULT_TIMEOUT = 180;
+const DEFAULT_TIMEOUT = ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT;
 const DEFAULT_ACTIVE_RESPONSE_TYPE = ACTIVE_RESPONSE_TYPE.STATELESS;
 export const CreateChannelContext = createContext<{
   edit?: boolean;

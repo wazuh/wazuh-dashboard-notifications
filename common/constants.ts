@@ -42,6 +42,8 @@ export const ACTIVE_RESPONSE_TYPE_LABEL = Object.freeze({
   [ACTIVE_RESPONSE_TYPE.STATEFUL]: 'Stateful',
 });
 
+export const ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT = 180;
+
 export const ACTIVE_RESPONSE_LOCATION = Object.freeze({
   ALL: 'all',
   DEFINED_AGENT: 'defined-agent',
@@ -49,7 +51,7 @@ export const ACTIVE_RESPONSE_LOCATION = Object.freeze({
 });
 
 export const ACTIVE_RESPONSE_LOCATION_LABEL = Object.freeze({
-  [ACTIVE_RESPONSE_LOCATION.ALL]: 'All',
+  [ACTIVE_RESPONSE_LOCATION.ALL]: 'All agents',
   [ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT]: 'Defined agent',
   [ACTIVE_RESPONSE_LOCATION.LOCAL]: 'Local',
 });

@@ -3,11 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { EuiCompressedFieldNumber, EuiCompressedFieldText, EuiIconTip, EuiCompressedSuperSelect, EuiCompressedTextArea, EuiCompressedFormRow, EuiSpacer } from '@elastic/eui';
+import { EuiCallOut, EuiCompressedFieldNumber, EuiCompressedFieldText, EuiIconTip, EuiCompressedSuperSelect, EuiCompressedTextArea, EuiCompressedFormRow, EuiSpacer, EuiText } from '@elastic/eui';
 import React, { useContext } from 'react';
 import { CreateChannelContext } from '../CreateChannel';
 import { validateAgentId, validateExecutable } from '../utils/validationHelper';
-import { ACTIVE_RESPONSE_LOCATION, ACTIVE_RESPONSE_LOCATION_LABEL, ACTIVE_RESPONSE_TYPE } from '../../../../common/constants';
+import { secondsToMinutesLabel } from '../utils/helper';
+import { ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT, ACTIVE_RESPONSE_LOCATION, ACTIVE_RESPONSE_LOCATION_LABEL, ACTIVE_RESPONSE_TYPE } from '../../../../common/constants';
 
 interface ActiveResponseSettingsProps {
   attributes: {
@@ -21,6 +22,8 @@ interface ActiveResponseSettingsProps {
   setAttribute: (attributeName: 'type' | 'executable' | 'extraArgs' | 'location' | 'agentId' | 'statefulTimeout', value: string | number) => void;
 }
 
+const DEFAULT_TIMEOUT_MINUTES_LABEL = secondsToMinutesLabel(ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT);
+
 export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
   const context = useContext(CreateChannelContext)!;
 
@@ -33,11 +36,12 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
             error={context.inputErrors.executable.join(' ')}
             isInvalid={context.inputErrors.executable.length > 0}
             fullWidth
+            helpText="The script must already exist on the target agent."
         >
             <EuiCompressedFieldText
                 fullWidth
                 data-test-subj="create-channel-active-response-executable-name"
-                placeholder="Executable"
+                placeholder="e.g. block-ip"
                 value={props.attributes.executable}
                 onChange={(e) => props.setAttribute('executable', e.target.value)}
                 isInvalid={context.inputErrors.executable.length > 0}
@@ -58,12 +62,13 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
             error={context.inputErrors.extraArgs.join(' ')}
             isInvalid={context.inputErrors.extraArgs.length > 0}
             fullWidth
+            helpText="Passed verbatim to the executable."
         >
             <EuiCompressedTextArea
                 style={{ height: '4.1rem' }}
                 fullWidth
                 data-test-subj="create-channel-active-response-extra-args"
-                placeholder="Extra arguments"
+                placeholder="e.g. --verbose"
                 value={props.attributes.extraArgs}
                 onChange={(e) => props.setAttribute('extraArgs', e.target.value)}
             />
@@ -71,12 +76,6 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
         
         <EuiCompressedFormRow
             label="Type"
-            labelAppend={
-                <EuiIconTip
-                    content="Stateless active responses are one-time actions without an event definition to revert or stop them. Stateful responses revert or stop their actions after a period of time."
-                    position="right"
-                />
-            }
             error={context.inputErrors.type.join(' ')}
             isInvalid={context.inputErrors.type.length > 0}
             fullWidth
@@ -84,29 +83,57 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
             <EuiCompressedSuperSelect
                 data-test-subj="create-channel-active-response-type"
                 options={[
-                    { value: ACTIVE_RESPONSE_TYPE.STATELESS, inputDisplay: 'Stateless' },
-                    { value: ACTIVE_RESPONSE_TYPE.STATEFUL, inputDisplay: 'Stateful' },
+                    {
+                        value: ACTIVE_RESPONSE_TYPE.STATELESS,
+                        inputDisplay: 'Stateless',
+                        dropdownDisplay: (
+                            <>
+                                <strong>Stateless</strong>
+                                <EuiText size="s" color="subdued">
+                                    <p className="ouiTextColor--subdued">
+                                        Runs once. Nothing is reverted — a false positive stays in effect until someone intervenes.
+                                    </p>
+                                </EuiText>
+                            </>
+                        ),
+                    },
+                    {
+                        value: ACTIVE_RESPONSE_TYPE.STATEFUL,
+                        inputDisplay: 'Stateful',
+                        dropdownDisplay: (
+                            <>
+                                <strong>Stateful</strong>
+                                <EuiText size="s" color="subdued">
+                                    <p className="ouiTextColor--subdued">
+                                        Runs, then asks the agent to revert after a timeout. Only works if the executable supports reversal.
+                                    </p>
+                                </EuiText>
+                            </>
+                        ),
+                    },
                 ]}
                 valueOfSelected={props.attributes.type}
                 onChange={(value) => props.setAttribute('type', value)}
+                itemLayoutAlign="top"
+                hasDividers
                 fullWidth
             />
         </EuiCompressedFormRow>
         {
             props.attributes.type === ACTIVE_RESPONSE_TYPE.STATEFUL && (
                 <EuiCompressedFormRow
-                    label="Stateful timeout (seconds)"
+                    label="Stateful timeout"
                     labelAppend={
                         <EuiIconTip
                             content="Specifies how long the active response action is effective, in seconds. After this time, the system will automatically revert stateful active responses."
                             position="right"
                         />
                     }
-                    
+                    helpText={`The agent reverts the action after ${props.attributes.statefulTimeout} second${props.attributes.statefulTimeout === 1 ? '' : 's'}. Default is ${ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT}${DEFAULT_TIMEOUT_MINUTES_LABEL ? ` (${DEFAULT_TIMEOUT_MINUTES_LABEL})` : ''}.`}
                     error={context.inputErrors.statefulTimeout.join(' ')}
                     isInvalid={context.inputErrors.statefulTimeout.length > 0}
                     fullWidth
-                    
+
                 >
                     <EuiCompressedFieldNumber
                         data-test-subj="create-channel-active-response-timeout"
@@ -114,7 +141,8 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                         value={props.attributes.statefulTimeout}
                         onChange={(e) => props.setAttribute('statefulTimeout', Number(e.target.value))}
                         isInvalid={context.inputErrors.statefulTimeout.length > 0}
-                        min={0}
+                        append="seconds"
+                        min={1}
                         fullWidth
                     />
                 </EuiCompressedFormRow>
@@ -122,12 +150,6 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
         }
         <EuiCompressedFormRow
             label="Location"
-            labelAppend={
-                <EuiIconTip
-                    content={`Specifies where the command must execute. '${ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.ALL]}' means the command will execute on all agents, '${ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT]}' means the command will execute on specific agents defined by the user, and '${ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.LOCAL]}' means the command will execute on the agent that triggered the event.`}
-                    position="right"
-                />
-            }
             error={context.inputErrors.location.join(' ')}
             isInvalid={context.inputErrors.location.length > 0}
             fullWidth
@@ -135,15 +157,73 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
             <EuiCompressedSuperSelect
                 data-test-subj="create-channel-active-response-location"
                 options={[
-                    { value: ACTIVE_RESPONSE_LOCATION.ALL, inputDisplay: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.ALL] },
-                    { value: ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT, inputDisplay: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT] },
-                    { value: ACTIVE_RESPONSE_LOCATION.LOCAL, inputDisplay: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.LOCAL] },
+                    {
+                        value: ACTIVE_RESPONSE_LOCATION.LOCAL,
+                        inputDisplay: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.LOCAL],
+                        dropdownDisplay: (
+                            <>
+                                <strong>{ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.LOCAL]}</strong>
+                                <EuiText size="s" color="subdued">
+                                    <p className="ouiTextColor--subdued">
+                                        The agent that reported the event. The safe default for most remediations.
+                                    </p>
+                                </EuiText>
+                            </>
+                        ),
+                    },
+                    {
+                        value: ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT,
+                        inputDisplay: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT],
+                        dropdownDisplay: (
+                            <>
+                                <strong>{ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT]}</strong>
+                                <EuiText size="s" color="subdued">
+                                    <p className="ouiTextColor--subdued">
+                                        One named agent, whatever reported the event.
+                                    </p>
+                                </EuiText>
+                            </>
+                        ),
+                    },
+                    {
+                        value: ACTIVE_RESPONSE_LOCATION.ALL,
+                        inputDisplay: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.ALL],
+                        dropdownDisplay: (
+                            <>
+                                <strong>{ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.ALL]}</strong>
+                                <EuiText size="s" color="subdued">
+                                    <p className="ouiTextColor--subdued">
+                                        Every agent in the environment.
+                                    </p>
+                                </EuiText>
+                            </>
+                        ),
+                    },
                 ]}
                 valueOfSelected={props.attributes.location}
                 onChange={(value) => props.setAttribute('location', value)}
+                itemLayoutAlign="top"
+                hasDividers
                 fullWidth
             />
         </EuiCompressedFormRow>
+        {
+            props.attributes.location === ACTIVE_RESPONSE_LOCATION.ALL && (
+                <>
+                    <EuiSpacer size="s" />
+                    <EuiCallOut
+                        title="This will run on every agent in your environment"
+                        color="warning"
+                        iconType="alert"
+                        style={{ maxWidth: 700 }}
+                    >
+                        <p>
+                            Fleet-wide responses are rarely intended. If the goal is to act on the machine that raised the alert, choose <strong>Local</strong>. Ask an administrator to validate the executable in a non-production environment first.
+                        </p>
+                    </EuiCallOut>
+                </>
+            )
+        }
         {
             props.attributes.location === ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT && (
                 <EuiCompressedFormRow
