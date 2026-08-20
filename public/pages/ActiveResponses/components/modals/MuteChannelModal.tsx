@@ -6,6 +6,7 @@
 import {
   EuiSmallButton,
   EuiSmallButtonEmpty,
+  EuiCallOut,
   EuiFlexGroup,
   EuiFlexItem,
   EuiModal,
@@ -14,6 +15,7 @@ import {
   EuiModalHeader,
   EuiModalHeaderTitle,
   EuiOverlayMask,
+  EuiSpacer,
   EuiText,
 } from '@elastic/eui';
 import React, { useContext } from 'react';
@@ -53,6 +55,19 @@ export const MuteChannelModal = (props: MuteChannelModalProps) => {
             {num >= 2 ? 'They' : 'It'} will remain configured and can be
             unmuted at any time.
           </EuiText>
+          <EuiSpacer />
+          <EuiCallOut
+            title="This may affect Alerting monitors"
+            color="warning"
+            iconType="alert"
+          >
+            <p>
+              Any Alerting trigger still pointing at{' '}
+              {num >= 2 ? 'these active responses' : 'this active response'}{' '}
+              will stop taking effect while{' '}
+              {num >= 2 ? 'they are' : 'it is'} muted.
+            </p>
+          </EuiCallOut>
         </EuiModalBody>
         <EuiModalFooter>
           <EuiFlexGroup justifyContent="flexEnd">

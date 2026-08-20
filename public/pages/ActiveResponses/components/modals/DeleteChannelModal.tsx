@@ -6,6 +6,7 @@
 import {
   EuiSmallButton,
   EuiSmallButtonEmpty,
+  EuiCallOut,
   EuiCompressedFieldText,
   EuiFlexGroup,
   EuiFlexItem,
@@ -40,9 +41,7 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
   const name = num >= 2 ? `${num} active responses` : props.selected[0].name;
   const message = `Delete ${
     num >= 2 ? 'the following active responses' : name
-  } permanently? Any Alerting trigger still pointing at ${
-    num >= 2 ? 'these active responses' : 'this active response'
-  } will become a broken action.`;
+  } permanently?`;
 
   return (
     <EuiOverlayMask>
@@ -56,6 +55,18 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
         </EuiModalHeader>
         <EuiModalBody>
           <EuiText size="s">{message}</EuiText>
+          <EuiSpacer />
+          <EuiCallOut
+            title="This may affect Alerting monitors"
+            color="warning"
+            iconType="alert"
+          >
+            <p>
+              Any Alerting trigger still pointing at{' '}
+              {num >= 2 ? 'these active responses' : 'this active response'}{' '}
+              will become a broken action.
+            </p>
+          </EuiCallOut>
           {num >= 2 && (
             <>
               <EuiSpacer />
