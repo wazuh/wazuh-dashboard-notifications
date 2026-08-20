@@ -50,29 +50,51 @@ export function ChannelActions(props: ChannelActionsProps) {
     },
     {
       label: 'Mute',
-      disabled: props.selected.length !== 1 || !props.selected[0].is_enabled,
+      disabled:
+        props.selected.length === 0 ||
+        !props.selected.every((channel) => channel.is_enabled),
       modal: MuteChannelModal,
       modalParams: { refresh: props.refresh, setSelected: props.setSelected },
     },
     {
       label: 'Unmute',
-      disabled: props.selected.length !== 1 || props.selected[0].is_enabled,
+      disabled:
+        props.selected.length === 0 ||
+        props.selected.some((channel) => channel.is_enabled),
       action: async () => {
-        const channel = { ...props.selected[0], is_enabled: true };
-        servicesContext.notificationService
-          .updateConfig(channel.config_id, channel)
-          .then((resp) => {
-            coreContext.notifications.toasts.addSuccess(
-              `Active response ${channel.name} successfully unmuted.`
-            );
-            props.setSelected([channel]);
-            setTimeout(() => props.refresh(), SERVER_DELAY);
-          })
-          .catch((error) => {
-            coreContext.notifications.toasts.addError(error?.body || error, {
-              title: 'Failed to unmute active response',
-            });
-          });
+        const unmutedChannels = props.selected.map((channel) => ({
+          ...channel,
+          is_enabled: true,
+        }));
+        const results = await Promise.allSettled(
+          unmutedChannels.map((channel) =>
+            servicesContext.notificationService.updateConfig(
+              channel.config_id,
+              channel
+            )
+          )
+        );
+        const failedCount = results.filter(
+          (result) => result.status === 'rejected'
+        ).length;
+        const num = props.selected.length;
+        if (failedCount === 0) {
+          coreContext.notifications.toasts.addSuccess(
+            `${
+              num >= 2
+                ? num + ' active responses'
+                : 'Active response ' + unmutedChannels[0].name
+            } successfully unmuted.`
+          );
+        } else {
+          coreContext.notifications.toasts.addDanger(
+            `Failed to unmute ${failedCount} of ${num} active response${
+              num === 1 ? '' : 's'
+            }.`
+          );
+        }
+        props.setSelected(unmutedChannels);
+        setTimeout(() => props.refresh(), SERVER_DELAY);
       },
     },
   ];
