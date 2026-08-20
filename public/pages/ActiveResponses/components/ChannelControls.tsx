@@ -75,7 +75,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
     switch (type) {
       case 'state':
         setStateItems(newItems);
-        newFilters.state = checkedItems[0];
+        newFilters.state = checkedItems.length === 1 ? checkedItems[0] : undefined;
         break;
       case 'type':
         setTypeItems(newItems);
@@ -133,10 +133,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 <EuiFilterSelectItem
                   key={`channel-state-filter-${index}`}
                   checked={item.checked === 'on' ? 'on' : undefined}
-                  onClick={() => {
-                    updateItem(stateItems, index, 'state', true);
-                    setIsStatePopoverOpen(false);
-                  }}
+                  onClick={() => updateItem(stateItems, index, 'state')}
                 >
                   {item.display}
                 </EuiFilterSelectItem>

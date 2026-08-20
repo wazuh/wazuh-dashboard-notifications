@@ -58,8 +58,10 @@ describe('<ChannelControls /> spec', () => {
     fireEvent.click(utils.getByText('Status'));
     fireEvent.click(utils.getByText('Active'));
     expect(onFiltersChange).toBeCalledWith({ state: 'true' });
-    fireEvent.click(utils.getByText('Active'));
+    fireEvent.click(utils.getByText('Muted'));
     expect(onFiltersChange).toBeCalledWith({ });
+    fireEvent.click(utils.getByText('Active'));
+    expect(onFiltersChange).toBeCalledWith({ state: 'false' });
 
     fireEvent.click(utils.getByText('Type'));
     fireEvent.click(utils.getByText('Stateful'));
@@ -79,6 +81,6 @@ describe('<ChannelControls /> spec', () => {
     fireEvent.click(utils.getByText('All agents'));
     expect(onFiltersChange).toBeCalledWith({ location: ['defined-agent', 'local'] });
 
-    expect(onFiltersChange).toBeCalledTimes(9);
+    expect(onFiltersChange).toBeCalledTimes(10);
   });
 });
