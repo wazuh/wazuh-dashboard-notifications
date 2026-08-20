@@ -116,9 +116,11 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(stateItems)}
+                numActiveFilters={stateItems.filter((item) => item.checked === 'on').length}
                 onClick={() => setIsStatePopoverOpen(!isStatePopoverOpen)}
               >
-                {isItemSelected(stateItems) ? <b>Status</b> : 'Status'}
+                Status
               </EuiSmallFilterButton>
             }
             isOpen={isStatePopoverOpen}
@@ -149,9 +151,11 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(locationItems)}
+                numActiveFilters={locationItems.filter((item) => item.checked === 'on').length}
                 onClick={() => setIsLocationPopoverOpen(!isLocationPopoverOpen)}
               >
-                {isItemSelected(locationItems) ? <b>Location</b> : 'Location'}
+                Location
               </EuiSmallFilterButton>
             }
             isOpen={isLocationPopoverOpen}
@@ -179,9 +183,11 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(typeItems)}
+                numActiveFilters={typeItems.filter((item) => item.checked === 'on').length}
                 onClick={() => setIsTypePopoverOpen(!isTypePopoverOpen)}
               >
-                {isItemSelected(typeItems) ? <b>Type</b> : 'Type'}
+                Type
               </EuiSmallFilterButton>
             }
             isOpen={isTypePopoverOpen}
