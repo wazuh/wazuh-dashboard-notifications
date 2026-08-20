@@ -40,9 +40,9 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
   const name = num >= 2 ? `${num} active responses` : props.selected[0].name;
   const message = `Delete ${
     num >= 2 ? 'the following active responses' : name
-  } permanently? Any notify actions will no longer be able to run the responses using ${
+  } permanently? Any Alerting trigger still pointing at ${
     num >= 2 ? 'these active responses' : 'this active response'
-  }.`;
+  } will become a broken action.`;
 
   return (
     <EuiOverlayMask>

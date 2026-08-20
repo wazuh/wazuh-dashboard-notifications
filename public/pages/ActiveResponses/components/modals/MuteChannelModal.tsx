@@ -45,8 +45,8 @@ export const MuteChannelModal = (props: MuteChannelModalProps) => {
         </EuiModalHeader>
         <EuiModalBody>
           <EuiText size="s">
-            This active response will stop sending responses to its recipients.
-            However, the active response will remain available for selection.
+            This active response will stop running its command. It will remain
+            configured and can be unmuted at any time.
           </EuiText>
         </EuiModalBody>
         <EuiModalFooter>
@@ -72,7 +72,7 @@ export const MuteChannelModal = (props: MuteChannelModalProps) => {
                     })
                     .catch((error) => {
                       coreContext.notifications.toasts.addError(error?.body || error, {
-                        title: 'Failed to mute channel',
+                        title: 'Failed to mute active response',
                       });
                     });
                   props.onClose();

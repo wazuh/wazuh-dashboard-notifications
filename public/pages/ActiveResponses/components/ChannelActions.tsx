@@ -70,7 +70,7 @@ export function ChannelActions(props: ChannelActionsProps) {
           })
           .catch((error) => {
             coreContext.notifications.toasts.addError(error?.body || error, {
-              title: 'Failed to unmute channel',
+              title: 'Failed to unmute active response',
             });
           });
       },

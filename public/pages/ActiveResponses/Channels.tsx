@@ -179,7 +179,7 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
         this.setState({ items: [], total: 0 });
       }
       this.context.notifications.toasts.addDanger(
-        getErrorMessage(error, 'There was a problem loading channels.')
+        getErrorMessage(error, 'There was a problem loading active responses.')
       );
     }
     this.setState({ loading: false });
