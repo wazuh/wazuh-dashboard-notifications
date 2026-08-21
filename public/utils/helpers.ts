@@ -59,6 +59,39 @@ export function handleMonitorsLinkClick(
   navigateToMonitorsApp();
 }
 
+export function getMonitorDetailsUrl(monitorId: string): string {
+  try {
+    const app = getApplication();
+    const path = `${MONITORS_PATH}/${monitorId}`;
+    return getUseUpdatedUx()
+      ? app.getUrlForApp(MONITORS_APP_ID, { path })
+      : app.getUrlForApp(ALERTING_APP_ID, { path });
+  } catch {
+    return '';
+  }
+}
+
+export function navigateToMonitorDetails(monitorId: string): void {
+  const app = getApplication();
+  const path = `${MONITORS_PATH}/${monitorId}`;
+  if (getUseUpdatedUx()) {
+    app.navigateToApp(MONITORS_APP_ID, { path });
+  } else {
+    app.navigateToApp(ALERTING_APP_ID, { path });
+  }
+}
+
+export function handleMonitorDetailsLinkClick(
+  event: MouseEvent<HTMLElement>,
+  monitorId: string
+): void {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
+    return; // let the browser handle open in new tab
+  }
+  event.preventDefault();
+  navigateToMonitorDetails(monitorId);
+}
+
 function buildActiveResponseExecutionsPath(name: string): string {
   const filterState = rison.encode({
     filters: [

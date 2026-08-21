@@ -8,6 +8,7 @@ import {
   EuiFlexGroup,
   EuiFlexItem,
   EuiHealth,
+  EuiLink,
   EuiSmallButton,
   EuiSpacer,
   EuiText,
@@ -28,7 +29,9 @@ import {
 } from '../../../../utils/constants';
 import {
   getActiveResponseExecutionsUrl,
+  getMonitorDetailsUrl,
   handleActiveResponseExecutionsLinkClick,
+  handleMonitorDetailsLinkClick,
   renderTime,
 } from '../../../../utils/helpers';
 import { ListItemType } from '../../types';
@@ -36,6 +39,9 @@ import { MuteChannelModal } from '../modals/MuteChannelModal';
 import { ChannelDetailItems } from './ChannelDetailItems';
 import { ChannelDetailsActions } from './ChannelDetailsActions';
 import { ChannelSettingsDetails } from './ChannelSettingsDetails';
+import AlertingMonitorsService, {
+  AlertingMonitorSummary,
+} from '../../../../services/AlertingMonitorsService';
 import PageHeader from "../../../../components/PageHeader/PageHeader";
 import { TopNavControlButtonData } from '../../../../../../../src/plugins/navigation/public';
 import { getUseUpdatedUx } from '../../../../services/utils/constants';
@@ -50,6 +56,7 @@ export function ChannelDetails(props: ChannelDetailsProps) {
   const id = props.match.params.id;
   const [channel, setChannel] = useState<ChannelItemType>();
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [usedByMonitors, setUsedByMonitors] = useState<AlertingMonitorSummary[]>([]);
 
   const sendTestMessage = async () => {
     try {
@@ -71,6 +78,21 @@ export function ChannelDetails(props: ChannelDetailsProps) {
     // ]);
     refresh();
   }, []);
+
+  useEffect(() => {
+    if (!channel) return;
+    const alertingMonitorsService = new AlertingMonitorsService(
+      servicesContext.notificationService.httpClient,
+      servicesContext.notificationService.dataSourceId
+    );
+    alertingMonitorsService
+      .getMonitorsUsingDestination(channel.config_id)
+      .then(setUsedByMonitors)
+      .catch(() => {
+        // The alertingDashboards plugin may not be installed, or the lookup failed —
+        // fall back to the same "—" empty state the panel already shows.
+      });
+  }, [channel?.config_id]);
 
   const refresh = async () => {
     servicesContext.notificationService
@@ -143,6 +165,33 @@ export function ChannelDetails(props: ChannelDetailsProps) {
     {
       title: 'Last updated',
       description: renderTime(channel?.last_updated_time_ms || NaN),
+    },
+  ];
+
+  const usedByList: Array<ListItemType> = [
+    {
+      title: 'Alerting monitors',
+      description:
+        usedByMonitors.length === 0 ? (
+          '—'
+        ) : (
+          <>
+            {usedByMonitors.length} (
+            {usedByMonitors.map((monitor, index) => (
+              <React.Fragment key={monitor.id || monitor.name}>
+                {index > 0 && ', '}
+                <EuiLink
+                  href={getMonitorDetailsUrl(monitor.id)}
+                  onClick={(event) => handleMonitorDetailsLinkClick(event, monitor.id)}
+                  data-test-subj={`channel-details-used-by-monitor-link-${monitor.id}`}
+                >
+                  {monitor.name}
+                </EuiLink>
+              </React.Fragment>
+            ))}
+            )
+          </>
+        ),
     },
   ];
 
@@ -281,6 +330,16 @@ export function ChannelDetails(props: ChannelDetailsProps) {
         titleSize="s"
       >
         <ChannelSettingsDetails channel={channel} />
+      </ContentPanel>
+
+      <EuiSpacer />
+
+      <ContentPanel
+        bodyStyles={{ padding: 'initial' }}
+        title="Used by"
+        titleSize="s"
+      >
+        <ChannelDetailItems listItems={usedByList} />
       </ContentPanel>
     </>
   );
