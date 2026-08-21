@@ -42,6 +42,11 @@ export const ACTIVE_RESPONSE_TYPE_LABEL = Object.freeze({
   [ACTIVE_RESPONSE_TYPE.STATEFUL]: 'Stateful',
 });
 
+export const ACTIVE_RESPONSE_TYPE_DESCRIPTION = Object.freeze({
+  [ACTIVE_RESPONSE_TYPE.STATELESS]: 'Runs once. Nothing is reverted — a false positive stays in effect until someone intervenes.',
+  [ACTIVE_RESPONSE_TYPE.STATEFUL]: 'Runs, then asks the agent to revert after a timeout. Only works if the executable supports reversal.',
+});
+
 export const ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT = 180;
 
 export const ACTIVE_RESPONSE_LOCATION = Object.freeze({

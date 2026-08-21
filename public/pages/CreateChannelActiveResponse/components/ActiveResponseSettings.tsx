@@ -8,7 +8,7 @@ import React, { useContext } from 'react';
 import { CreateChannelContext } from '../CreateChannel';
 import { validateAgentId, validateExecutable, validateStatefulTimeout } from '../utils/validationHelper';
 import { secondsToMinutesLabel } from '../utils/helper';
-import { ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT, ACTIVE_RESPONSE_LOCATION, ACTIVE_RESPONSE_LOCATION_LABEL, ACTIVE_RESPONSE_TYPE } from '../../../../common/constants';
+import { ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT, ACTIVE_RESPONSE_LOCATION, ACTIVE_RESPONSE_LOCATION_LABEL, ACTIVE_RESPONSE_TYPE, ACTIVE_RESPONSE_TYPE_DESCRIPTION } from '../../../../common/constants';
 
 interface ActiveResponseSettingsProps {
   attributes: {
@@ -94,7 +94,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                                 <strong>Stateless</strong>
                                 <EuiText size="s" color="subdued">
                                     <p className="ouiTextColor--subdued">
-                                        Runs once. Nothing is reverted — a false positive stays in effect until someone intervenes.
+                                        {ACTIVE_RESPONSE_TYPE_DESCRIPTION[ACTIVE_RESPONSE_TYPE.STATELESS]}
                                     </p>
                                 </EuiText>
                             </>
@@ -108,7 +108,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                                 <strong>Stateful</strong>
                                 <EuiText size="s" color="subdued">
                                     <p className="ouiTextColor--subdued">
-                                        Runs, then asks the agent to revert after a timeout. Only works if the executable supports reversal.
+                                        {ACTIVE_RESPONSE_TYPE_DESCRIPTION[ACTIVE_RESPONSE_TYPE.STATEFUL]}
                                     </p>
                                 </EuiText>
                             </>

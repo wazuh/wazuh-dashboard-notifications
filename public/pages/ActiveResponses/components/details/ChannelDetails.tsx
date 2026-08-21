@@ -129,11 +129,11 @@ export function ChannelDetails(props: ChannelDetailsProps) {
   const nameList: Array<ListItemType> = [
     {
       title: 'Active Response name',
-      description: channel?.name || '-',
+      description: channel?.name || '—',
     },
     {
       title: 'Description',
-      description: channel?.description || '-',
+      description: channel?.description || '—',
     },
     {
       title: 'Last updated',

@@ -5,10 +5,11 @@
 
 import React from 'react';
 import _ from 'lodash';
+import { EuiText } from '@elastic/eui';
 import { ChannelItemType } from '../../../../../models/interfaces';
 import { ListItemType } from '../../types';
 import { ChannelDetailItems } from './ChannelDetailItems';
-import { ACTIVE_RESPONSE_LOCATION_LABEL, ACTIVE_RESPONSE_TYPE_LABEL } from '../../../../../common/constants';
+import { ACTIVE_RESPONSE_LOCATION_LABEL, ACTIVE_RESPONSE_TYPE_LABEL, ACTIVE_RESPONSE_TYPE_DESCRIPTION } from '../../../../../common/constants';
 
 interface ChannelSettingsDetailsProps {
   channel: ChannelItemType | undefined;
@@ -23,12 +24,23 @@ export function ChannelSettingsDetails(props: ChannelSettingsDetailsProps) {
         description: props.channel.active_response.executable,
     },
     {
-        title: 'Extra args',
-        description: props.channel.active_response.extra_args,
+        title: 'Extra arguments',
+        description: props.channel.active_response.extra_args || '—',
     },
     {
         title: 'Type',
-        description: _.get(ACTIVE_RESPONSE_TYPE_LABEL, props.channel.active_response.type, '-'),
+        description: (
+            <>
+                {_.get(ACTIVE_RESPONSE_TYPE_LABEL, props.channel.active_response.type, '—')}
+                {_.get(ACTIVE_RESPONSE_TYPE_DESCRIPTION, props.channel.active_response.type) && (
+                    <EuiText size="s" color="subdued">
+                        <p className="ouiTextColor--subdued">
+                            {_.get(ACTIVE_RESPONSE_TYPE_DESCRIPTION, props.channel.active_response.type)}
+                        </p>
+                    </EuiText>
+                )}
+            </>
+        ),
     },
     ...(props.channel.active_response.type === 'stateful' ? [{
             title: 'Stateful timeout (seconds)',
@@ -37,11 +49,11 @@ export function ChannelSettingsDetails(props: ChannelSettingsDetailsProps) {
         : []),
     {
         title: 'Location',
-        description: _.get(ACTIVE_RESPONSE_LOCATION_LABEL, props.channel.active_response.location, '-'),
+        description: _.get(ACTIVE_RESPONSE_LOCATION_LABEL, props.channel.active_response.location, '—'),
     },
     ...(props.channel.active_response.location === 'defined-agent' ? [{
             title: 'Agent ID',
-            description: props.channel.active_response.agent_id || '-',
+            description: props.channel.active_response.agent_id || '—',
         }]
         : []),
   ];
