@@ -80,7 +80,7 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
             <>
               <EuiSpacer />
               <EuiCallOut
-                title="This affects Alerting monitors"
+                title="This action affects Alerting monitors"
                 color="warning"
                 iconType="alert"
                 data-test-subj="delete-channel-modal-monitors-callout"

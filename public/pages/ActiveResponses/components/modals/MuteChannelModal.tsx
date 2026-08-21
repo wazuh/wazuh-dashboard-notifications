@@ -80,7 +80,7 @@ export const MuteChannelModal = (props: MuteChannelModalProps) => {
             <>
               <EuiSpacer />
               <EuiCallOut
-                title="This affects Alerting monitors"
+                title="This action affects Alerting monitors"
                 color="warning"
                 iconType="alert"
                 data-test-subj="mute-channel-modal-monitors-callout"
