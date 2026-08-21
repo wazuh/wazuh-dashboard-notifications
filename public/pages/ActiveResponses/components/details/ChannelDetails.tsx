@@ -11,6 +11,7 @@ import {
   EuiSmallButton,
   EuiSpacer,
   EuiText,
+  EuiToolTip,
 } from '@elastic/eui';
 import { Toast } from '@elastic/eui/src/components/toast/global_toast_list';
 import React, { useContext, useEffect, useState } from 'react';
@@ -25,7 +26,11 @@ import {
   ROUTES,
   setBreadcrumbsActiveResponse as setBreadcrumbs
 } from '../../../../utils/constants';
-import { renderTime } from '../../../../utils/helpers';
+import {
+  getActiveResponseExecutionsUrl,
+  handleActiveResponseExecutionsLinkClick,
+  renderTime,
+} from '../../../../utils/helpers';
 import { ListItemType } from '../../types';
 import { MuteChannelModal } from '../modals/MuteChannelModal';
 import { ChannelDetailItems } from './ChannelDetailItems';
@@ -141,8 +146,25 @@ export function ChannelDetails(props: ChannelDetailsProps) {
     },
   ];
 
+  const executionsUrl = channel ? getActiveResponseExecutionsUrl(channel.name) : '';
+
   const actionsAndMuteComponent = <EuiFlexGroup gutterSize="s" alignItems="center">
     <EuiFlexItem />
+    <EuiFlexItem grow={false}>
+      {channel && executionsUrl && (
+        <EuiToolTip content="Matches executions by name — if this active response was renamed, executions recorded under its previous name won't appear.">
+          <EuiSmallButton
+            iconType="popout"
+            iconSide="right"
+            href={executionsUrl}
+            onClick={(event) => handleActiveResponseExecutionsLinkClick(event, channel.name)}
+            data-test-subj="channel-details-view-executions-button"
+          >
+            View recent executions
+          </EuiSmallButton>
+        </EuiToolTip>
+      )}
+    </EuiFlexItem>
     <EuiFlexItem grow={false}>
       {channel && (
         <ChannelDetailsActions

@@ -41,6 +41,9 @@ exports[`<ChannelDetails/> spec handles a non-existing channel 1`] = `
       <div
         class="euiFlexItem euiFlexItem--flexGrowZero"
       />
+      <div
+        class="euiFlexItem euiFlexItem--flexGrowZero"
+      />
     </div>
   </div>
   <div
@@ -211,6 +214,9 @@ exports[`<ChannelDetails/> spec renders a specific channel 1`] = `
       <div
         class="euiFlexItem euiFlexItem--flexGrowZero"
       />
+      <div
+        class="euiFlexItem euiFlexItem--flexGrowZero"
+      />
     </div>
   </div>
   <div
@@ -373,6 +379,9 @@ exports[`<ChannelDetails/> spec renders the component 1`] = `
   >
     <div
       class="euiFlexItem"
+    />
+    <div
+      class="euiFlexItem euiFlexItem--flexGrowZero"
     />
     <div
       class="euiFlexItem euiFlexItem--flexGrowZero"
