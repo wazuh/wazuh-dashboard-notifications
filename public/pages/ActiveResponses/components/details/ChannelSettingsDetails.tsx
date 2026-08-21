@@ -34,7 +34,7 @@ export function ChannelSettingsDetails(props: ChannelSettingsDetailsProps) {
                 {_.get(ACTIVE_RESPONSE_TYPE_LABEL, props.channel.active_response.type, '—')}
                 {_.get(ACTIVE_RESPONSE_TYPE_DESCRIPTION, props.channel.active_response.type) && (
                     <EuiText size="s" color="subdued">
-                        <p className="ouiTextColor--subdued">
+                        <p>
                             {_.get(ACTIVE_RESPONSE_TYPE_DESCRIPTION, props.channel.active_response.type)}
                         </p>
                     </EuiText>

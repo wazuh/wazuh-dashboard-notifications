@@ -93,7 +93,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                             <>
                                 <strong>Stateless</strong>
                                 <EuiText size="s" color="subdued">
-                                    <p className="ouiTextColor--subdued">
+                                    <p>
                                         {ACTIVE_RESPONSE_TYPE_DESCRIPTION[ACTIVE_RESPONSE_TYPE.STATELESS]}
                                     </p>
                                 </EuiText>
@@ -107,7 +107,7 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                             <>
                                 <strong>Stateful</strong>
                                 <EuiText size="s" color="subdued">
-                                    <p className="ouiTextColor--subdued">
+                                    <p>
                                         {ACTIVE_RESPONSE_TYPE_DESCRIPTION[ACTIVE_RESPONSE_TYPE.STATEFUL]}
                                     </p>
                                 </EuiText>

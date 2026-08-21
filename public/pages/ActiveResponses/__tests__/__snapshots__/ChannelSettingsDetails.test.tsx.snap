@@ -68,9 +68,7 @@ exports[`<ChannelSettingsDetails /> spec renders Active Response channel 1`] = `
             <div
               class="euiTextColor euiTextColor--subdued"
             >
-              <p
-                class="ouiTextColor--subdued"
-              >
+              <p>
                 Runs, then asks the agent to revert after a timeout. Only works if the executable supports reversal.
               </p>
             </div>
