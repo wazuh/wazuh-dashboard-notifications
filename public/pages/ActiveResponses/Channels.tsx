@@ -54,7 +54,13 @@ import MDSEnabledComponent, {
 } from '../../components/MDSEnabledComponent/MDSEnabledComponent';
 import PageHeader from "../../components/PageHeader/PageHeader"
 import { getUseUpdatedUx } from '../../services/utils/constants';
-import { TopNavControlButtonData } from 'src/plugins/navigation/public';
+import {
+  TopNavControlButtonData,
+  TopNavControlDescriptionData,
+} from 'src/plugins/navigation/public';
+
+export const ACTIVE_RESPONSE_DESCRIPTION =
+  'Active responses automatically execute an action in response to a security event. Each one runs as the action of an Alerting monitor, which you can create or edit from the Monitors app.';
 
 interface ChannelsProps extends RouteComponentProps, DataSourceMenuProperties {
   notificationService: NotificationService;
@@ -360,6 +366,11 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
                   <PageHeader
                     appRightControls={headerControls}
                     appLeftControls={[{ renderComponent: totalChannels }]}
+                    appDescriptionControls={[
+                      {
+                        description: ACTIVE_RESPONSE_DESCRIPTION,
+                      } as TopNavControlDescriptionData,
+                    ]}
                   />
                   <ContentPanel panelStyles={{ padding: this.state.total < 1 ? '16px 16px 0px' : '16px' }}>
                     {!isTrulyEmpty && (
@@ -401,6 +412,7 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
                   title="Active responses"
                   titleSize="s"
                   total={this.state.total}
+                  description={ACTIVE_RESPONSE_DESCRIPTION}
                 >
                   {!isTrulyEmpty && (
                     <>
