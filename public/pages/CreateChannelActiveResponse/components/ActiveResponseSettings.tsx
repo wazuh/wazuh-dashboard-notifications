@@ -127,12 +127,6 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                 <EuiCompressedFormRow
                     id="statefulTimeout"
                     label="Stateful timeout"
-                    labelAppend={
-                        <EuiIconTip
-                            content="Specifies how long the active response action is effective, in seconds. After this time, the system will automatically revert stateful active responses."
-                            position="right"
-                        />
-                    }
                     helpText={`The agent reverts the action after ${props.attributes.statefulTimeout} second${props.attributes.statefulTimeout === 1 ? '' : 's'}. Default is ${ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT}${DEFAULT_TIMEOUT_MINUTES_LABEL ? ` (${DEFAULT_TIMEOUT_MINUTES_LABEL})` : ''}.`}
                     error={context.inputErrors.statefulTimeout.join(' ')}
                     isInvalid={context.inputErrors.statefulTimeout.length > 0}
