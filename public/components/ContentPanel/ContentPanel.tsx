@@ -8,6 +8,8 @@ import {
   EuiFlexItem,
   EuiHorizontalRule,
   EuiPanel,
+  EuiSpacer,
+  EuiText,
   EuiTitle,
 } from '@elastic/eui';
 import React from 'react';
@@ -16,6 +18,7 @@ interface ContentPanelProps {
   title?: string;
   titleSize?: 'xs' | 's' | 'm';
   total?: number;
+  description?: string;
   bodyStyles?: object;
   panelStyles?: object;
   horizontalRuleClassName?: string;
@@ -27,6 +30,7 @@ const ContentPanel: React.SFC<ContentPanelProps> = ({
   title = '',
   titleSize = 's',
   total = undefined,
+  description,
   bodyStyles = {},
   panelStyles = {},
   horizontalRuleClassName = '',
@@ -50,6 +54,14 @@ const ContentPanel: React.SFC<ContentPanelProps> = ({
             ) : null}
           </h2>
         </EuiTitle>
+        {description && (
+          <>
+            <EuiSpacer size="xs" />
+            <EuiText size="s" color="subdued">
+              <p>{description}</p>
+            </EuiText>
+          </>
+        )}
       </EuiFlexItem>
       {actions ? (
         <EuiFlexItem grow={false}>

@@ -4,6 +4,7 @@
  */
 
 import {
+  EuiCallOut,
   EuiSmallButton,
   EuiSmallButtonEmpty,
   EuiFlexGroup,
@@ -40,15 +41,41 @@ import {
 } from './utils/validationHelper';
 import { getUseUpdatedUx } from '../../services/utils/constants';
 import { ActiveResponseSettings } from './components/ActiveResponseSettings';
-import { ACTIVE_RESPONSE_TYPE } from '../../../common/constants';
+import {
+  ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT,
+  ACTIVE_RESPONSE_TYPE,
+} from '../../../common/constants';
 interface CreateChannelsProps extends RouteComponentProps<{ id?: string }> {
   edit?: boolean;
 }
 
 type InputErrorsType = { [key: string]: string[] };
 
-const DEFAULT_TIMEOUT = 180;
+const DEFAULT_TIMEOUT = ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT;
 const DEFAULT_ACTIVE_RESPONSE_TYPE = ACTIVE_RESPONSE_TYPE.STATELESS;
+
+const FIELD_LABELS: { [key: string]: string } = {
+  name: 'Name',
+  executable: 'Executable',
+  extraArgs: 'Extra arguments',
+  type: 'Type',
+  statefulTimeout: 'Stateful timeout',
+  location: 'Location',
+  agentId: 'Agent ID',
+};
+
+const focusField = (fieldKey: string) => {
+  const element = document.getElementById(fieldKey);
+  if (!element) return;
+  element.focus({ preventScroll: true });
+  // Matches wazuh-dashboard-alerting's SubmitErrorHandler.js smooth-scroll workaround
+  setTimeout(() => {
+    if (typeof element.scrollIntoView === 'function') {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
+};
+
 export const CreateChannelContext = createContext<{
   edit?: boolean;
   inputErrors: InputErrorsType;
@@ -89,6 +116,7 @@ export function CreateChannel(props: CreateChannelsProps) {
     type: [],
     statefulTimeout: [],
   });
+  const [showErrorSummary, setShowErrorSummary] = useState(false);
 
   // Initial load: fetch channel data and set up page
   useEffect(() => {
@@ -151,10 +179,14 @@ export function CreateChannel(props: CreateChannelsProps) {
           : [], // only validate statefulTimeout when type is stateful
     };
     setInputErrors(errors);
-    return !Object.values(errors).reduce(
-      (errorFlag, error) => errorFlag || error.length > 0,
-      false
+    const invalidKeys = Object.keys(errors).filter(
+      (key) => errors[key].length > 0
     );
+    setShowErrorSummary(invalidKeys.length > 0);
+    if (invalidKeys.length > 0) {
+      focusField(invalidKeys[0]);
+    }
+    return invalidKeys.length === 0;
   };
 
   const createConfigObject = () => {
@@ -189,6 +221,30 @@ export function CreateChannel(props: CreateChannelsProps) {
             <EuiSpacer />
           </>
         )}
+        {showErrorSummary &&
+          Object.values(inputErrors).some((errs) => errs.length > 0) && (
+            <>
+              <EuiCallOut
+                title="Address the following error(s) in the form"
+                color="danger"
+                iconType="alert"
+              >
+                <ul>
+                  {Object.entries(inputErrors)
+                    .filter(([, errs]) => errs.length > 0)
+                    .map(([key, errs]) => (
+                      <li key={key}>
+                        <EuiLink onClick={() => focusField(key)}>
+                          {FIELD_LABELS[key]}
+                        </EuiLink>
+                        : {errs.join(' ')}
+                      </li>
+                    ))}
+                </ul>
+              </EuiCallOut>
+              <EuiSpacer />
+            </>
+          )}
         <ContentPanel
           bodyStyles={{ padding: 'initial' }}
           title="Name and description"

@@ -3,6 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+export const secondsToMinutesLabel = (seconds: number): string | null => {
+  if (!Number.isFinite(seconds) || seconds < 60 || seconds % 60 !== 0) {
+    return null;
+  }
+
+  const minutes = seconds / 60;
+
+  return `${minutes} minute${minutes === 1 ? '' : 's'}`;
+};
+
 export const constructActiveResponseObject = ({
   activeResponseType,
   executable,

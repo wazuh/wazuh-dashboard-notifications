@@ -8,8 +8,13 @@ import { getBreadCrumbsSetter, getUseUpdatedUx } from '../services/utils/constan
 import { DataSourceOption } from 'src/plugins/data_source_management/public';
 import { i18n } from "@osd/i18n";
 import { BehaviorSubject } from 'rxjs';
+import { webDocumentationLink } from '../../common/services/web_documentation';
 
 export const DOCUMENTATION_LINK = '';
+// Wazuh
+export const ACTIVE_RESPONSE_DOCUMENTATION_URL = webDocumentationLink(
+  'user-manual/wazuh-dashboard/wazuh-dashboard-configurations.html#active-response'
+);
 export const ALERTING_DOCUMENTATION_LINK =
   'https://opensearch.org/docs/monitoring-plugins/alerting/monitors/#authenticate-sender-account';
 

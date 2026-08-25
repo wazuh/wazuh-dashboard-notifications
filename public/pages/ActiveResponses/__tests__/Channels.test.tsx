@@ -13,7 +13,7 @@ import {
 } from '../../../../test/mocks/serviceMock';
 import { CoreServicesContext } from '../../../components/coreServices';
 import { MainContext } from '../../Main/Main';
-import { Channels } from '../Channels';
+import { ACTIVE_RESPONSE_DESCRIPTION, Channels } from '../Channels';
 import { setupCoreStart } from '../../../../test/utils/helpers';
 
 beforeAll(() => {
@@ -67,7 +67,7 @@ describe('<Channels/> spec', () => {
     );
   });
 
-  it('renders the Monitors shortcut with an info popover', () => {
+  it('renders the Monitors shortcut and the active response description', () => {
     const notificationServiceMock = jest.fn() as any;
     notificationServiceMock.notificationService = {
       getChannels: jest.fn(async () => []),
@@ -86,9 +86,7 @@ describe('<Channels/> spec', () => {
     // Shortcut button is present.
     expect(utils.getByTestId('monitors-shortcut-button')).toBeTruthy();
 
-    // The info popover is closed until the icon is clicked.
-    expect(utils.queryByText('Active responses & monitors')).toBeNull();
-    fireEvent.click(utils.getByTestId('monitors-shortcut-info-button'));
-    expect(utils.getByText('Active responses & monitors')).toBeTruthy();
+    // The description explains the relationship with Alerting monitors.
+    expect(utils.getByText(ACTIVE_RESPONSE_DESCRIPTION)).toBeTruthy();
   });
 });
