@@ -218,7 +218,7 @@ export function HowItWorksShortcut() {
           onClick={() => setIsFlyoutVisible(true)}
           data-test-subj="how-it-works-button"
           aria-label="How it works button"
-          color="success"
+          color="primary"
         />
       </EuiToolTip>
       {isFlyoutVisible && (
