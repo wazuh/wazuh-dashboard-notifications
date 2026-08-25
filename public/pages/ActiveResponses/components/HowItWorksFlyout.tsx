@@ -97,13 +97,13 @@ const SETTINGS = [
         <em>
           {
             ACTIVE_RESPONSE_LOCATION_LABEL[
-            ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT
+              ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT
             ]
           }
         </em>{' '}
         {
           ACTIVE_RESPONSE_LOCATION_DESCRIPTION[
-          ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT
+            ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT
           ]
         }{' '}
         <em>{ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.ALL]}</em>{' '}
