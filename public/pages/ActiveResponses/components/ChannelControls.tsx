@@ -34,21 +34,37 @@ export const ChannelControls = (props: ChannelControlsProps) => {
     { field: 'false', display: 'Muted', checked: 'off' },
   ]);
   const [isTypePopoverOpen, setIsTypePopoverOpen] = useState(false);
-  const [typeItems, setTypeItems] = useState(
-    [
-      {field: ACTIVE_RESPONSE_TYPE.STATEFUL, display: 'Stateful', checked: 'off'},
-      {field: ACTIVE_RESPONSE_TYPE.STATELESS, display: 'Stateless', checked: 'off'},
-    ]
-  );
+  const [typeItems, setTypeItems] = useState([
+    {
+      field: ACTIVE_RESPONSE_TYPE.STATEFUL,
+      display: 'Stateful',
+      checked: 'off',
+    },
+    {
+      field: ACTIVE_RESPONSE_TYPE.STATELESS,
+      display: 'Stateless',
+      checked: 'off',
+    },
+  ]);
   const [isLocationPopoverOpen, setIsLocationPopoverOpen] = useState(false);
-  const [locationItems, setLocationItems] = useState(
-    [
-      {field: ACTIVE_RESPONSE_LOCATION.ALL, display: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.ALL], checked: 'off'},
-      {field: ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT, display: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT], checked: 'off'},
-      {field: ACTIVE_RESPONSE_LOCATION.LOCAL, display: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.LOCAL], checked: 'off'},
-    ]
-  );
-
+  const [locationItems, setLocationItems] = useState([
+    {
+      field: ACTIVE_RESPONSE_LOCATION.ALL,
+      display: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.ALL],
+      checked: 'off',
+    },
+    {
+      field: ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT,
+      display:
+        ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT],
+      checked: 'off',
+    },
+    {
+      field: ACTIVE_RESPONSE_LOCATION.LOCAL,
+      display: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.LOCAL],
+      checked: 'off',
+    },
+  ]);
 
   function updateItem(
     items: Array<{ field: string; display: string; checked: string }>,
@@ -83,7 +99,8 @@ export const ChannelControls = (props: ChannelControlsProps) => {
         break;
       case 'location':
         setLocationItems(newItems);
-        newFilters.location = checkedItems.length > 0 ? checkedItems : undefined;
+        newFilters.location =
+          checkedItems.length > 0 ? checkedItems : undefined;
         break;
       default:
         break;
@@ -118,7 +135,10 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 iconType="arrowDown"
                 grow={false}
                 hasActiveFilters={isItemSelected(stateItems)}
-                numActiveFilters={stateItems.filter((item) => item.checked === 'on').length || undefined}
+                numActiveFilters={
+                  stateItems.filter((item) => item.checked === 'on').length ||
+                  undefined
+                }
                 onClick={() => setIsStatePopoverOpen(!isStatePopoverOpen)}
               >
                 Status
@@ -150,7 +170,10 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 iconType="arrowDown"
                 grow={false}
                 hasActiveFilters={isItemSelected(locationItems)}
-                numActiveFilters={locationItems.filter((item) => item.checked === 'on').length || undefined}
+                numActiveFilters={
+                  locationItems.filter((item) => item.checked === 'on')
+                    .length || undefined
+                }
                 onClick={() => setIsLocationPopoverOpen(!isLocationPopoverOpen)}
               >
                 Location
@@ -182,7 +205,10 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 iconType="arrowDown"
                 grow={false}
                 hasActiveFilters={isItemSelected(typeItems)}
-                numActiveFilters={typeItems.filter((item) => item.checked === 'on').length || undefined}
+                numActiveFilters={
+                  typeItems.filter((item) => item.checked === 'on').length ||
+                  undefined
+                }
                 onClick={() => setIsTypePopoverOpen(!isTypePopoverOpen)}
               >
                 Type

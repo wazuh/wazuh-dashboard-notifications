@@ -43,14 +43,16 @@ describe('<MuteChannelModal /> spec', () => {
     );
 
     await waitFor(() => {
-      expect(utils.getByTestId('mute-channel-modal-monitors-callout').textContent).toContain(
-        '2 Alerting monitors are still pointing at'
-      );
+      expect(
+        utils.getByTestId('mute-channel-modal-monitors-callout').textContent
+      ).toContain('2 Alerting monitors are still pointing at');
     });
   });
 
   it('deduplicates monitors referenced by more than one selected active response', async () => {
-    mockGetMonitorsUsingDestination.mockResolvedValue([{ id: 'monitor-1', name: 'monitor-1' }]);
+    mockGetMonitorsUsingDestination.mockResolvedValue([
+      { id: 'monitor-1', name: 'monitor-1' },
+    ]);
     const utils = render(
       <CoreServicesContext.Provider value={coreServicesMock}>
         <MuteChannelModal
@@ -63,9 +65,9 @@ describe('<MuteChannelModal /> spec', () => {
     );
 
     await waitFor(() => {
-      expect(utils.getByTestId('mute-channel-modal-monitors-callout').textContent).toContain(
-        '1 Alerting monitor is still pointing at'
-      );
+      expect(
+        utils.getByTestId('mute-channel-modal-monitors-callout').textContent
+      ).toContain('1 Alerting monitor is still pointing at');
     });
   });
 
@@ -85,7 +87,9 @@ describe('<MuteChannelModal /> spec', () => {
     await waitFor(() => {
       expect(utils.getByText('Mute')).toBeTruthy();
     });
-    expect(utils.queryByTestId('mute-channel-modal-monitors-callout')).toBeNull();
+    expect(
+      utils.queryByTestId('mute-channel-modal-monitors-callout')
+    ).toBeNull();
   });
   it('returns if no channels', () => {
     const { container } = render(
@@ -137,7 +141,7 @@ describe('<MuteChannelModal /> spec', () => {
       </CoreServicesContext.Provider>
     );
     utils.getByText('Mute').click();
-    await waitFor(() => expect(setSelected).toBeCalled())
+    await waitFor(() => expect(setSelected).toBeCalled());
   });
 
   it('handles failures', async () => {

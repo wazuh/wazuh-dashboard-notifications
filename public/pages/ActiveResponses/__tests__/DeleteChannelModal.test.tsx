@@ -27,7 +27,9 @@ describe('<DeleteChannelModal /> spec', () => {
   });
 
   it('shows the monitors callout with the referencing monitor count', async () => {
-    mockGetMonitorsUsingDestination.mockResolvedValue([{ id: 'monitor-1', name: 'monitor-1' }]);
+    mockGetMonitorsUsingDestination.mockResolvedValue([
+      { id: 'monitor-1', name: 'monitor-1' },
+    ]);
     const utils = render(
       <CoreServicesContext.Provider value={coreServicesMock}>
         <DeleteChannelModal
@@ -39,9 +41,9 @@ describe('<DeleteChannelModal /> spec', () => {
     );
 
     await waitFor(() => {
-      expect(utils.getByTestId('delete-channel-modal-monitors-callout').textContent).toContain(
-        '1 Alerting monitor is still pointing at'
-      );
+      expect(
+        utils.getByTestId('delete-channel-modal-monitors-callout').textContent
+      ).toContain('1 Alerting monitor is still pointing at');
     });
   });
 
@@ -60,7 +62,9 @@ describe('<DeleteChannelModal /> spec', () => {
     await waitFor(() => {
       expect(utils.getByText('Delete')).toBeTruthy();
     });
-    expect(utils.queryByTestId('delete-channel-modal-monitors-callout')).toBeNull();
+    expect(
+      utils.queryByTestId('delete-channel-modal-monitors-callout')
+    ).toBeNull();
   });
   it('returns if no channels', () => {
     const { container } = render(

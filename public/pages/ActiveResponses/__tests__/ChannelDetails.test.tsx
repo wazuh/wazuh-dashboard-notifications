@@ -25,7 +25,9 @@ jest.mock('../../../utils/helpers', () => ({
   getActiveResponseExecutionsUrl: jest.fn(() => ''),
 }));
 
-const { getActiveResponseExecutionsUrl } = jest.requireMock('../../../utils/helpers');
+const { getActiveResponseExecutionsUrl } = jest.requireMock(
+  '../../../utils/helpers'
+);
 
 const mockGetMonitorsUsingDestination = jest.fn();
 jest.mock('../../../services/AlertingMonitorsService', () =>
@@ -94,7 +96,7 @@ describe('<ChannelDetails/> spec', () => {
     const notificationServiceMock = jest.fn() as any;
     notificationServiceMock.notificationService = {
       getChannel: async (id: string) => {
-        throw "non existing channel"
+        throw 'non existing channel';
       },
     };
     let container = document.createElement('div');
@@ -160,7 +162,9 @@ describe('<ChannelDetails/> spec', () => {
     );
 
     await waitFor(() => {
-      expect(utils.getByTestId('channel-details-view-executions-button')).toBeTruthy();
+      expect(
+        utils.getByTestId('channel-details-view-executions-button')
+      ).toBeTruthy();
     });
     expect(getActiveResponseExecutionsUrl).toHaveBeenCalledWith(
       MOCK_DATA_ACTIVE_RESPONSE.activeResponse.name
@@ -188,7 +192,9 @@ describe('<ChannelDetails/> spec', () => {
     await waitFor(() => {
       expect(utils.queryByTestId('channel-details-mute-button')).toBeTruthy();
     });
-    expect(utils.queryByTestId('channel-details-view-executions-button')).toBeNull();
+    expect(
+      utils.queryByTestId('channel-details-view-executions-button')
+    ).toBeNull();
   });
 
   it('renders the used by panel listing monitor names and count, each linking to its details page', async () => {
@@ -214,13 +220,17 @@ describe('<ChannelDetails/> spec', () => {
 
     await waitFor(() => {
       const title = utils.getByText('Alerting monitors');
-      expect(title.nextElementSibling?.textContent).toBe('2 (monitor-1, monitor-2)');
+      expect(title.nextElementSibling?.textContent).toBe(
+        '2 (monitor-1, monitor-2)'
+      );
     });
     expect(
-      utils.getByTestId('channel-details-used-by-monitor-link-monitor-id-1').textContent
+      utils.getByTestId('channel-details-used-by-monitor-link-monitor-id-1')
+        .textContent
     ).toBe('monitor-1');
     expect(
-      utils.getByTestId('channel-details-used-by-monitor-link-monitor-id-2').textContent
+      utils.getByTestId('channel-details-used-by-monitor-link-monitor-id-2')
+        .textContent
     ).toBe('monitor-2');
   });
 

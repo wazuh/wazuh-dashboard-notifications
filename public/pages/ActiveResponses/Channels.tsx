@@ -52,7 +52,7 @@ import MDSEnabledComponent, {
   isDataSourceChanged,
   isDataSourceError,
 } from '../../components/MDSEnabledComponent/MDSEnabledComponent';
-import PageHeader from "../../components/PageHeader/PageHeader"
+import PageHeader from '../../components/PageHeader/PageHeader';
 import { getUseUpdatedUx } from '../../services/utils/constants';
 import {
   TopNavControlButtonData,
@@ -66,11 +66,15 @@ interface ChannelsProps extends RouteComponentProps, DataSourceMenuProperties {
   notificationService: NotificationService;
 }
 
-interface ChannelsState extends TableState<ChannelItemType>, DataSourceMenuProperties {
+interface ChannelsState
+  extends TableState<ChannelItemType>, DataSourceMenuProperties {
   filters: ChannelFiltersType;
 }
 
-export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> {
+export class Channels extends MDSEnabledComponent<
+  ChannelsProps,
+  ChannelsState
+> {
   static contextType = CoreServicesContext;
   columns: EuiTableFieldDataColumnType<ChannelItemType>[];
 
@@ -98,7 +102,9 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
         sortable: true,
         truncateText: true,
         render: (name: string, item: ChannelItemType) => (
-          <EuiLink href={`#${ROUTES.ACTIVE_RESPONSE_DETAILS}/${item.config_id}`}>
+          <EuiLink
+            href={`#${ROUTES.ACTIVE_RESPONSE_DETAILS}/${item.config_id}`}
+          >
             {name}
           </EuiLink>
         ),
@@ -119,14 +125,16 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
         name: 'Location',
         sortable: true,
         truncateText: false,
-        render: (value: string) => _.get(ACTIVE_RESPONSE_LOCATION_LABEL, value, '-'),
+        render: (value: string) =>
+          _.get(ACTIVE_RESPONSE_LOCATION_LABEL, value, '-'),
       },
       {
         field: 'active_response.type',
         name: 'Type',
         sortable: true,
         truncateText: false,
-        render: (value: string) => _.get(ACTIVE_RESPONSE_TYPE_LABEL, value, '-'),
+        render: (value: string) =>
+          _.get(ACTIVE_RESPONSE_TYPE_LABEL, value, '-'),
       },
       {
         field: 'description',
@@ -180,9 +188,8 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
     this.setState({ loading: true });
     try {
       const queryObject = this.getQueryObjectFromState(this.state);
-      const channels = await this.props.notificationService.getChannels(
-        queryObject
-      );
+      const channels =
+        await this.props.notificationService.getChannels(queryObject);
       this.setState({ items: channels.items, total: channels.total });
     } catch (error) {
       if (isDataSourceError(error)) {
@@ -219,7 +226,10 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
   unmuteChannel = async (item: ChannelItemType) => {
     const channel = { ...item, is_enabled: true };
     try {
-      await this.props.notificationService.updateConfig(channel.config_id, channel);
+      await this.props.notificationService.updateConfig(
+        channel.config_id,
+        channel
+      );
       this.context.notifications.toasts.addSuccess(
         `Active response ${channel.name} successfully unmuted.`
       );
@@ -240,7 +250,8 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
       this.state.filters.state !== undefined ||
       this.state.filters.type !== undefined ||
       this.state.filters.location !== undefined;
-    const isTrulyEmpty = !this.state.loading && this.state.total === 0 && !hasActiveFilters;
+    const isTrulyEmpty =
+      !this.state.loading && this.state.total === 0 && !hasActiveFilters;
 
     const pagination: Pagination = {
       pageIndex: page,
@@ -280,19 +291,27 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
       <EuiTitle size="m">
         <h2>({this.state.total})</h2>
       </EuiTitle>
-    )
+    );
 
-    const channelActionsComponent = <ChannelActions
-      selected={this.state.selectedItems}
-      setSelected={(selectedItems: ChannelItemType[]) => this.setState({ selectedItems })}
-      items={this.state.items}
-      setItems={(items: ChannelItemType[]) => this.setState({ items })}
-      refresh={this.refresh} />;
+    const channelActionsComponent = (
+      <ChannelActions
+        selected={this.state.selectedItems}
+        setSelected={(selectedItems: ChannelItemType[]) =>
+          this.setState({ selectedItems })
+        }
+        items={this.state.items}
+        setItems={(items: ChannelItemType[]) => this.setState({ items })}
+        refresh={this.refresh}
+      />
+    );
 
-    const channelControlsComponent = <ChannelControls
-      onSearchChange={this.onSearchChange}
-      filters={this.state.filters}
-      onFiltersChange={this.onFiltersChange} />;
+    const channelControlsComponent = (
+      <ChannelControls
+        onSearchChange={this.onSearchChange}
+        filters={this.state.filters}
+        onFiltersChange={this.onFiltersChange}
+      />
+    );
 
     return (
       <ModalConsumer>
@@ -306,7 +325,9 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
                 icon: 'pencil',
                 type: 'icon',
                 onClick: (item) =>
-                  location.assign(`#${ROUTES.ACTIVE_RESPONSE_EDIT}/${item.config_id}`),
+                  location.assign(
+                    `#${ROUTES.ACTIVE_RESPONSE_EDIT}/${item.config_id}`
+                  ),
               },
               {
                 name: 'Delete',
@@ -315,7 +336,10 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
                 color: 'danger',
                 type: 'icon',
                 onClick: (item) =>
-                  onShow(DeleteChannelModal, { selected: [item], refresh: this.refresh }),
+                  onShow(DeleteChannelModal, {
+                    selected: [item],
+                    refresh: this.refresh,
+                  }),
               },
               {
                 name: 'Mute',
@@ -341,23 +365,40 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
             ],
           };
 
-          const basicTableComponent = <EuiBasicTable
-            columns={[...this.columns, actionsColumn]}
-            items={this.state.items}
-            itemId="config_id"
-            isSelectable={true}
-            selection={selection}
-            noItemsMessage={<EuiEmptyPrompt
-              title={<EuiText size="s"><h2>No active responses configured</h2></EuiText>}
-              body={<EuiText size="s">Active responses are not configured. Create one to automatically react to security events.</EuiText>}
-              actions={<EuiSmallButton href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}>
-                Create active response
-              </EuiSmallButton>} />}
-            onChange={this.onTableChange}
-            pagination={pagination}
-            sorting={sorting}
-            tableLayout="auto"
-            loading={this.state.loading} />;
+          const basicTableComponent = (
+            <EuiBasicTable
+              columns={[...this.columns, actionsColumn]}
+              items={this.state.items}
+              itemId="config_id"
+              isSelectable={true}
+              selection={selection}
+              noItemsMessage={
+                <EuiEmptyPrompt
+                  title={
+                    <EuiText size="s">
+                      <h2>No active responses configured</h2>
+                    </EuiText>
+                  }
+                  body={
+                    <EuiText size="s">
+                      Active responses are not configured. Create one to
+                      automatically react to security events.
+                    </EuiText>
+                  }
+                  actions={
+                    <EuiSmallButton href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}>
+                      Create active response
+                    </EuiSmallButton>
+                  }
+                />
+              }
+              onChange={this.onTableChange}
+              pagination={pagination}
+              sorting={sorting}
+              tableLayout="auto"
+              loading={this.state.loading}
+            />
+          );
 
           return (
             <>
@@ -372,11 +413,17 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
                       } as TopNavControlDescriptionData,
                     ]}
                   />
-                  <ContentPanel panelStyles={{ padding: this.state.total < 1 ? '16px 16px 0px' : '16px' }}>
+                  <ContentPanel
+                    panelStyles={{
+                      padding: this.state.total < 1 ? '16px 16px 0px' : '16px',
+                    }}
+                  >
                     {!isTrulyEmpty && (
                       <>
                         <div style={{ marginBottom: '10px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <div
+                            style={{ display: 'flex', alignItems: 'center' }}
+                          >
                             {channelControlsComponent}
                             <div style={{ marginLeft: '16px' }}>
                               {channelActionsComponent}
@@ -394,10 +441,15 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
                   actions={
                     <ContentPanelActions
                       actions={[
-                        ...(!isTrulyEmpty ? [{ component: channelActionsComponent }] : []),
+                        ...(!isTrulyEmpty
+                          ? [{ component: channelActionsComponent }]
+                          : []),
                         {
                           component: (
-                            <EuiSmallButton fill href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}>
+                            <EuiSmallButton
+                              fill
+                              href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}
+                            >
                               Create active response
                             </EuiSmallButton>
                           ),
@@ -429,5 +481,4 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
       </ModalConsumer>
     );
   }
-};
-
+}

@@ -25,7 +25,7 @@ import { ServicesContext } from '../../../../services';
 import {
   BREADCRUMBS,
   ROUTES,
-  setBreadcrumbsActiveResponse as setBreadcrumbs
+  setBreadcrumbsActiveResponse as setBreadcrumbs,
 } from '../../../../utils/constants';
 import {
   getActiveResponseExecutionsUrl,
@@ -42,13 +42,13 @@ import { ChannelSettingsDetails } from './ChannelSettingsDetails';
 import AlertingMonitorsService, {
   AlertingMonitorSummary,
 } from '../../../../services/AlertingMonitorsService';
-import PageHeader from "../../../../components/PageHeader/PageHeader";
+import PageHeader from '../../../../components/PageHeader/PageHeader';
 import { TopNavControlButtonData } from '../../../../../../../src/plugins/navigation/public';
 import { getUseUpdatedUx } from '../../../../services/utils/constants';
 
 interface ChannelDetailsProps extends RouteComponentProps<{
-  id: string
-}> { }
+  id: string;
+}> {}
 
 export function ChannelDetails(props: ChannelDetailsProps) {
   const coreContext = useContext(CoreServicesContext)!;
@@ -56,7 +56,9 @@ export function ChannelDetails(props: ChannelDetailsProps) {
   const id = props.match.params.id;
   const [channel, setChannel] = useState<ChannelItemType>();
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [usedByMonitors, setUsedByMonitors] = useState<AlertingMonitorSummary[]>([]);
+  const [usedByMonitors, setUsedByMonitors] = useState<
+    AlertingMonitorSummary[]
+  >([]);
 
   const sendTestMessage = async () => {
     try {
@@ -67,7 +69,8 @@ export function ChannelDetails(props: ChannelDetailsProps) {
     } catch (error) {
       coreContext.notifications.toasts.addError(error?.body || error, {
         title: 'Failed to send the test message.',
-        toastMessage: 'View error details and adjust the active response settings.',
+        toastMessage:
+          'View error details and adjust the active response settings.',
       });
     }
   };
@@ -99,9 +102,10 @@ export function ChannelDetails(props: ChannelDetailsProps) {
       .getChannel(id)
       .then(async (response) => {
         if (response.config_type === 'email') {
-          const channel = await servicesContext.notificationService.getEmailConfigDetails(
-            response
-          );
+          const channel =
+            await servicesContext.notificationService.getEmailConfigDetails(
+              response
+            );
           if (channel.email?.invalid_ids?.length) {
             coreContext.notifications.toasts.addDanger(
               'The sender and/or some recipient groups might have been deleted.'
@@ -182,7 +186,9 @@ export function ChannelDetails(props: ChannelDetailsProps) {
                 {index > 0 && ', '}
                 <EuiLink
                   href={getMonitorDetailsUrl(monitor.id)}
-                  onClick={(event) => handleMonitorDetailsLinkClick(event, monitor.id)}
+                  onClick={(event) =>
+                    handleMonitorDetailsLinkClick(event, monitor.id)
+                  }
                   data-test-subj={`channel-details-used-by-monitor-link-${monitor.id}`}
                 >
                   {monitor.name}
@@ -195,69 +201,72 @@ export function ChannelDetails(props: ChannelDetailsProps) {
     },
   ];
 
-  const executionsUrl = channel ? getActiveResponseExecutionsUrl(channel.name) : '';
+  const executionsUrl = channel
+    ? getActiveResponseExecutionsUrl(channel.name)
+    : '';
 
-  const actionsAndMuteComponent = <EuiFlexGroup gutterSize="s" alignItems="center">
-    <EuiFlexItem />
-    <EuiFlexItem grow={false}>
-      {channel && executionsUrl && (
-        <EuiToolTip content="Matches executions by name — if this active response was renamed, executions recorded under its previous name won't appear.">
-          <EuiSmallButton
-            iconType="popout"
-            iconSide="right"
-            href={executionsUrl}
-            onClick={(event) => handleActiveResponseExecutionsLinkClick(event, channel.name)}
-            data-test-subj="channel-details-view-executions-button"
-          >
-            View recent executions
-          </EuiSmallButton>
-        </EuiToolTip>
-      )}
-    </EuiFlexItem>
-    <EuiFlexItem grow={false}>
-      {channel && (
-        <ChannelDetailsActions
-          channel={channel} />
-      )}
-    </EuiFlexItem>
-    <EuiFlexItem grow={false}>
-      {channel && (
-        <ModalConsumer>
-          {({ onShow }) => (
+  const actionsAndMuteComponent = (
+    <EuiFlexGroup gutterSize="s" alignItems="center">
+      <EuiFlexItem />
+      <EuiFlexItem grow={false}>
+        {channel && executionsUrl && (
+          <EuiToolTip content="Matches executions by name — if this active response was renamed, executions recorded under its previous name won't appear.">
             <EuiSmallButton
-              data-test-subj="channel-details-mute-button"
-              iconType={channel.is_enabled ? 'bellSlash' : 'bell'}
-              onClick={() => {
-                if (channel.is_enabled) {
-                  onShow(MuteChannelModal, {
-                    selected: [channel],
-                    setSelected: (selected: any[]) => setChannel(selected[0]),
-                  });
-                } else {
-                  const newChannel = { ...channel, is_enabled: true };
-                  servicesContext.notificationService
-                    .updateConfig(channel.config_id, newChannel)
-                    .then(() => {
-                      coreContext.notifications.toasts.addSuccess(
-                        `Active response ${channel.name} successfully unmuted.`
-                      );
-                      setChannel(newChannel);
-                    });
-                }
-              }}
+              iconType="popout"
+              iconSide="right"
+              href={executionsUrl}
+              onClick={(event) =>
+                handleActiveResponseExecutionsLinkClick(event, channel.name)
+              }
+              data-test-subj="channel-details-view-executions-button"
             >
-              {channel.is_enabled ? 'Mute active response' : 'Unmute active response'}
+              View recent executions
             </EuiSmallButton>
-          )}
-        </ModalConsumer>
-      )}
-    </EuiFlexItem>
-  </EuiFlexGroup>;
+          </EuiToolTip>
+        )}
+      </EuiFlexItem>
+      <EuiFlexItem grow={false}>
+        {channel && <ChannelDetailsActions channel={channel} />}
+      </EuiFlexItem>
+      <EuiFlexItem grow={false}>
+        {channel && (
+          <ModalConsumer>
+            {({ onShow }) => (
+              <EuiSmallButton
+                data-test-subj="channel-details-mute-button"
+                iconType={channel.is_enabled ? 'bellSlash' : 'bell'}
+                onClick={() => {
+                  if (channel.is_enabled) {
+                    onShow(MuteChannelModal, {
+                      selected: [channel],
+                      setSelected: (selected: any[]) => setChannel(selected[0]),
+                    });
+                  } else {
+                    const newChannel = { ...channel, is_enabled: true };
+                    servicesContext.notificationService
+                      .updateConfig(channel.config_id, newChannel)
+                      .then(() => {
+                        coreContext.notifications.toasts.addSuccess(
+                          `Active response ${channel.name} successfully unmuted.`
+                        );
+                        setChannel(newChannel);
+                      });
+                  }
+                }}
+              >
+                {channel.is_enabled
+                  ? 'Mute active response'
+                  : 'Unmute active response'}
+              </EuiSmallButton>
+            )}
+          </ModalConsumer>
+        )}
+      </EuiFlexItem>
+    </EuiFlexGroup>
+  );
   const rightControls = [
     {
-      renderComponent: (
-        actionsAndMuteComponent
-      ),
+      renderComponent: actionsAndMuteComponent,
     },
     {
       controlType: 'button',
@@ -269,19 +278,19 @@ export function ChannelDetails(props: ChannelDetailsProps) {
     } as TopNavControlButtonData,
   ];
 
-  const badgeComponent = <EuiFlexItem grow={false} style={{ paddingTop: '5px' }}>
-    {channel?.is_enabled === undefined ? null : channel.is_enabled ? (
-      <EuiHealth color="success">Active</EuiHealth>
-    ) : (
-      <EuiHealth color="subdued">Muted</EuiHealth>
-    )}
-  </EuiFlexItem>;
+  const badgeComponent = (
+    <EuiFlexItem grow={false} style={{ paddingTop: '5px' }}>
+      {channel?.is_enabled === undefined ? null : channel.is_enabled ? (
+        <EuiHealth color="success">Active</EuiHealth>
+      ) : (
+        <EuiHealth color="subdued">Muted</EuiHealth>
+      )}
+    </EuiFlexItem>
+  );
 
   const badgeControls = [
     {
-      renderComponent: (
-        badgeComponent
-      ),
+      renderComponent: badgeComponent,
     },
   ];
 
@@ -291,25 +300,25 @@ export function ChannelDetails(props: ChannelDetailsProps) {
         appRightControls={rightControls}
         appBadgeControls={badgeControls}
       >
-        {(
+        {
           <EuiFlexGroup
-          alignItems="center"
-          gutterSize="m"
-          style={{ padding: '0px 8px 0px 0px' }}
-        >
-          <EuiFlexItem grow={false}>
-            <EuiFlexGroup gutterSize="m" alignItems="center">
-              <EuiFlexItem grow={false}>
-                <EuiText size="s">
-                  <h1>{channel?.name ?? '-'}</h1>
-                </EuiText>
-              </EuiFlexItem>
-              {badgeComponent}
-            </EuiFlexGroup>
-          </EuiFlexItem>
-          {actionsAndMuteComponent}
+            alignItems="center"
+            gutterSize="m"
+            style={{ padding: '0px 8px 0px 0px' }}
+          >
+            <EuiFlexItem grow={false}>
+              <EuiFlexGroup gutterSize="m" alignItems="center">
+                <EuiFlexItem grow={false}>
+                  <EuiText size="s">
+                    <h1>{channel?.name ?? '-'}</h1>
+                  </EuiText>
+                </EuiFlexItem>
+                {badgeComponent}
+              </EuiFlexGroup>
+            </EuiFlexItem>
+            {actionsAndMuteComponent}
           </EuiFlexGroup>
-        )}
+        }
       </PageHeader>
 
       {!getUseUpdatedUx() && <EuiSpacer />}
@@ -343,5 +352,4 @@ export function ChannelDetails(props: ChannelDetailsProps) {
       </ContentPanel>
     </>
   );
-};
-
+}

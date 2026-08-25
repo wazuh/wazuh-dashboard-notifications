@@ -56,7 +56,9 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
       )
     )
       .then((results) => {
-        const uniqueMonitorIds = new Set(results.flat().map((monitor) => monitor.id));
+        const uniqueMonitorIds = new Set(
+          results.flat().map((monitor) => monitor.id)
+        );
         setMonitorCount(uniqueMonitorIds.size);
       })
       .catch(() => {
@@ -88,9 +90,9 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
                 <p>
                   {monitorCount} Alerting monitor{monitorCount === 1 ? '' : 's'}{' '}
                   {monitorCount === 1 ? 'is' : 'are'} still pointing at{' '}
-                  {num >= 2 ? 'these active responses' : 'this active response'} and
-                  will become broken action{monitorCount === 1 ? '' : 's'} if you
-                  continue.
+                  {num >= 2 ? 'these active responses' : 'this active response'}{' '}
+                  and will become broken action{monitorCount === 1 ? '' : 's'}{' '}
+                  if you continue.
                 </p>
               </EuiCallOut>
             </>
@@ -122,7 +124,9 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
         <EuiModalFooter>
           <EuiFlexGroup justifyContent="flexEnd">
             <EuiFlexItem grow={false}>
-              <EuiSmallButtonEmpty onClick={props.onClose}>Cancel</EuiSmallButtonEmpty>
+              <EuiSmallButtonEmpty onClick={props.onClose}>
+                Cancel
+              </EuiSmallButtonEmpty>
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
               <EuiSmallButton
@@ -152,9 +156,13 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
                         setTimeout(() => props.refresh!(), SERVER_DELAY);
                     })
                     .catch((error) => {
-                      coreContext.notifications.toasts.addError(error?.body || error, {
-                        title: 'Failed to delete one or more active responses.',
-                      });
+                      coreContext.notifications.toasts.addError(
+                        error?.body || error,
+                        {
+                          title:
+                            'Failed to delete one or more active responses.',
+                        }
+                      );
                       props.onClose();
                     });
                 }}

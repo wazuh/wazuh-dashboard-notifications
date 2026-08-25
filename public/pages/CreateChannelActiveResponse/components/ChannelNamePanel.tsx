@@ -3,7 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { EuiCompressedFieldText, EuiCompressedFormRow, EuiCompressedTextArea } from '@elastic/eui';
+import {
+  EuiCompressedFieldText,
+  EuiCompressedFormRow,
+  EuiCompressedTextArea,
+} from '@elastic/eui';
 import React, { useContext } from 'react';
 import { ContentPanel } from '../../../components/ContentPanel';
 import { CreateChannelContext } from '../CreateChannel';

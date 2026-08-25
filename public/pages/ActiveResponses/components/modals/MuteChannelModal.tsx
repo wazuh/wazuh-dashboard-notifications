@@ -51,7 +51,9 @@ export const MuteChannelModal = (props: MuteChannelModalProps) => {
       )
     )
       .then((results) => {
-        const uniqueMonitorIds = new Set(results.flat().map((monitor) => monitor.id));
+        const uniqueMonitorIds = new Set(
+          results.flat().map((monitor) => monitor.id)
+        );
         setMonitorCount(uniqueMonitorIds.size);
       })
       .catch(() => {
@@ -73,8 +75,8 @@ export const MuteChannelModal = (props: MuteChannelModalProps) => {
           <EuiText size="s">
             {num >= 2 ? 'These active responses' : 'This active response'} will
             stop running {num >= 2 ? 'their commands' : 'its command'}.{' '}
-            {num >= 2 ? 'They' : 'It'} will remain configured and can be
-            unmuted at any time.
+            {num >= 2 ? 'They' : 'It'} will remain configured and can be unmuted
+            at any time.
           </EuiText>
           {!!monitorCount && (
             <>
@@ -88,8 +90,8 @@ export const MuteChannelModal = (props: MuteChannelModalProps) => {
                 <p>
                   {monitorCount} Alerting monitor{monitorCount === 1 ? '' : 's'}{' '}
                   {monitorCount === 1 ? 'is' : 'are'} still pointing at{' '}
-                  {num >= 2 ? 'these active responses' : 'this active response'} and
-                  will stop taking effect while{' '}
+                  {num >= 2 ? 'these active responses' : 'this active response'}{' '}
+                  and will stop taking effect while{' '}
                   {num >= 2 ? 'they are' : 'it is'} muted.
                 </p>
               </EuiCallOut>
@@ -99,7 +101,9 @@ export const MuteChannelModal = (props: MuteChannelModalProps) => {
         <EuiModalFooter>
           <EuiFlexGroup justifyContent="flexEnd">
             <EuiFlexItem grow={false}>
-              <EuiSmallButtonEmpty onClick={props.onClose}>Cancel</EuiSmallButtonEmpty>
+              <EuiSmallButtonEmpty onClick={props.onClose}>
+                Cancel
+              </EuiSmallButtonEmpty>
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
               <EuiSmallButton

@@ -27,10 +27,9 @@ describe('constructs active response objects', () => {
       extraArgs: '--test',
       location: 'defined-agent',
       agentId: '001',
-      statefulTimeout: 60
+      statefulTimeout: 60,
     });
     expect(resultFromActiveResponse).toEqual(activeResponseItem);
-
   });
 });
 
