@@ -81,7 +81,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
     switch (type) {
       case 'state':
         setStateItems(newItems);
-        newFilters.state = checkedItems[0];
+        newFilters.state = checkedItems.length > 0 ? checkedItems : undefined;
         break;
       case 'type':
         setTypeItems(newItems);
@@ -118,9 +118,11 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(stateItems)}
+                numActiveFilters={stateItems.filter((item) => item.checked === 'on').length || undefined}
                 onClick={() => setIsStatePopoverOpen(!isStatePopoverOpen)}
               >
-                {isItemSelected(stateItems) ? <b>Status</b> : 'Status'}
+                Status
               </EuiSmallFilterButton>
             }
             isOpen={isStatePopoverOpen}
@@ -132,10 +134,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 <EuiFilterSelectItem
                   key={`channel-state-filter-${index}`}
                   checked={item.checked === 'on' ? 'on' : undefined}
-                  onClick={() => {
-                    updateItem(stateItems, index, 'state', true);
-                    setIsStatePopoverOpen(false);
-                  }}
+                  onClick={() => updateItem(stateItems, index, 'state')}
                 >
                   {item.display}
                 </EuiFilterSelectItem>
@@ -151,9 +150,11 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(typeItems)}
+                numActiveFilters={typeItems.filter((item) => item.checked === 'on').length || undefined}
                 onClick={() => setIsTypePopoverOpen(!isTypePopoverOpen)}
               >
-                {isItemSelected(typeItems) ? <b>Type</b> : 'Type'}
+                Type
               </EuiSmallFilterButton>
             }
             isOpen={isTypePopoverOpen}

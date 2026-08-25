@@ -53,6 +53,12 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
     'smtp_account.method': schema.maybe(
       schema.oneOf([schema.arrayOf(schema.string()), schema.string()])
     ),
+    'active_response.type': schema.maybe(
+      schema.oneOf([schema.arrayOf(schema.string()), schema.string()])
+    ),
+    'active_response.location': schema.maybe(
+      schema.oneOf([schema.arrayOf(schema.string()), schema.string()])
+    ),
   };
 
   if (dataSourceEnabled) {
@@ -116,6 +122,12 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
       const encryption_method = joinRequestParams(
         request.query['smtp_account.method']
       );
+      const activeResponseType = joinRequestParams(
+        request.query['active_response.type']
+      );
+      const activeResponseLocation = joinRequestParams(
+        request.query['active_response.location']
+      );
       const query = request.query.query;
 
       const client = MDSEnabledClientService.getClient(request, context, dataSourceEnabled);
@@ -133,6 +145,12 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
             ...(config_id_list && { config_id_list }),
             ...(encryption_method && {
               'smtp_account.method': encryption_method,
+            }),
+            ...(activeResponseType && {
+              'active_response.type.keyword': activeResponseType,
+            }),
+            ...(activeResponseLocation && {
+              'active_response.location.keyword': activeResponseLocation,
             }),
           }
         );

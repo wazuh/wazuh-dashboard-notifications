@@ -4,6 +4,7 @@
  */
 
 import {
+  EuiCallOut,
   EuiSmallButton,
   EuiSmallButtonEmpty,
   EuiFlexGroup,
@@ -22,7 +23,7 @@ import { ServicesContext } from '../../services';
 import {
   BREADCRUMBS,
   ROUTES,
-  setBreadcrumbsActiveResponse as setBreadcrumbs
+  setBreadcrumbsActiveResponse as setBreadcrumbs,
 } from '../../utils/constants';
 import {
   getErrorMessage,
@@ -31,9 +32,7 @@ import {
 } from '../../utils/helpers';
 import ReactDOM from 'react-dom';
 import { ChannelNamePanel } from './components/ChannelNamePanel';
-import {
-  constructActiveResponseObject,
-} from './utils/helper';
+import { constructActiveResponseObject } from './utils/helper';
 import {
   validateAgentId,
   validateChannelName,
@@ -42,15 +41,41 @@ import {
 } from './utils/validationHelper';
 import { getUseUpdatedUx } from '../../services/utils/constants';
 import { ActiveResponseSettings } from './components/ActiveResponseSettings';
-import { ACTIVE_RESPONSE_TYPE } from '../../../common/constants';
+import {
+  ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT,
+  ACTIVE_RESPONSE_TYPE,
+} from '../../../common/constants';
 interface CreateChannelsProps extends RouteComponentProps<{ id?: string }> {
   edit?: boolean;
 }
 
 type InputErrorsType = { [key: string]: string[] };
 
-const DEFAULT_TIMEOUT = 180;
+const DEFAULT_TIMEOUT = ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT;
 const DEFAULT_ACTIVE_RESPONSE_TYPE = ACTIVE_RESPONSE_TYPE.STATELESS;
+
+const FIELD_LABELS: { [key: string]: string } = {
+  name: 'Name',
+  executable: 'Executable',
+  extraArgs: 'Extra arguments',
+  type: 'Type',
+  statefulTimeout: 'Stateful timeout',
+  location: 'Location',
+  agentId: 'Agent ID',
+};
+
+const focusField = (fieldKey: string) => {
+  const element = document.getElementById(fieldKey);
+  if (!element) return;
+  element.focus({ preventScroll: true });
+  // Matches wazuh-dashboard-alerting's SubmitErrorHandler.js smooth-scroll workaround
+  setTimeout(() => {
+    if (typeof element.scrollIntoView === 'function') {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
+};
+
 export const CreateChannelContext = createContext<{
   edit?: boolean;
   inputErrors: InputErrorsType;
@@ -77,7 +102,9 @@ export function CreateChannel(props: CreateChannelsProps) {
   const [extraArgs, setExtraArgs] = useState('');
   const [location, setLocation] = useState('local');
   const [agentId, setAgentId] = useState('');
-  const [activeResponseType, setActiveResponseType] = useState<'stateless' | 'stateful'>(DEFAULT_ACTIVE_RESPONSE_TYPE);
+  const [activeResponseType, setActiveResponseType] = useState<
+    'stateless' | 'stateful'
+  >(DEFAULT_ACTIVE_RESPONSE_TYPE);
   const [statefulTimeout, setStatefulTimeout] = useState(DEFAULT_TIMEOUT);
 
   const [inputErrors, setInputErrors] = useState<InputErrorsType>({
@@ -89,6 +116,7 @@ export function CreateChannel(props: CreateChannelsProps) {
     type: [],
     statefulTimeout: [],
   });
+  const [showErrorSummary, setShowErrorSummary] = useState(false);
 
   // Initial load: fetch channel data and set up page
   useEffect(() => {
@@ -101,15 +129,14 @@ export function CreateChannel(props: CreateChannelsProps) {
   // Update breadcrumbs when name changes
   useEffect(() => {
     const { edit } = props;
-    const breadcrumbs = [
-    ];
+    const breadcrumbs = [];
     if (edit) {
       if (getUseUpdatedUx()) {
-        breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_EDIT_DETAILS(name))
+        breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_EDIT_DETAILS(name));
       }
-      breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_EDIT)
+      breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_EDIT);
     } else {
-      breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_CREATE)
+      breadcrumbs.push(BREADCRUMBS.ACTIVE_RESPONSE_CREATE);
     }
     setBreadcrumbs(breadcrumbs);
   }, [name, props.edit]);
@@ -119,8 +146,7 @@ export function CreateChannel(props: CreateChannelsProps) {
     if (typeof id !== 'string') return;
 
     try {
-      const response = await servicesContext.notificationService
-        .getChannel(id);
+      const response = await servicesContext.notificationService.getChannel(id);
       setIsEnabled(response.is_enabled);
       setName(response.name);
       setDescription(response.description || '');
@@ -132,7 +158,6 @@ export function CreateChannel(props: CreateChannelsProps) {
       setLocation(response.active_response?.location || '');
       setAgentId(response.active_response?.agent_id || '');
       setStatefulTimeout(response.active_response?.stateful_timeout);
-
     } catch (error) {
       coreContext.notifications.toasts.addDanger(
         getErrorMessage(error, 'There was a problem loading channel.')
@@ -148,13 +173,20 @@ export function CreateChannel(props: CreateChannelsProps) {
       location: [], // no validation since it's a select with fixed options
       agentId: location === 'defined-agent' ? validateAgentId(agentId) : [], // only validate agentId when location is defined-agent
       type: [], // no validation since it's a select with fixed options
-      statefulTimeout: activeResponseType === 'stateful' ? validateStatefulTimeout(statefulTimeout) : [], // only validate statefulTimeout when type is stateful
+      statefulTimeout:
+        activeResponseType === 'stateful'
+          ? validateStatefulTimeout(statefulTimeout)
+          : [], // only validate statefulTimeout when type is stateful
     };
     setInputErrors(errors);
-    return !Object.values(errors).reduce(
-      (errorFlag, error) => errorFlag || error.length > 0,
-      false
+    const invalidKeys = Object.keys(errors).filter(
+      (key) => errors[key].length > 0
     );
+    setShowErrorSummary(invalidKeys.length > 0);
+    if (invalidKeys.length > 0) {
+      focusField(invalidKeys[0]);
+    }
+    return invalidKeys.length === 0;
   };
 
   const createConfigObject = () => {
@@ -189,6 +221,30 @@ export function CreateChannel(props: CreateChannelsProps) {
             <EuiSpacer />
           </>
         )}
+        {showErrorSummary &&
+          Object.values(inputErrors).some((errs) => errs.length > 0) && (
+            <>
+              <EuiCallOut
+                title="Address the following error(s) in the form"
+                color="danger"
+                iconType="alert"
+              >
+                <ul>
+                  {Object.entries(inputErrors)
+                    .filter(([, errs]) => errs.length > 0)
+                    .map(([key, errs]) => (
+                      <li key={key}>
+                        <EuiLink onClick={() => focusField(key)}>
+                          {FIELD_LABELS[key]}
+                        </EuiLink>
+                        : {errs.join(' ')}
+                      </li>
+                    ))}
+                </ul>
+              </EuiCallOut>
+              <EuiSpacer />
+            </>
+          )}
         <ContentPanel
           bodyStyles={{ padding: 'initial' }}
           title="Name and description"
@@ -249,15 +305,16 @@ export function CreateChannel(props: CreateChannelsProps) {
                 const config = createConfigObject();
                 const request = props.edit
                   ? servicesContext.notificationService.updateConfig(
-                    id!,
-                    config
-                  )
+                      id!,
+                      config
+                    )
                   : servicesContext.notificationService.createConfig(config);
                 await request
                   .then((response) => {
                     coreContext.notifications.toasts.addSuccess({
-                      title: `Active response ${name} successfully ${props.edit ? 'updated' : 'created'
-                    }.`,
+                      title: `Active response ${name} successfully ${
+                        props.edit ? 'updated' : 'created'
+                      }.`,
                       text: (element: HTMLElement) => {
                         ReactDOM.render(
                           <>
@@ -275,12 +332,11 @@ export function CreateChannel(props: CreateChannelsProps) {
                           </>,
                           element
                         );
-                        return () =>
-                          ReactDOM.unmountComponentAtNode(element);
+                        return () => ReactDOM.unmountComponentAtNode(element);
                       },
                     });
                     setTimeout(() => {
-                      (window.location.hash = prevURL);
+                      window.location.hash = prevURL;
                     }, SERVER_DELAY);
                   })
                   .catch((error) => {
@@ -288,8 +344,9 @@ export function CreateChannel(props: CreateChannelsProps) {
                     coreContext.notifications.toasts.addError(
                       error?.body || error,
                       {
-                        title: `Failed to ${props.edit ? 'update' : 'create'
-                          } active response.`,
+                        title: `Failed to ${
+                          props.edit ? 'update' : 'create'
+                        } active response.`,
                       }
                     );
                   });

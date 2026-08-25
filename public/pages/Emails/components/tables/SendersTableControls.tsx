@@ -78,20 +78,17 @@ export const SendersTableControls = (props: SendersTableControlsProps) => {
           <EuiPopover
             button={
               <EuiSmallFilterButton
-                numFilters={
-                  encryptionItems.filter((item) => item.checked === 'on').length
-                }
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(encryptionItems)}
+                numActiveFilters={
+                  encryptionItems.filter((item) => item.checked === 'on').length || undefined
+                }
                 onClick={() =>
                   setIsEncryptionPopoverOpen(!isEncryptionPopoverOpen)
                 }
               >
-                {isItemSelected(encryptionItems) ? (
-                  <b>Encryption method</b>
-                ) : (
-                  'Encryption method'
-                )}
+                Encryption method
               </EuiSmallFilterButton>
             }
             isOpen={isEncryptionPopoverOpen}

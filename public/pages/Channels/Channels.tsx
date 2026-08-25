@@ -10,6 +10,7 @@ import {
   EuiHealth,
   EuiHorizontalRule,
   EuiLink,
+  EuiTableActionsColumnType,
   EuiTableFieldDataColumnType,
   EuiTableSortingType,
   EuiTitle,
@@ -21,12 +22,14 @@ import { Pagination } from '@elastic/eui/src/components/basic_table/pagination_b
 import _ from 'lodash';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { SERVER_DELAY } from '../../../common';
 import { ChannelItemType, TableState } from '../../../models/interfaces';
 import {
   ContentPanel,
   ContentPanelActions,
 } from '../../components/ContentPanel';
 import { CoreServicesContext } from '../../components/coreServices';
+import { ModalConsumer } from '../../components/Modal';
 import { NotificationService } from '../../services';
 import {
   BREADCRUMBS,
@@ -41,6 +44,8 @@ import { getErrorMessage } from '../../utils/helpers';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '../Notifications/utils/constants';
 import { ChannelActions } from './components/ChannelActions';
 import { ChannelControls } from './components/ChannelControls';
+import { DeleteChannelModal } from './components/modals/DeleteChannelModal';
+import { MuteChannelModal } from './components/modals/MuteChannelModal';
 import { ChannelFiltersType } from './types';
 import { DataSourceMenuProperties } from '../../services/DataSourceMenuContext';
 import MDSEnabledComponent, {
@@ -156,8 +161,8 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
       sort_field: state.sortField,
       sort_order: state.sortDirection,
     };
-    if (state.filters.state != undefined)
-      queryObject.is_enabled = state.filters.state;
+    if (state.filters.state?.length === 1)
+      queryObject.is_enabled = state.filters.state[0];
     return queryObject;
   }
 
@@ -199,6 +204,21 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
 
   onFiltersChange = (filters: ChannelFiltersType): void => {
     this.setState({ from: 0, filters });
+  };
+
+  unmuteChannel = async (item: ChannelItemType) => {
+    const channel = { ...item, is_enabled: true };
+    try {
+      await this.props.notificationService.updateConfig(channel.config_id, channel);
+      this.context.notifications.toasts.addSuccess(
+        `Channel ${channel.name} successfully unmuted.`
+      );
+      setTimeout(() => this.refresh(), SERVER_DELAY);
+    } catch (error) {
+      this.context.notifications.toasts.addError(error?.body || error, {
+        title: 'Failed to unmute channel',
+      });
+    }
   };
 
   render() {
@@ -254,75 +274,125 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
       filters={this.state.filters}
       onFiltersChange={this.onFiltersChange} />;
 
-    const basicTableComponent = <EuiBasicTable
-      columns={this.columns}
-      items={this.state.items}
-      itemId="config_id"
-      isSelectable={true}
-      selection={selection}
-      noItemsMessage={<EuiEmptyPrompt
-        title={<EuiText size="s"><h2>No channels to display</h2></EuiText>}
-        body={<EuiText size="s">"To send or receive notifications, you will need to create a notification channel."</EuiText>}
-        actions={<EuiSmallButton href={`#${ROUTES.CREATE_CHANNEL}`}>
-          Create channel
-        </EuiSmallButton>} />}
-      onChange={this.onTableChange}
-      pagination={pagination}
-      sorting={sorting}
-      tableLayout="auto"
-      loading={this.state.loading} />;
-
     return (
-      <>
-      {getUseUpdatedUx() ? (
-        <>
-          <PageHeader
-            appRightControls={headerControls}
-            appLeftControls={[{ renderComponent: totalChannels }]}
-          />
-          <ContentPanel panelStyles={{ padding: this.state.total < 1? '16px 16px 0px' : '16px' }}>
-            <div style={{ marginBottom: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                {channelControlsComponent}
-                <div style={{ marginLeft: '16px' }}>
-                  {channelActionsComponent}
-                </div>
-              </div>
-            </div>
-            <EuiHorizontalRule margin="s" />
-            {basicTableComponent}
-          </ContentPanel>
-        </>
-      ) : (
-        <ContentPanel
-          actions={
-            <ContentPanelActions
-              actions={[
-                {
-                  component: channelActionsComponent,
-                },
-                {
-                  component: (
-                    <EuiSmallButton fill href={`#${ROUTES.CREATE_CHANNEL}`}>
-                      Create channel
-                    </EuiSmallButton>
-                  ),
-                },
-              ]}
-            />
-          }
-          bodyStyles={{ padding: 'initial' }}
-          title="Channels"
-          titleSize="s"
-          total={this.state.total}
-        >
-          {channelControlsComponent}
-          <EuiHorizontalRule margin="s" />
-          {basicTableComponent}
-        </ContentPanel>
-      )}
-    </>
+      <ModalConsumer>
+        {({ onShow }) => {
+          const actionsColumn: EuiTableActionsColumnType<ChannelItemType> = {
+            name: 'Actions',
+            actions: [
+              {
+                name: 'Edit',
+                description: 'Edit this channel',
+                icon: 'pencil',
+                type: 'icon',
+                onClick: (item) =>
+                  location.assign(`#${ROUTES.EDIT_CHANNEL}/${item.config_id}`),
+              },
+              {
+                name: 'Delete',
+                description: 'Delete this channel',
+                icon: 'trash',
+                color: 'danger',
+                type: 'icon',
+                onClick: (item) =>
+                  onShow(DeleteChannelModal, { selected: [item], refresh: this.refresh }),
+              },
+              {
+                name: 'Mute',
+                description: 'Mute this channel',
+                icon: 'bellSlash',
+                type: 'icon',
+                available: (item) => item.is_enabled,
+                onClick: (item) =>
+                  onShow(MuteChannelModal, {
+                    selected: [item],
+                    setSelected: () => {},
+                    refresh: this.refresh,
+                  }),
+              },
+              {
+                name: 'Unmute',
+                description: 'Unmute this channel',
+                icon: 'bell',
+                type: 'icon',
+                available: (item) => !item.is_enabled,
+                onClick: (item) => this.unmuteChannel(item),
+              },
+            ],
+          };
 
+          const basicTableComponent = <EuiBasicTable
+            columns={[...this.columns, actionsColumn]}
+            items={this.state.items}
+            itemId="config_id"
+            isSelectable={true}
+            selection={selection}
+            noItemsMessage={<EuiEmptyPrompt
+              title={<EuiText size="s"><h2>No channels to display</h2></EuiText>}
+              body={<EuiText size="s">"To send or receive notifications, you will need to create a notification channel."</EuiText>}
+              actions={<EuiSmallButton href={`#${ROUTES.CREATE_CHANNEL}`}>
+                Create channel
+              </EuiSmallButton>} />}
+            onChange={this.onTableChange}
+            pagination={pagination}
+            sorting={sorting}
+            tableLayout="auto"
+            loading={this.state.loading} />;
+
+          return (
+            <>
+            {getUseUpdatedUx() ? (
+              <>
+                <PageHeader
+                  appRightControls={headerControls}
+                  appLeftControls={[{ renderComponent: totalChannels }]}
+                />
+                <ContentPanel panelStyles={{ padding: this.state.total < 1? '16px 16px 0px' : '16px' }}>
+                  <div style={{ marginBottom: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      {channelControlsComponent}
+                      <div style={{ marginLeft: '16px' }}>
+                        {channelActionsComponent}
+                      </div>
+                    </div>
+                  </div>
+                  <EuiHorizontalRule margin="s" />
+                  {basicTableComponent}
+                </ContentPanel>
+              </>
+            ) : (
+              <ContentPanel
+                actions={
+                  <ContentPanelActions
+                    actions={[
+                      {
+                        component: channelActionsComponent,
+                      },
+                      {
+                        component: (
+                          <EuiSmallButton fill href={`#${ROUTES.CREATE_CHANNEL}`}>
+                            Create channel
+                          </EuiSmallButton>
+                        ),
+                      },
+                    ]}
+                  />
+                }
+                bodyStyles={{ padding: 'initial' }}
+                title="Channels"
+                titleSize="s"
+                total={this.state.total}
+              >
+                {channelControlsComponent}
+                <EuiHorizontalRule margin="s" />
+                {basicTableComponent}
+              </ContentPanel>
+            )}
+          </>
+
+          );
+        }}
+      </ModalConsumer>
     );
   }
 };

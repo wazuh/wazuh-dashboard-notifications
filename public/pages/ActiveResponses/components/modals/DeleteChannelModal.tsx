@@ -6,6 +6,7 @@
 import {
   EuiSmallButton,
   EuiSmallButtonEmpty,
+  EuiCallOut,
   EuiCompressedFieldText,
   EuiFlexGroup,
   EuiFlexItem,
@@ -18,11 +19,12 @@ import {
   EuiSpacer,
   EuiText,
 } from '@elastic/eui';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SERVER_DELAY } from '../../../../../common';
 import { ChannelItemType } from '../../../../../models/interfaces';
 import { CoreServicesContext } from '../../../../components/coreServices';
 import { ModalRootProps } from '../../../../components/Modal/ModalRoot';
+import AlertingMonitorsService from '../../../../services/AlertingMonitorsService';
 
 interface DeleteChannelModalProps extends ModalRootProps {
   selected: ChannelItemType[];
@@ -36,13 +38,33 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
 
   const coreContext = useContext(CoreServicesContext)!;
   const [input, setInput] = useState('');
+  const [monitorCount, setMonitorCount] = useState<number>();
   const num = props.selected.length;
   const name = num >= 2 ? `${num} active responses` : props.selected[0].name;
   const message = `Delete ${
     num >= 2 ? 'the following active responses' : name
-  } permanently? Any notify actions will no longer be able to run the responses using ${
-    num >= 2 ? 'these active responses' : 'this active response'
-  }.`;
+  } permanently?`;
+
+  useEffect(() => {
+    const alertingMonitorsService = new AlertingMonitorsService(
+      props.services.notificationService.httpClient,
+      props.services.notificationService.dataSourceId
+    );
+    Promise.all(
+      props.selected.map((channel) =>
+        alertingMonitorsService.getMonitorsUsingDestination(channel.config_id)
+      )
+    )
+      .then((results) => {
+        const uniqueMonitorIds = new Set(
+          results.flat().map((monitor) => monitor.id)
+        );
+        setMonitorCount(uniqueMonitorIds.size);
+      })
+      .catch(() => {
+        // The alertingDashboards plugin may not be installed — leave the callout hidden.
+      });
+  }, []);
 
   return (
     <EuiOverlayMask>
@@ -56,6 +78,25 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
         </EuiModalHeader>
         <EuiModalBody>
           <EuiText size="s">{message}</EuiText>
+          {!!monitorCount && (
+            <>
+              <EuiSpacer />
+              <EuiCallOut
+                title="This action affects Alerting monitors"
+                color="warning"
+                iconType="alert"
+                data-test-subj="delete-channel-modal-monitors-callout"
+              >
+                <p>
+                  {monitorCount} Alerting monitor{monitorCount === 1 ? '' : 's'}{' '}
+                  {monitorCount === 1 ? 'is' : 'are'} still pointing at{' '}
+                  {num >= 2 ? 'these active responses' : 'this active response'}{' '}
+                  and will become broken action{monitorCount === 1 ? '' : 's'}{' '}
+                  if you continue.
+                </p>
+              </EuiCallOut>
+            </>
+          )}
           {num >= 2 && (
             <>
               <EuiSpacer />
@@ -83,7 +124,9 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
         <EuiModalFooter>
           <EuiFlexGroup justifyContent="flexEnd">
             <EuiFlexItem grow={false}>
-              <EuiSmallButtonEmpty onClick={props.onClose}>Cancel</EuiSmallButtonEmpty>
+              <EuiSmallButtonEmpty onClick={props.onClose}>
+                Cancel
+              </EuiSmallButtonEmpty>
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
               <EuiSmallButton
@@ -113,9 +156,13 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
                         setTimeout(() => props.refresh!(), SERVER_DELAY);
                     })
                     .catch((error) => {
-                      coreContext.notifications.toasts.addError(error?.body || error, {
-                        title: 'Failed to delete one or more active responses.',
-                      });
+                      coreContext.notifications.toasts.addError(
+                        error?.body || error,
+                        {
+                          title:
+                            'Failed to delete one or more active responses.',
+                        }
+                      );
                       props.onClose();
                     });
                 }}
