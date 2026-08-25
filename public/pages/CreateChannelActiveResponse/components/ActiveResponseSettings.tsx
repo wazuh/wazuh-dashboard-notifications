@@ -25,6 +25,7 @@ import { secondsToMinutesLabel } from '../utils/helper';
 import {
   ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT,
   ACTIVE_RESPONSE_LOCATION,
+  ACTIVE_RESPONSE_LOCATION_DESCRIPTION,
   ACTIVE_RESPONSE_LOCATION_LABEL,
   ACTIVE_RESPONSE_TYPE,
   ACTIVE_RESPONSE_TYPE_DESCRIPTION,
@@ -215,8 +216,11 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                   </strong>
                   <EuiText size="s" color="subdued">
                     <p className="ouiTextColor--subdued">
-                      The agent that reported the event. The safe default for
-                      most remediations.
+                      {
+                        ACTIVE_RESPONSE_LOCATION_DESCRIPTION[
+                          ACTIVE_RESPONSE_LOCATION.LOCAL
+                        ]
+                      }
                     </p>
                   </EuiText>
                 </>
@@ -239,7 +243,11 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                   </strong>
                   <EuiText size="s" color="subdued">
                     <p className="ouiTextColor--subdued">
-                      One named agent, whatever reported the event.
+                      {
+                        ACTIVE_RESPONSE_LOCATION_DESCRIPTION[
+                          ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT
+                        ]
+                      }
                     </p>
                   </EuiText>
                 </>
@@ -260,7 +268,11 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
                   </strong>
                   <EuiText size="s" color="subdued">
                     <p className="ouiTextColor--subdued">
-                      Every agent in the environment.
+                      {
+                        ACTIVE_RESPONSE_LOCATION_DESCRIPTION[
+                          ACTIVE_RESPONSE_LOCATION.ALL
+                        ]
+                      }
                     </p>
                   </EuiText>
                 </>

@@ -1,3 +1,5 @@
+import { wazuh } from '../package.json';
+
 export const BACKEND_CHANNEL_TYPE = Object.freeze({
   SLACK: 'slack',
   EMAIL: 'email',
@@ -69,3 +71,19 @@ export const MANAGED_CHANNEL_CATEGORIES = Object.freeze([BACKEND_CHANNEL_TYPE.AC
 
 // This constant defines the default category for channels that do not fall under the managed categories.
 export const DEFAULT_CHANNEL_CATEGORY = 'notification';
+
+export const ACTIVE_RESPONSE_LOCATION_DESCRIPTION = Object.freeze({
+  [ACTIVE_RESPONSE_LOCATION.LOCAL]:
+    'The agent that reported the event. The safe default for most remediations.',
+  [ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT]:
+    'One named agent, whatever reported the event.',
+  [ACTIVE_RESPONSE_LOCATION.ALL]: 'Every agent in the environment.',
+});
+
+export const WAZUH_VERSION = wazuh.version;
+
+export const PLUGIN_VERSION_SHORT = WAZUH_VERSION.split('.')
+  .splice(0, 2)
+  .join('.');
+
+export const DOCUMENTATION_WEB_BASE_URL = 'https://documentation.wazuh.com';

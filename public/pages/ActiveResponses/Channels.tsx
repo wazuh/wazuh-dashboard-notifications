@@ -46,6 +46,7 @@ import { ChannelControls } from './components/ChannelControls';
 import { DeleteChannelModal } from './components/modals/DeleteChannelModal';
 import { MuteChannelModal } from './components/modals/MuteChannelModal';
 import { MonitorsShortcut } from './components/MonitorsShortcut';
+import { HowItWorksShortcut } from './components/HowItWorksFlyout';
 import { ChannelFiltersType } from './types';
 import { DataSourceMenuProperties } from '../../services/DataSourceMenuContext';
 import MDSEnabledComponent, {
@@ -285,6 +286,9 @@ export class Channels extends MDSEnabledComponent<
       {
         renderComponent: <MonitorsShortcut />,
       },
+      {
+        renderComponent: <HowItWorksShortcut />,
+      },
     ];
 
     const totalChannels = (
@@ -456,6 +460,9 @@ export class Channels extends MDSEnabledComponent<
                         },
                         {
                           component: <MonitorsShortcut />,
+                        },
+                        {
+                          component: <HowItWorksShortcut />,
                         },
                       ]}
                     />
