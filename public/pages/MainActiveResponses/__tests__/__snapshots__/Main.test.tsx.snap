@@ -134,7 +134,7 @@ exports[`<Main /> spec renders the component 1`] = `
                           <span
                             class="euiButton__text"
                           >
-                            Manage Monitors
+                            Manage monitors
                           </span>
                         </span>
                       </button>

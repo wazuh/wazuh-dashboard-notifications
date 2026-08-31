@@ -16,6 +16,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import {
   ACTIVE_RESPONSE_LOCATION,
+  ACTIVE_RESPONSE_LOCATION_LABEL,
   ACTIVE_RESPONSE_TYPE,
 } from '../../../../common/constants';
 import { ChannelFiltersType } from '../types';
@@ -33,21 +34,37 @@ export const ChannelControls = (props: ChannelControlsProps) => {
     { field: 'false', display: 'Muted', checked: 'off' },
   ]);
   const [isTypePopoverOpen, setIsTypePopoverOpen] = useState(false);
-  const [typeItems, setTypeItems] = useState(
-    [
-      {field: ACTIVE_RESPONSE_TYPE.STATEFUL, display: 'Stateful', checked: 'off'},
-      {field: ACTIVE_RESPONSE_TYPE.STATELESS, display: 'Stateless', checked: 'off'},
-    ]
-  );
+  const [typeItems, setTypeItems] = useState([
+    {
+      field: ACTIVE_RESPONSE_TYPE.STATEFUL,
+      display: 'Stateful',
+      checked: 'off',
+    },
+    {
+      field: ACTIVE_RESPONSE_TYPE.STATELESS,
+      display: 'Stateless',
+      checked: 'off',
+    },
+  ]);
   const [isLocationPopoverOpen, setIsLocationPopoverOpen] = useState(false);
-  const [locationItems, setLocationItems] = useState(
-    [
-      {field: ACTIVE_RESPONSE_LOCATION.ALL, display: 'All', checked: 'off'},
-      {field: ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT, display: 'Defined agent', checked: 'off'},
-      {field: ACTIVE_RESPONSE_LOCATION.LOCAL, display: 'Local', checked: 'off'},
-    ]
-  );
-
+  const [locationItems, setLocationItems] = useState([
+    {
+      field: ACTIVE_RESPONSE_LOCATION.ALL,
+      display: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.ALL],
+      checked: 'off',
+    },
+    {
+      field: ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT,
+      display:
+        ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT],
+      checked: 'off',
+    },
+    {
+      field: ACTIVE_RESPONSE_LOCATION.LOCAL,
+      display: ACTIVE_RESPONSE_LOCATION_LABEL[ACTIVE_RESPONSE_LOCATION.LOCAL],
+      checked: 'off',
+    },
+  ]);
 
   function updateItem(
     items: Array<{ field: string; display: string; checked: string }>,
@@ -74,15 +91,16 @@ export const ChannelControls = (props: ChannelControlsProps) => {
     switch (type) {
       case 'state':
         setStateItems(newItems);
-        newFilters.state = checkedItems[0];
+        newFilters.state = checkedItems.length > 0 ? checkedItems : undefined;
         break;
       case 'type':
         setTypeItems(newItems);
-        newFilters.type = checkedItems[0];
+        newFilters.type = checkedItems.length > 0 ? checkedItems : undefined;
         break;
       case 'location':
         setLocationItems(newItems);
-        newFilters.location = checkedItems[0];
+        newFilters.location =
+          checkedItems.length > 0 ? checkedItems : undefined;
         break;
       default:
         break;
@@ -116,9 +134,14 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(stateItems)}
+                numActiveFilters={
+                  stateItems.filter((item) => item.checked === 'on').length ||
+                  undefined
+                }
                 onClick={() => setIsStatePopoverOpen(!isStatePopoverOpen)}
               >
-                {isItemSelected(stateItems) ? <b>Status</b> : 'Status'}
+                Status
               </EuiSmallFilterButton>
             }
             isOpen={isStatePopoverOpen}
@@ -130,10 +153,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 <EuiFilterSelectItem
                   key={`channel-state-filter-${index}`}
                   checked={item.checked === 'on' ? 'on' : undefined}
-                  onClick={() => {
-                    updateItem(stateItems, index, 'state', true);
-                    setIsStatePopoverOpen(false);
-                  }}
+                  onClick={() => updateItem(stateItems, index, 'state')}
                 >
                   {item.display}
                 </EuiFilterSelectItem>
@@ -149,9 +169,14 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(locationItems)}
+                numActiveFilters={
+                  locationItems.filter((item) => item.checked === 'on')
+                    .length || undefined
+                }
                 onClick={() => setIsLocationPopoverOpen(!isLocationPopoverOpen)}
               >
-                {isItemSelected(locationItems) ? <b>Location</b> : 'Location'}
+                Location
               </EuiSmallFilterButton>
             }
             isOpen={isLocationPopoverOpen}
@@ -163,7 +188,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 <EuiFilterSelectItem
                   key={`active-response-location-filter-${index}`}
                   checked={item.checked === 'on' ? 'on' : undefined}
-                  onClick={() => updateItem(locationItems, index, 'location', true)}
+                  onClick={() => updateItem(locationItems, index, 'location')}
                 >
                   {item.display}
                 </EuiFilterSelectItem>
@@ -179,9 +204,14 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(typeItems)}
+                numActiveFilters={
+                  typeItems.filter((item) => item.checked === 'on').length ||
+                  undefined
+                }
                 onClick={() => setIsTypePopoverOpen(!isTypePopoverOpen)}
               >
-                {isItemSelected(typeItems) ? <b>Type</b> : 'Type'}
+                Type
               </EuiSmallFilterButton>
             }
             isOpen={isTypePopoverOpen}
@@ -193,7 +223,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 <EuiFilterSelectItem
                   key={`active-response-type-filter-${index}`}
                   checked={item.checked === 'on' ? 'on' : undefined}
-                  onClick={() => updateItem(typeItems, index, 'type', true)}
+                  onClick={() => updateItem(typeItems, index, 'type')}
                 >
                   {item.display}
                 </EuiFilterSelectItem>
