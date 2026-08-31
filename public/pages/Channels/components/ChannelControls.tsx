@@ -14,9 +14,7 @@ import {
 } from '@elastic/eui';
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  CHANNEL_TYPE,
-} from '../../../../common/constants';
+import { CHANNEL_TYPE } from '../../../../common/constants';
 import { MainContext } from '../../Main/Main';
 import { ChannelFiltersType } from '../types';
 import { isManagedChannelType } from '../../../../common/utils';
@@ -46,13 +44,14 @@ export const ChannelControls = (props: ChannelControlsProps) => {
   );
 
   useEffect(() => {
-    const newItems = typeItems.filter(
-      ({ field }) => {
-        // Wazuh
-        const channel = mainStateContext.availableChannels?.[field as keyof typeof CHANNEL_TYPE]
-        return !!channel && !isManagedChannelType(channel)
-      }
-    );
+    const newItems = typeItems.filter(({ field }) => {
+      // Wazuh
+      const channel =
+        mainStateContext.availableChannels?.[
+          field as keyof typeof CHANNEL_TYPE
+        ];
+      return !!channel && !isManagedChannelType(channel);
+    });
     if (newItems.length !== typeItems.length) setTypeItems(newItems);
   }, [mainStateContext.availableChannels]);
 
@@ -119,7 +118,10 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 iconType="arrowDown"
                 grow={false}
                 hasActiveFilters={isItemSelected(stateItems)}
-                numActiveFilters={stateItems.filter((item) => item.checked === 'on').length || undefined}
+                numActiveFilters={
+                  stateItems.filter((item) => item.checked === 'on').length ||
+                  undefined
+                }
                 onClick={() => setIsStatePopoverOpen(!isStatePopoverOpen)}
               >
                 Status
@@ -151,7 +153,10 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 iconType="arrowDown"
                 grow={false}
                 hasActiveFilters={isItemSelected(typeItems)}
-                numActiveFilters={typeItems.filter((item) => item.checked === 'on').length || undefined}
+                numActiveFilters={
+                  typeItems.filter((item) => item.checked === 'on').length ||
+                  undefined
+                }
                 onClick={() => setIsTypePopoverOpen(!isTypePopoverOpen)}
               >
                 Type

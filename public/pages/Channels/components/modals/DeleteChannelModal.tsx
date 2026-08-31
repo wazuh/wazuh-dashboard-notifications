@@ -94,7 +94,9 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
         <EuiModalFooter>
           <EuiFlexGroup justifyContent="flexEnd">
             <EuiFlexItem grow={false}>
-              <EuiSmallButtonEmpty onClick={props.onClose}>Cancel</EuiSmallButtonEmpty>
+              <EuiSmallButtonEmpty onClick={props.onClose}>
+                Cancel
+              </EuiSmallButtonEmpty>
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
               <EuiSmallButton
@@ -124,9 +126,12 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
                         setTimeout(() => props.refresh!(), SERVER_DELAY);
                     })
                     .catch((error) => {
-                      coreContext.notifications.toasts.addError(error?.body || error, {
-                        title: 'Failed to delete one or more channels.',
-                      });
+                      coreContext.notifications.toasts.addError(
+                        error?.body || error,
+                        {
+                          title: 'Failed to delete one or more channels.',
+                        }
+                      );
                       props.onClose();
                     });
                 }}

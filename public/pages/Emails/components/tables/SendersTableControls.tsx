@@ -82,7 +82,8 @@ export const SendersTableControls = (props: SendersTableControlsProps) => {
                 grow={false}
                 hasActiveFilters={isItemSelected(encryptionItems)}
                 numActiveFilters={
-                  encryptionItems.filter((item) => item.checked === 'on').length || undefined
+                  encryptionItems.filter((item) => item.checked === 'on')
+                    .length || undefined
                 }
                 onClick={() =>
                   setIsEncryptionPopoverOpen(!isEncryptionPopoverOpen)

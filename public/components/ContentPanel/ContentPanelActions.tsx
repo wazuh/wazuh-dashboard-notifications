@@ -16,7 +16,11 @@ interface ContentPanelActionsProps {
 const ContentPanelActions: React.SFC<ContentPanelActionsProps> = ({
   actions,
 }) => (
-  <EuiFlexGroup justifyContent="spaceBetween" alignItems="center" gutterSize="s">
+  <EuiFlexGroup
+    justifyContent="spaceBetween"
+    alignItems="center"
+    gutterSize="s"
+  >
     {actions.map(({ component, flexItemProps = {} }, index) => {
       return (
         <EuiFlexItem {...flexItemProps} grow={false} key={index}>

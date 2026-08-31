@@ -29,7 +29,7 @@ export const CHANNEL_TYPE = Object.freeze({
   webhook: string;
   sns: string;
   mattermost: string;
-  // Wazuh  
+  // Wazuh
   active_response: string;
 };
 
@@ -45,8 +45,10 @@ export const ACTIVE_RESPONSE_TYPE_LABEL = Object.freeze({
 });
 
 export const ACTIVE_RESPONSE_TYPE_DESCRIPTION = Object.freeze({
-  [ACTIVE_RESPONSE_TYPE.STATELESS]: 'Runs once. Nothing is reverted — a false positive stays in effect until someone intervenes.',
-  [ACTIVE_RESPONSE_TYPE.STATEFUL]: 'Runs, then asks the agent to revert after a timeout. Only works if the executable supports reversal.',
+  [ACTIVE_RESPONSE_TYPE.STATELESS]:
+    'Runs once. Nothing is reverted — a false positive stays in effect until someone intervenes.',
+  [ACTIVE_RESPONSE_TYPE.STATEFUL]:
+    'Runs, then asks the agent to revert after a timeout. Only works if the executable supports reversal.',
 });
 
 export const ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT = 180;
@@ -67,7 +69,9 @@ export const ACTIVE_RESPONSE_LOCATION_LABEL = Object.freeze({
 Managed channels are those that have specific handling, as opposed
 to generic notification channels. By categorizing channels into managed and notification types,
 the system can apply different logic or UI elements based on the channel category. */
-export const MANAGED_CHANNEL_CATEGORIES = Object.freeze([BACKEND_CHANNEL_TYPE.ACTIVE_RESPONSE] as const); 
+export const MANAGED_CHANNEL_CATEGORIES = Object.freeze([
+  BACKEND_CHANNEL_TYPE.ACTIVE_RESPONSE,
+] as const);
 
 // This constant defines the default category for channels that do not fall under the managed categories.
 export const DEFAULT_CHANNEL_CATEGORY = 'notification';

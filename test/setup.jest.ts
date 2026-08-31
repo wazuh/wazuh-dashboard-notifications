@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { configure } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 
 configure({ testIdAttribute: 'data-test-subj' });
 
@@ -15,7 +16,10 @@ jest.doMock('moment', () => {
   return moment;
 });
 
-jest.mock('@elastic/eui/lib/components/form/form_row/make_id', () => () => 'random-id');
+jest.mock(
+  '@elastic/eui/lib/components/form/form_row/make_id',
+  () => () => 'random-id'
+);
 
 jest.mock('@elastic/eui/lib/services/accessibility/html_id_generator', () => ({
   htmlIdGenerator: () => {

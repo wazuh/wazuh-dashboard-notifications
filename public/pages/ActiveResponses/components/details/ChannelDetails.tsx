@@ -46,9 +46,10 @@ import PageHeader from '../../../../components/PageHeader/PageHeader';
 import { TopNavControlButtonData } from '../../../../../../../src/plugins/navigation/public';
 import { getUseUpdatedUx } from '../../../../services/utils/constants';
 
-interface ChannelDetailsProps extends RouteComponentProps<{
-  id: string;
-}> {}
+interface ChannelDetailsProps
+  extends RouteComponentProps<{
+    id: string;
+  }> {}
 
 export function ChannelDetails(props: ChannelDetailsProps) {
   const coreContext = useContext(CoreServicesContext)!;

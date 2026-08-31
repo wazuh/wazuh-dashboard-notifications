@@ -43,7 +43,9 @@ describe('AlertingMonitorsService', () => {
     ]);
     const [, options] = post.mock.calls[0];
     const sentBody = JSON.parse(options.body);
-    expect(sentBody.query.query.term['monitor.monitor_type']).toBe('active_response_monitor');
+    expect(sentBody.query.query.term['monitor.monitor_type']).toBe(
+      'active_response_monitor'
+    );
     expect(options.query).toBeUndefined();
   });
 
@@ -58,7 +60,11 @@ describe('AlertingMonitorsService', () => {
               _source: {
                 name: 'monitor-1',
                 triggers: [
-                  { query_level_trigger: { actions: [{ destination_id: 'config-id-1' }] } },
+                  {
+                    query_level_trigger: {
+                      actions: [{ destination_id: 'config-id-1' }],
+                    },
+                  },
                 ],
               },
             },
@@ -74,7 +80,9 @@ describe('AlertingMonitorsService', () => {
   });
 
   it('forwards dataSourceId as a query param when set', async () => {
-    const post = jest.fn().mockResolvedValue({ ok: true, resp: { hits: { hits: [] } } });
+    const post = jest
+      .fn()
+      .mockResolvedValue({ ok: true, resp: { hits: { hits: [] } } });
     const service = new AlertingMonitorsService({ post } as any, 'ds-1');
 
     await service.getMonitorsUsingDestination('config-id-1');
@@ -86,24 +94,32 @@ describe('AlertingMonitorsService', () => {
   it('returns an empty list when no monitors reference the destination', async () => {
     const post = jest.fn().mockResolvedValue({
       ok: true,
-      resp: { hits: { hits: [monitorHit('id-1', 'monitor-1', 'other-config-id')] } },
+      resp: {
+        hits: { hits: [monitorHit('id-1', 'monitor-1', 'other-config-id')] },
+      },
     });
     const service = new AlertingMonitorsService({ post } as any);
 
-    expect(await service.getMonitorsUsingDestination('config-id-1')).toEqual([]);
+    expect(await service.getMonitorsUsingDestination('config-id-1')).toEqual(
+      []
+    );
   });
 
   it('returns an empty list when the response has no hits', async () => {
     const post = jest.fn().mockResolvedValue({ ok: true, resp: {} });
     const service = new AlertingMonitorsService({ post } as any);
 
-    expect(await service.getMonitorsUsingDestination('config-id-1')).toEqual([]);
+    expect(await service.getMonitorsUsingDestination('config-id-1')).toEqual(
+      []
+    );
   });
 
   it('throws when the response is not ok', async () => {
     const post = jest.fn().mockResolvedValue({ ok: false, resp: 'boom' });
     const service = new AlertingMonitorsService({ post } as any);
 
-    await expect(service.getMonitorsUsingDestination('config-id-1')).rejects.toThrow();
+    await expect(
+      service.getMonitorsUsingDestination('config-id-1')
+    ).rejects.toThrow();
   });
 });
