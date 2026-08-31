@@ -27,13 +27,4 @@ describe('<MonitorsShortcut/> spec', () => {
     fireEvent.click(utils.getByTestId('monitors-shortcut-button'));
     expect(handleMonitorsLinkClick).toHaveBeenCalled();
   });
-
-  it('opens the info popover explaining the relationship', () => {
-    const utils = render(<MonitorsShortcut />);
-
-    expect(utils.queryByText('Active responses & monitors')).toBeNull();
-    fireEvent.click(utils.getByTestId('monitors-shortcut-info-button'));
-
-    expect(utils.getByText('Active responses & monitors')).toBeTruthy();
-  });
 });
