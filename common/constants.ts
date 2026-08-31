@@ -1,3 +1,5 @@
+import { wazuh } from '../package.json';
+
 export const BACKEND_CHANNEL_TYPE = Object.freeze({
   SLACK: 'slack',
   EMAIL: 'email',
@@ -27,7 +29,7 @@ export const CHANNEL_TYPE = Object.freeze({
   webhook: string;
   sns: string;
   mattermost: string;
-  // Wazuh  
+  // Wazuh
   active_response: string;
 };
 
@@ -42,6 +44,15 @@ export const ACTIVE_RESPONSE_TYPE_LABEL = Object.freeze({
   [ACTIVE_RESPONSE_TYPE.STATEFUL]: 'Stateful',
 });
 
+export const ACTIVE_RESPONSE_TYPE_DESCRIPTION = Object.freeze({
+  [ACTIVE_RESPONSE_TYPE.STATELESS]:
+    'Runs once. Nothing is reverted — a false positive stays in effect until someone intervenes.',
+  [ACTIVE_RESPONSE_TYPE.STATEFUL]:
+    'Runs, then asks the agent to revert after a timeout. Only works if the executable supports reversal.',
+});
+
+export const ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT = 180;
+
 export const ACTIVE_RESPONSE_LOCATION = Object.freeze({
   ALL: 'all',
   DEFINED_AGENT: 'defined-agent',
@@ -49,7 +60,7 @@ export const ACTIVE_RESPONSE_LOCATION = Object.freeze({
 });
 
 export const ACTIVE_RESPONSE_LOCATION_LABEL = Object.freeze({
-  [ACTIVE_RESPONSE_LOCATION.ALL]: 'All',
+  [ACTIVE_RESPONSE_LOCATION.ALL]: 'All agents',
   [ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT]: 'Defined agent',
   [ACTIVE_RESPONSE_LOCATION.LOCAL]: 'Local',
 });
@@ -58,7 +69,25 @@ export const ACTIVE_RESPONSE_LOCATION_LABEL = Object.freeze({
 Managed channels are those that have specific handling, as opposed
 to generic notification channels. By categorizing channels into managed and notification types,
 the system can apply different logic or UI elements based on the channel category. */
-export const MANAGED_CHANNEL_CATEGORIES = Object.freeze([BACKEND_CHANNEL_TYPE.ACTIVE_RESPONSE] as const); 
+export const MANAGED_CHANNEL_CATEGORIES = Object.freeze([
+  BACKEND_CHANNEL_TYPE.ACTIVE_RESPONSE,
+] as const);
 
 // This constant defines the default category for channels that do not fall under the managed categories.
 export const DEFAULT_CHANNEL_CATEGORY = 'notification';
+
+export const ACTIVE_RESPONSE_LOCATION_DESCRIPTION = Object.freeze({
+  [ACTIVE_RESPONSE_LOCATION.LOCAL]:
+    'The agent that reported the event. The safe default for most remediations.',
+  [ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT]:
+    'One named agent, whatever reported the event.',
+  [ACTIVE_RESPONSE_LOCATION.ALL]: 'Every agent in the environment.',
+});
+
+export const WAZUH_VERSION = wazuh.version;
+
+export const PLUGIN_VERSION_SHORT = WAZUH_VERSION.split('.')
+  .splice(0, 2)
+  .join('.');
+
+export const DOCUMENTATION_WEB_BASE_URL = 'https://documentation.wazuh.com';

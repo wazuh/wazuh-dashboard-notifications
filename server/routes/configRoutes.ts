@@ -35,7 +35,6 @@ interface DeleteQuerySchema {
 }
 
 export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
-
   const getConfigsQuerySchema: Schema = {
     from_index: schema.number(),
     max_items: schema.number(),
@@ -51,6 +50,12 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
       schema.oneOf([schema.arrayOf(schema.string()), schema.string()])
     ),
     'smtp_account.method': schema.maybe(
+      schema.oneOf([schema.arrayOf(schema.string()), schema.string()])
+    ),
+    'active_response.type': schema.maybe(
+      schema.oneOf([schema.arrayOf(schema.string()), schema.string()])
+    ),
+    'active_response.location': schema.maybe(
       schema.oneOf([schema.arrayOf(schema.string()), schema.string()])
     ),
   };
@@ -116,26 +121,39 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
       const encryption_method = joinRequestParams(
         request.query['smtp_account.method']
       );
+      const activeResponseType = joinRequestParams(
+        request.query['active_response.type']
+      );
+      const activeResponseLocation = joinRequestParams(
+        request.query['active_response.location']
+      );
       const query = request.query.query;
 
-      const client = MDSEnabledClientService.getClient(request, context, dataSourceEnabled);
+      const client = MDSEnabledClientService.getClient(
+        request,
+        context,
+        dataSourceEnabled
+      );
       try {
-        const resp = await client(
-          'notifications.getConfigs',
-          {
-            from_index: request.query.from_index,
-            max_items: request.query.max_items,
-            is_enabled: request.query.is_enabled,
-            sort_field: request.query.sort_field,
-            sort_order: request.query.sort_order,
-            config_type,
-            ...(query && { text_query: query }), // text_query will exclude keyword fields
-            ...(config_id_list && { config_id_list }),
-            ...(encryption_method && {
-              'smtp_account.method': encryption_method,
-            }),
-          }
-        );
+        const resp = await client('notifications.getConfigs', {
+          from_index: request.query.from_index,
+          max_items: request.query.max_items,
+          is_enabled: request.query.is_enabled,
+          sort_field: request.query.sort_field,
+          sort_order: request.query.sort_order,
+          config_type,
+          ...(query && { text_query: query }), // text_query will exclude keyword fields
+          ...(config_id_list && { config_id_list }),
+          ...(encryption_method && {
+            'smtp_account.method': encryption_method,
+          }),
+          ...(activeResponseType && {
+            'active_response.type.keyword': activeResponseType,
+          }),
+          ...(activeResponseLocation && {
+            'active_response.location.keyword': activeResponseLocation,
+          }),
+        });
         return response.ok({ body: resp });
       } catch (error) {
         return response.custom({
@@ -152,12 +170,15 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
       validate: genericParamsAndDataSourceIdQuery,
     },
     async (context, request, response) => {
-      const client = MDSEnabledClientService.getClient(request, context, dataSourceEnabled);
+      const client = MDSEnabledClientService.getClient(
+        request,
+        context,
+        dataSourceEnabled
+      );
       try {
-        const resp = await client(
-          'notifications.getConfigById',
-          { configId: request.params.configId }
-        );
+        const resp = await client('notifications.getConfigById', {
+          configId: request.params.configId,
+        });
         return response.ok({ body: resp });
       } catch (error) {
         return response.custom({
@@ -174,12 +195,15 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
       validate: genericBodyAndDataSourceIdQuery,
     },
     async (context, request, response) => {
-      const client = MDSEnabledClientService.getClient(request, context, dataSourceEnabled);
+      const client = MDSEnabledClientService.getClient(
+        request,
+        context,
+        dataSourceEnabled
+      );
       try {
-        const resp = await client(
-          'notifications.createConfig',
-          { body: request.body },
-        );
+        const resp = await client('notifications.createConfig', {
+          body: request.body,
+        });
         return response.ok({ body: resp });
       } catch (error) {
         return response.custom({
@@ -190,22 +214,22 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
     }
   );
 
-
   router.put(
     {
       path: `${NODE_API.UPDATE_CONFIG}/{configId}`,
       validate: updateQuerySchema,
     },
     async (context, request, response) => {
-      const client = MDSEnabledClientService.getClient(request, context, dataSourceEnabled);
+      const client = MDSEnabledClientService.getClient(
+        request,
+        context,
+        dataSourceEnabled
+      );
       try {
-        const resp = await client(
-          'notifications.updateConfigById',
-          {
-            configId: request.params.configId,
-            body: request.body,
-          }
-        );
+        const resp = await client('notifications.updateConfigById', {
+          configId: request.params.configId,
+          body: request.body,
+        });
         return response.ok({ body: resp });
       } catch (error) {
         return response.custom({
@@ -220,17 +244,20 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
     {
       path: NODE_API.DELETE_CONFIGS,
       validate: {
-        query: schema.object(deleteQuerySchema)
-      }
+        query: schema.object(deleteQuerySchema),
+      },
     },
     async (context, request, response) => {
-      const client = MDSEnabledClientService.getClient(request, context, dataSourceEnabled)
+      const client = MDSEnabledClientService.getClient(
+        request,
+        context,
+        dataSourceEnabled
+      );
       const config_id_list = joinRequestParams(request.query.config_id_list);
       try {
-        const resp = await client(
-          'notifications.deleteConfigs',
-          { config_id_list }
-        );
+        const resp = await client('notifications.deleteConfigs', {
+          config_id_list,
+        });
         return response.ok({ body: resp });
       } catch (error) {
         return response.custom({
@@ -244,19 +271,23 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
   router.get(
     {
       path: NODE_API.GET_AVAILABLE_FEATURES,
-      validate: dataSourceEnabled ? {
-        query: schema.object({
-          dataSourceId: schema.string(),
-        }),
-      } : false,
+      validate: dataSourceEnabled
+        ? {
+            query: schema.object({
+              dataSourceId: schema.string(),
+            }),
+          }
+        : false,
     },
     async (context, request, response) => {
-      const client = MDSEnabledClientService.getClient(request, context, dataSourceEnabled);
+      const client = MDSEnabledClientService.getClient(
+        request,
+        context,
+        dataSourceEnabled
+      );
 
       try {
-        const resp = await client(
-          'notifications.getServerFeatures'
-        );
+        const resp = await client('notifications.getServerFeatures');
         const config_type_list = resp.allowed_config_type_list as Array<
           keyof typeof CHANNEL_TYPE
         >;
@@ -264,7 +295,7 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
 
         for (let channel of config_type_list) {
           if (CHANNEL_TYPE[channel]) {
-            channelTypes[channel] = CHANNEL_TYPE[channel]
+            channelTypes[channel] = CHANNEL_TYPE[channel];
           }
         }
 

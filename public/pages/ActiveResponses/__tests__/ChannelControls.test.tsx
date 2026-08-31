@@ -57,24 +57,36 @@ describe('<ChannelControls /> spec', () => {
     );
     fireEvent.click(utils.getByText('Status'));
     fireEvent.click(utils.getByText('Active'));
-    expect(onFiltersChange).toBeCalledWith({ state: 'true' });
+    expect(onFiltersChange).toBeCalledWith({ state: ['true'] });
+    fireEvent.click(utils.getByText('Muted'));
+    expect(onFiltersChange).toBeCalledWith({ state: ['true', 'false'] });
     fireEvent.click(utils.getByText('Active'));
-    expect(onFiltersChange).toBeCalledWith({ });
+    expect(onFiltersChange).toBeCalledWith({ state: ['false'] });
 
     fireEvent.click(utils.getByText('Type'));
     fireEvent.click(utils.getByText('Stateful'));
-    expect(onFiltersChange).toBeCalledWith({ type: 'stateful' });
+    expect(onFiltersChange).toBeCalledWith({ type: ['stateful'] });
     fireEvent.click(utils.getByText('Stateless'));
-    expect(onFiltersChange).toBeCalledWith({ type: 'stateless' });
+    expect(onFiltersChange).toBeCalledWith({ type: ['stateful', 'stateless'] });
+    fireEvent.click(utils.getByText('Stateful'));
+    expect(onFiltersChange).toBeCalledWith({ type: ['stateless'] });
 
     fireEvent.click(utils.getByText('Location'));
-    fireEvent.click(utils.getByText('All'));
-    expect(onFiltersChange).toBeCalledWith({ location: 'all' });
+    fireEvent.click(utils.getByText('All agents'));
+    expect(onFiltersChange).toBeCalledWith({ location: ['all'] });
     fireEvent.click(utils.getByText('Defined agent'));
-    expect(onFiltersChange).toBeCalledWith({ location: 'defined-agent' });
+    expect(onFiltersChange).toBeCalledWith({
+      location: ['all', 'defined-agent'],
+    });
     fireEvent.click(utils.getByText('Local'));
-    expect(onFiltersChange).toBeCalledWith({ location: 'local' });
+    expect(onFiltersChange).toBeCalledWith({
+      location: ['all', 'defined-agent', 'local'],
+    });
+    fireEvent.click(utils.getByText('All agents'));
+    expect(onFiltersChange).toBeCalledWith({
+      location: ['defined-agent', 'local'],
+    });
 
-    expect(onFiltersChange).toBeCalledTimes(7);
+    expect(onFiltersChange).toBeCalledTimes(10);
   });
 });

@@ -3,7 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { EuiCompressedFieldText, EuiCompressedFormRow, EuiCompressedTextArea } from '@elastic/eui';
+import {
+  EuiCompressedFieldText,
+  EuiCompressedFormRow,
+  EuiCompressedTextArea,
+} from '@elastic/eui';
 import React, { useContext } from 'react';
 import { ContentPanel } from '../../../components/ContentPanel';
 import { CreateChannelContext } from '../CreateChannel';
@@ -21,6 +25,7 @@ export function ChannelNamePanel(props: ChannelNamePanelProps) {
   return (
     <div style={{ maxWidth: '700px' }}>
       <EuiCompressedFormRow
+        id="name"
         label="Name"
         error={context.inputErrors.name.join(' ')}
         isInvalid={context.inputErrors.name.length > 0}

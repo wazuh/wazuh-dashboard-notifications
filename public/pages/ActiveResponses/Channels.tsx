@@ -10,6 +10,7 @@ import {
   EuiHealth,
   EuiHorizontalRule,
   EuiLink,
+  EuiTableActionsColumnType,
   EuiTableFieldDataColumnType,
   EuiTableSortingType,
   EuiTitle,
@@ -21,12 +22,14 @@ import { Pagination } from '@elastic/eui/src/components/basic_table/pagination_b
 import _ from 'lodash';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { SERVER_DELAY } from '../../../common';
 import { ChannelItemType, TableState } from '../../../models/interfaces';
 import {
   ContentPanel,
   ContentPanelActions,
 } from '../../components/ContentPanel';
 import { CoreServicesContext } from '../../components/coreServices';
+import { ModalConsumer } from '../../components/Modal';
 import { NotificationService } from '../../services';
 import {
   ROUTES,
@@ -40,7 +43,10 @@ import { getErrorMessage } from '../../utils/helpers';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '../Notifications/utils/constants';
 import { ChannelActions } from './components/ChannelActions';
 import { ChannelControls } from './components/ChannelControls';
+import { DeleteChannelModal } from './components/modals/DeleteChannelModal';
+import { MuteChannelModal } from './components/modals/MuteChannelModal';
 import { MonitorsShortcut } from './components/MonitorsShortcut';
+import { HowItWorksShortcut } from './components/HowItWorksFlyout';
 import { ChannelFiltersType } from './types';
 import { DataSourceMenuProperties } from '../../services/DataSourceMenuContext';
 import MDSEnabledComponent, {
@@ -49,7 +55,13 @@ import MDSEnabledComponent, {
 } from '../../components/MDSEnabledComponent/MDSEnabledComponent';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import { getUseUpdatedUx } from '../../services/utils/constants';
-import { TopNavControlButtonData } from 'src/plugins/navigation/public';
+import {
+  TopNavControlButtonData,
+  TopNavControlDescriptionData,
+} from 'src/plugins/navigation/public';
+
+export const ACTIVE_RESPONSE_DESCRIPTION =
+  'Active responses automatically execute an action in response to a security event. Each one runs as the action of an Alerting monitor, which you can create or edit from the Monitors app.';
 
 interface ChannelsProps extends RouteComponentProps, DataSourceMenuProperties {
   notificationService: NotificationService;
@@ -165,13 +177,12 @@ export class Channels extends MDSEnabledComponent<
       sort_field: state.sortField,
       sort_order: state.sortDirection,
     };
-    if (state.filters.state != undefined)
-      queryObject.is_enabled = state.filters.state;
-    // TODO: update backend to filter by active response type and location
-    // if (state.filters.type != undefined)
-    //   queryObject.active_response_type = state.filters.type;
-    // if (state.filters.location != undefined)
-    //   queryObject.active_response_location = state.filters.location;
+    if (state.filters.state?.length === 1)
+      queryObject.is_enabled = state.filters.state[0];
+    if (state.filters.type != undefined)
+      queryObject['active_response.type'] = state.filters.type;
+    if (state.filters.location != undefined)
+      queryObject['active_response.location'] = state.filters.location;
     return queryObject;
   }
 
@@ -188,7 +199,7 @@ export class Channels extends MDSEnabledComponent<
         this.setState({ items: [], total: 0 });
       }
       this.context.notifications.toasts.addDanger(
-        getErrorMessage(error, 'There was a problem loading channels.')
+        getErrorMessage(error, 'There was a problem loading active responses.')
       );
     }
     this.setState({ loading: false });
@@ -215,23 +226,35 @@ export class Channels extends MDSEnabledComponent<
     this.setState({ from: 0, filters });
   };
 
+  unmuteChannel = async (item: ChannelItemType) => {
+    const channel = { ...item, is_enabled: true };
+    try {
+      await this.props.notificationService.updateConfig(
+        channel.config_id,
+        channel
+      );
+      this.context.notifications.toasts.addSuccess(
+        `Active response ${channel.name} successfully unmuted.`
+      );
+      setTimeout(() => this.refresh(), SERVER_DELAY);
+    } catch (error) {
+      this.context.notifications.toasts.addError(error?.body || error, {
+        title: 'Failed to unmute active response',
+      });
+    }
+  };
+
   render() {
     const filterIsApplied = !!this.state.search;
     const page = Math.floor(this.state.from / this.state.size);
 
-    const filteredItems = this.state.items.filter((item) => {
-      if (
-        this.state.filters.type &&
-        item.active_response?.type !== this.state.filters.type
-      )
-        return false;
-      if (
-        this.state.filters.location &&
-        item.active_response?.location !== this.state.filters.location
-      )
-        return false;
-      return true;
-    });
+    const hasActiveFilters =
+      !!this.state.search ||
+      this.state.filters.state !== undefined ||
+      this.state.filters.type !== undefined ||
+      this.state.filters.location !== undefined;
+    const isTrulyEmpty =
+      !this.state.loading && this.state.total === 0 && !hasActiveFilters;
 
     const pagination: Pagination = {
       pageIndex: page,
@@ -255,15 +278,18 @@ export class Channels extends MDSEnabledComponent<
     const headerControls = [
       {
         id: 'Create Channel',
-        label: 'Create channel',
+        label: 'Create active response',
         iconType: 'plus',
         fill: true,
-        href: `#${ROUTES.CREATE_CHANNEL}`,
+        href: `#${ROUTES.ACTIVE_RESPONSE_CREATE}`,
         testId: 'createButton',
         controlType: 'button',
       } as TopNavControlButtonData,
       {
         renderComponent: <MonitorsShortcut />,
+      },
+      {
+        renderComponent: <HowItWorksShortcut />,
       },
     ];
 
@@ -293,101 +319,175 @@ export class Channels extends MDSEnabledComponent<
       />
     );
 
-    const basicTableComponent = (
-      <EuiBasicTable
-        columns={this.columns}
-        items={filteredItems}
-        itemId="config_id"
-        isSelectable={true}
-        selection={selection}
-        noItemsMessage={
-          <EuiEmptyPrompt
-            title={
-              <EuiText size="s">
-                <h2>No active responses configured</h2>
-              </EuiText>
-            }
-            body={
-              <EuiText size="s">
-                Active responses are not configured. Create one to automatically
-                react to security events.
-              </EuiText>
-            }
-            actions={
-              <EuiSmallButton href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}>
-                Create active response
-              </EuiSmallButton>
-            }
-          />
-        }
-        onChange={this.onTableChange}
-        pagination={pagination}
-        sorting={sorting}
-        tableLayout="auto"
-        loading={this.state.loading}
-      />
-    );
-
     return (
-      <>
-        {getUseUpdatedUx() ? (
-          <>
-            <PageHeader
-              appRightControls={headerControls}
-              appLeftControls={[{ renderComponent: totalChannels }]}
+      <ModalConsumer>
+        {({ onShow }) => {
+          const actionsColumn: EuiTableActionsColumnType<ChannelItemType> = {
+            name: 'Actions',
+            actions: [
+              {
+                name: 'Edit',
+                description: 'Edit this active response',
+                icon: 'pencil',
+                type: 'icon',
+                onClick: (item) =>
+                  location.assign(
+                    `#${ROUTES.ACTIVE_RESPONSE_EDIT}/${item.config_id}`
+                  ),
+              },
+              {
+                name: 'Delete',
+                description: 'Delete this active response',
+                icon: 'trash',
+                color: 'danger',
+                type: 'icon',
+                onClick: (item) =>
+                  onShow(DeleteChannelModal, {
+                    selected: [item],
+                    refresh: this.refresh,
+                  }),
+              },
+              {
+                name: 'Mute',
+                description: 'Mute this active response',
+                icon: 'bellSlash',
+                type: 'icon',
+                available: (item) => item.is_enabled,
+                onClick: (item) =>
+                  onShow(MuteChannelModal, {
+                    selected: [item],
+                    setSelected: () => {},
+                    refresh: this.refresh,
+                  }),
+              },
+              {
+                name: 'Unmute',
+                description: 'Unmute this active response',
+                icon: 'bell',
+                type: 'icon',
+                available: (item) => !item.is_enabled,
+                onClick: (item) => this.unmuteChannel(item),
+              },
+            ],
+          };
+
+          const basicTableComponent = (
+            <EuiBasicTable
+              columns={[...this.columns, actionsColumn]}
+              items={this.state.items}
+              itemId="config_id"
+              isSelectable={true}
+              selection={selection}
+              noItemsMessage={
+                <EuiEmptyPrompt
+                  title={
+                    <EuiText size="s">
+                      <h2>No active responses configured</h2>
+                    </EuiText>
+                  }
+                  body={
+                    <EuiText size="s">
+                      Active responses are not configured. Create one to
+                      automatically react to security events.
+                    </EuiText>
+                  }
+                  actions={
+                    <EuiSmallButton href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}>
+                      Create active response
+                    </EuiSmallButton>
+                  }
+                />
+              }
+              onChange={this.onTableChange}
+              pagination={pagination}
+              sorting={sorting}
+              tableLayout="auto"
+              loading={this.state.loading}
             />
-            <ContentPanel
-              panelStyles={{
-                padding: this.state.total < 1 ? '16px 16px 0px' : '16px',
-              }}
-            >
-              <div style={{ marginBottom: '10px' }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {channelControlsComponent}
-                  <div style={{ marginLeft: '16px' }}>
-                    {channelActionsComponent}
-                  </div>
-                </div>
-              </div>
-              <EuiHorizontalRule margin="s" />
-              {basicTableComponent}
-            </ContentPanel>
-          </>
-        ) : (
-          <ContentPanel
-            actions={
-              <ContentPanelActions
-                actions={[
-                  {
-                    component: channelActionsComponent,
-                  },
-                  {
-                    component: (
-                      <EuiSmallButton
-                        fill
-                        href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}
-                      >
-                        Create active response
-                      </EuiSmallButton>
-                    ),
-                  },
-                  {
-                    component: <MonitorsShortcut />,
-                  },
-                ]}
-              />
-            }
-            bodyStyles={{ padding: 'initial' }}
-            title="Active responses"
-            titleSize="s"
-            total={this.state.total}
-          >
-            {channelControlsComponent}
-            <EuiHorizontalRule margin="s" />
-            {basicTableComponent}
-          </ContentPanel>
-        )}
-      </>
+          );
+
+          return (
+            <>
+              {getUseUpdatedUx() ? (
+                <>
+                  <PageHeader
+                    appRightControls={headerControls}
+                    appLeftControls={[{ renderComponent: totalChannels }]}
+                    appDescriptionControls={[
+                      {
+                        description: ACTIVE_RESPONSE_DESCRIPTION,
+                      } as TopNavControlDescriptionData,
+                    ]}
+                  />
+                  <ContentPanel
+                    panelStyles={{
+                      padding: this.state.total < 1 ? '16px 16px 0px' : '16px',
+                    }}
+                  >
+                    {!isTrulyEmpty && (
+                      <>
+                        <div style={{ marginBottom: '10px' }}>
+                          <div
+                            style={{ display: 'flex', alignItems: 'center' }}
+                          >
+                            {channelControlsComponent}
+                            <div style={{ marginLeft: '16px' }}>
+                              {channelActionsComponent}
+                            </div>
+                          </div>
+                        </div>
+                        <EuiHorizontalRule margin="s" />
+                      </>
+                    )}
+                    {basicTableComponent}
+                  </ContentPanel>
+                </>
+              ) : (
+                <ContentPanel
+                  actions={
+                    <ContentPanelActions
+                      actions={[
+                        ...(!isTrulyEmpty
+                          ? [{ component: channelActionsComponent }]
+                          : []),
+                        {
+                          component: (
+                            <EuiSmallButton
+                              fill
+                              href={`#${ROUTES.ACTIVE_RESPONSE_CREATE}`}
+                            >
+                              Create active response
+                            </EuiSmallButton>
+                          ),
+                        },
+                        {
+                          component: <MonitorsShortcut />,
+                        },
+                        {
+                          component: <HowItWorksShortcut />,
+                        },
+                      ]}
+                    />
+                  }
+                  bodyStyles={{ padding: 'initial' }}
+                  title="Active responses"
+                  titleSize="s"
+                  total={this.state.total}
+                  description={ACTIVE_RESPONSE_DESCRIPTION}
+                >
+                  {!isTrulyEmpty && (
+                    <>
+                      {channelControlsComponent}
+                      <EuiHorizontalRule margin="s" />
+                    </>
+                  )}
+                  {basicTableComponent}
+                </ContentPanel>
+              )}
+            </>
+          );
+        }}
+      </ModalConsumer>
     );
   }
 }
