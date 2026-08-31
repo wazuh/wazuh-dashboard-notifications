@@ -32,7 +32,7 @@ exports[`<RecipientGroupsTable /> spec renders empty state 1`] = `
           class="euiFlexItem"
         >
           <div
-            class="euiFlexGroup euiFlexGroup--gutterLarge euiFlexGroup--alignItemsCenter euiFlexGroup--justifyContentSpaceBetween euiFlexGroup--directionRow euiFlexGroup--responsive"
+            class="euiFlexGroup euiFlexGroup--gutterSmall euiFlexGroup--alignItemsCenter euiFlexGroup--justifyContentSpaceBetween euiFlexGroup--directionRow euiFlexGroup--responsive"
           >
             <div
               class="euiFlexItem euiFlexItem--flexGrowZero"
