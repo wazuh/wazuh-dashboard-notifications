@@ -4,12 +4,20 @@
  */
 
 import { ChromeBreadcrumb } from 'opensearch-dashboards/public';
-import { getBreadCrumbsSetter, getUseUpdatedUx } from '../services/utils/constants';
+import {
+  getBreadCrumbsSetter,
+  getUseUpdatedUx,
+} from '../services/utils/constants';
 import { DataSourceOption } from 'src/plugins/data_source_management/public';
-import { i18n } from "@osd/i18n";
+import { i18n } from '@osd/i18n';
 import { BehaviorSubject } from 'rxjs';
+import { webDocumentationLink } from '../../common/services/web_documentation';
 
 export const DOCUMENTATION_LINK = '';
+// Wazuh
+export const ACTIVE_RESPONSE_DOCUMENTATION_URL = webDocumentationLink(
+  'user-manual/wazuh-dashboard/wazuh-dashboard-configurations.html#active-response'
+);
 export const ALERTING_DOCUMENTATION_LINK =
   'https://opensearch.org/docs/monitoring-plugins/alerting/monitors/#authenticate-sender-account';
 
@@ -45,7 +53,10 @@ export const BREADCRUMBS = Object.freeze({
     href: `#${ROUTES.EDIT_CHANNEL}`,
   }),
   EMAIL_SENDERS: { text: 'Email senders', href: `#${ROUTES.EMAIL_SENDERS}` },
-  EMAIL_GROUPS: { text: 'Email recipient groups', href: `#${ROUTES.EMAIL_GROUPS}` },
+  EMAIL_GROUPS: {
+    text: 'Email recipient groups',
+    href: `#${ROUTES.EMAIL_GROUPS}`,
+  },
   CREATE_SENDER: {
     text: 'Create SMTP sender',
     href: `#${ROUTES.CREATE_SENDER}`,
@@ -60,16 +71,31 @@ export const BREADCRUMBS = Object.freeze({
     text: 'Create recipient group',
     href: `#${ROUTES.CREATE_RECIPIENT_GROUP}`,
   },
-  EDIT_RECIPIENT_GROUP: { text: 'Edit recipient group', href: `#${ROUTES.EDIT_RECIPIENT_GROUP}`},
+  EDIT_RECIPIENT_GROUP: {
+    text: 'Edit recipient group',
+    href: `#${ROUTES.EDIT_RECIPIENT_GROUP}`,
+  },
   EDIT_RECIPIENT_GROUP_DETAILS: (name: string) => ({
     text: name,
     href: `#${ROUTES.EDIT_RECIPIENT_GROUP}`,
   }),
   // Wazuh
-  ACTIVE_RESPONSES: { text: 'Active responses', href: `#${ROUTES.ACTIVE_RESPONSES}` },
-  ACTIVE_RESPONSE_DETAILS: { text: 'Active response details', href: `#${ROUTES.ACTIVE_RESPONSE_DETAILS}` },
-  ACTIVE_RESPONSE_CREATE: { text: 'Create active response', href: `#${ROUTES.ACTIVE_RESPONSE_CREATE}` },
-  ACTIVE_RESPONSE_EDIT: { text: 'Edit active response', href: `#${ROUTES.ACTIVE_RESPONSE_EDIT}` },
+  ACTIVE_RESPONSES: {
+    text: 'Active responses',
+    href: `#${ROUTES.ACTIVE_RESPONSES}`,
+  },
+  ACTIVE_RESPONSE_DETAILS: {
+    text: 'Active response details',
+    href: `#${ROUTES.ACTIVE_RESPONSE_DETAILS}`,
+  },
+  ACTIVE_RESPONSE_CREATE: {
+    text: 'Create active response',
+    href: `#${ROUTES.ACTIVE_RESPONSE_CREATE}`,
+  },
+  ACTIVE_RESPONSE_EDIT: {
+    text: 'Edit active response',
+    href: `#${ROUTES.ACTIVE_RESPONSE_EDIT}`,
+  },
   ACTIVE_RESPONSE_EDIT_DETAILS: (name: string) => ({
     text: name,
     href: `#${ROUTES.ACTIVE_RESPONSE_EDIT}`,
@@ -95,19 +121,23 @@ export const CUSTOM_WEBHOOK_ENDPOINT_TYPE = Object.freeze({
 });
 
 export function setBreadcrumbs(crumbs: ChromeBreadcrumb[]) {
-  getBreadCrumbsSetter()(getUseUpdatedUx() ? crumbs : [BREADCRUMBS.NOTIFICATIONS, ...crumbs]);
+  getBreadCrumbsSetter()(
+    getUseUpdatedUx() ? crumbs : [BREADCRUMBS.NOTIFICATIONS, ...crumbs]
+  );
 }
 
 // Wazuh
 export function setBreadcrumbsActiveResponse(crumbs: ChromeBreadcrumb[]) {
-  getBreadCrumbsSetter()(getUseUpdatedUx() ? crumbs : [BREADCRUMBS.ACTIVE_RESPONSES, ...crumbs]);
+  getBreadCrumbsSetter()(
+    getUseUpdatedUx() ? crumbs : [BREADCRUMBS.ACTIVE_RESPONSES, ...crumbs]
+  );
 }
 
 const LocalCluster: DataSourceOption = {
-  label: i18n.translate("dataSource.localCluster", {
-    defaultMessage: "Local cluster",
+  label: i18n.translate('dataSource.localCluster', {
+    defaultMessage: 'Local cluster',
   }),
-  id: "",
+  id: '',
 };
 
 // We should use empty object for default value as local cluster may be disabled

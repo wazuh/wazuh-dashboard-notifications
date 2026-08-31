@@ -6,6 +6,7 @@
 import {
   EuiSmallButton,
   EuiSmallButtonEmpty,
+  EuiCallOut,
   EuiCompressedFieldText,
   EuiFlexGroup,
   EuiFlexItem,
@@ -40,9 +41,7 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
   const name = num >= 2 ? `${num} channels` : props.selected[0].name;
   const message = `Delete ${
     num >= 2 ? 'the following channels' : name
-  } permanently? Any notify actions will no longer be able to send notifications using ${
-    num >= 2 ? 'these channels' : 'this channel'
-  }.`;
+  } permanently?`;
 
   return (
     <EuiOverlayMask>
@@ -56,6 +55,18 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
         </EuiModalHeader>
         <EuiModalBody>
           <EuiText size="s">{message}</EuiText>
+          <EuiSpacer />
+          <EuiCallOut
+            title="This may affect Alerting monitors"
+            color="warning"
+            iconType="alert"
+          >
+            <p>
+              Any Alerting trigger still pointing at{' '}
+              {num >= 2 ? 'these channels' : 'this channel'} will become a
+              broken action.
+            </p>
+          </EuiCallOut>
           {num >= 2 && (
             <>
               <EuiSpacer />
@@ -83,7 +94,9 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
         <EuiModalFooter>
           <EuiFlexGroup justifyContent="flexEnd">
             <EuiFlexItem grow={false}>
-              <EuiSmallButtonEmpty onClick={props.onClose}>Cancel</EuiSmallButtonEmpty>
+              <EuiSmallButtonEmpty onClick={props.onClose}>
+                Cancel
+              </EuiSmallButtonEmpty>
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
               <EuiSmallButton
@@ -113,9 +126,12 @@ export const DeleteChannelModal = (props: DeleteChannelModalProps) => {
                         setTimeout(() => props.refresh!(), SERVER_DELAY);
                     })
                     .catch((error) => {
-                      coreContext.notifications.toasts.addError(error?.body || error, {
-                        title: 'Failed to delete one or more channels.',
-                      });
+                      coreContext.notifications.toasts.addError(
+                        error?.body || error,
+                        {
+                          title: 'Failed to delete one or more channels.',
+                        }
+                      );
                       props.onClose();
                     });
                 }}
