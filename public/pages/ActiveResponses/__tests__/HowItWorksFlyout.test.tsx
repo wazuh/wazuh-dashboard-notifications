@@ -15,14 +15,17 @@ import { ACTIVE_RESPONSE_DOCUMENTATION_URL } from '../../../utils/constants';
 describe('<HowItWorksFlyout/> spec', () => {
   it('renders the flyout', () => {
     const utils = render(<HowItWorksFlyout onClose={() => {}} />);
-    expect(utils.getByText(HOW_IT_WORKS_TITLE)).toBeInTheDocument();
+    expect(utils.getByText(HOW_IT_WORKS_TITLE)).toBeTruthy();
   });
 
   it('links to the active response documentation', () => {
     const utils = render(<HowItWorksFlyout onClose={() => {}} />);
     expect(
-      utils.getByText('Read the full documentation').closest('a')
-    ).toHaveAttribute('href', ACTIVE_RESPONSE_DOCUMENTATION_URL);
+      utils
+        .getByText('Read the full documentation')
+        .closest('a')
+        ?.getAttribute('href')
+    ).toBe(ACTIVE_RESPONSE_DOCUMENTATION_URL);
   });
 });
 
@@ -32,6 +35,6 @@ describe('<HowItWorksShortcut/> spec', () => {
     expect(utils.queryByText(HOW_IT_WORKS_TITLE)).toBeNull();
 
     fireEvent.click(utils.getByTestId('how-it-works-button'));
-    expect(utils.getByText(HOW_IT_WORKS_TITLE)).toBeInTheDocument();
+    expect(utils.getByText(HOW_IT_WORKS_TITLE)).toBeTruthy();
   });
 });
