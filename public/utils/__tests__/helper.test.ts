@@ -6,11 +6,7 @@
 import rison from 'rison-node';
 import { applicationServiceMock } from '../../../../../src/core/public/application/application_service.mock';
 import { setApplication } from '../../services/utils/constants';
-import {
-  getActiveResponseExecutionsUrl,
-  getErrorMessage,
-  renderTime,
-} from '../helpers';
+import { getActiveResponseExecutionsUrl, getErrorMessage, renderTime } from '../helpers';
 
 describe('test helper functions', () => {
   it('returns default message if error not valid', () => {
@@ -51,15 +47,12 @@ describe('getActiveResponseExecutionsUrl', () => {
       navLinks: { 'incident-response-dashboard': true },
     };
     (app.getUrlForApp as jest.Mock).mockImplementation(
-      (appId: string, options: { path: string }) =>
-        `http://localhost/app/${appId}${options.path}`
+      (appId: string, options: { path: string }) => `http://localhost/app/${appId}${options.path}`
     );
     setApplication(app);
 
     const url = getActiveResponseExecutionsUrl('my-response');
-    expect(url).toContain(
-      'http://localhost/app/incident-response-dashboard#overview/'
-    );
+    expect(url).toContain('http://localhost/app/incident-response-dashboard#overview/');
     expect(url).toContain('tabView=responses');
 
     const [, encodedAppState] = url.match(/_a=([^&]+)/) || [];

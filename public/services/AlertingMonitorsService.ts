@@ -61,15 +61,10 @@ function triggerActions(trigger: Trigger): Action[] {
   ];
 }
 
-function monitorReferencesDestination(
-  hit: MonitorHit,
-  destinationId: string
-): boolean {
+function monitorReferencesDestination(hit: MonitorHit, destinationId: string): boolean {
   const triggers = hit._source?.triggers ?? [];
   return triggers.some((trigger) =>
-    triggerActions(trigger).some(
-      (action) => action.destination_id === destinationId
-    )
+    triggerActions(trigger).some((action) => action.destination_id === destinationId)
   );
 }
 
@@ -96,9 +91,7 @@ export default class AlertingMonitorsService {
    * matching destination_id client-side against `_source`, works around that gap
    * without needing an indexer-side mapping change.
    */
-  getMonitorsUsingDestination = async (
-    destinationId: string
-  ): Promise<AlertingMonitorSummary[]> => {
+  getMonitorsUsingDestination = async (destinationId: string): Promise<AlertingMonitorSummary[]> => {
     const esQuery = {
       size: MAX_MONITORS,
       query: {
@@ -110,16 +103,12 @@ export default class AlertingMonitorsService {
       ALERTING_MONITORS_SEARCH_API,
       {
         body: JSON.stringify({ query: esQuery }),
-        query: this.dataSourceId
-          ? { dataSourceId: this.dataSourceId }
-          : undefined,
+        query: this.dataSourceId ? { dataSourceId: this.dataSourceId } : undefined,
       }
     );
 
     if (!response.ok) {
-      throw new Error(
-        'Failed to look up monitors referencing this active response.'
-      );
+      throw new Error('Failed to look up monitors referencing this active response.');
     }
 
     const hits = response.resp?.hits?.hits ?? [];
