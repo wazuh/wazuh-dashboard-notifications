@@ -118,10 +118,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 iconType="arrowDown"
                 grow={false}
                 hasActiveFilters={isItemSelected(stateItems)}
-                numActiveFilters={
-                  stateItems.filter((item) => item.checked === 'on').length ||
-                  undefined
-                }
+                numActiveFilters={stateItems.filter((item) => item.checked === 'on').length || undefined}
                 onClick={() => setIsStatePopoverOpen(!isStatePopoverOpen)}
               >
                 Status
@@ -153,10 +150,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 iconType="arrowDown"
                 grow={false}
                 hasActiveFilters={isItemSelected(typeItems)}
-                numActiveFilters={
-                  typeItems.filter((item) => item.checked === 'on').length ||
-                  undefined
-                }
+                numActiveFilters={typeItems.filter((item) => item.checked === 'on').length || undefined}
                 onClick={() => setIsTypePopoverOpen(!isTypePopoverOpen)}
               >
                 Type
