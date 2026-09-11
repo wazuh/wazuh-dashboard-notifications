@@ -96,9 +96,7 @@ describe('<CreateChannel/> spec', () => {
       <MainContext.Provider value={mainStateMock}>
         <ServicesContext.Provider value={notificationServiceMockCreate}>
           <CoreServicesContext.Provider value={coreServicesMock}>
-            <CreateChannel
-              {...(props as RouteComponentProps<{ id: string }>)}
-            />
+            <CreateChannel {...(props as RouteComponentProps<{ id: string }>)} />
           </CoreServicesContext.Provider>
         </ServicesContext.Provider>
       </MainContext.Provider>

@@ -135,25 +135,28 @@ export function configRoutes(router: IRouter, dataSourceEnabled: boolean) {
         dataSourceEnabled
       );
       try {
-        const resp = await client('notifications.getConfigs', {
-          from_index: request.query.from_index,
-          max_items: request.query.max_items,
-          is_enabled: request.query.is_enabled,
-          sort_field: request.query.sort_field,
-          sort_order: request.query.sort_order,
-          config_type,
-          ...(query && { text_query: query }), // text_query will exclude keyword fields
-          ...(config_id_list && { config_id_list }),
-          ...(encryption_method && {
-            'smtp_account.method': encryption_method,
-          }),
-          ...(activeResponseType && {
-            'active_response.type.keyword': activeResponseType,
-          }),
-          ...(activeResponseLocation && {
-            'active_response.location.keyword': activeResponseLocation,
-          }),
-        });
+        const resp = await client(
+          'notifications.getConfigs',
+          {
+            from_index: request.query.from_index,
+            max_items: request.query.max_items,
+            is_enabled: request.query.is_enabled,
+            sort_field: request.query.sort_field,
+            sort_order: request.query.sort_order,
+            config_type,
+            ...(query && { text_query: query }), // text_query will exclude keyword fields
+            ...(config_id_list && { config_id_list }),
+            ...(encryption_method && {
+              'smtp_account.method': encryption_method,
+            }),
+            ...(activeResponseType && {
+              'active_response.type.keyword': activeResponseType,
+            }),
+            ...(activeResponseLocation && {
+              'active_response.location.keyword': activeResponseLocation,
+            }),
+          }
+        );
         return response.ok({ body: resp });
       } catch (error) {
         return response.custom({

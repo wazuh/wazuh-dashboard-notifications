@@ -22,8 +22,7 @@ const ACTIVE_RESPONSES_INDEX_PATTERN_ID = 'wazuh-active-responses*';
 // final solution should filter by config_id instead — that requires adding a
 // config_id field to the wazuh-active-responses* documents and indexing it.
 const ACTIVE_RESPONSE_NAME_FIELD = 'wazuh.active_response.name';
-const ACTIVE_RESPONSES_TAB_PATH =
-  '#overview/?tab=incident-response-dashboard&tabView=responses';
+const ACTIVE_RESPONSES_TAB_PATH = '#overview/?tab=incident-response-dashboard&tabView=responses';
 // 3-day window matches wazuh-active-responses*'s retention (vs. the 24h default
 // wazuh-kibana-app's own Discover deep links use for longer-retention indices) —
 // otherwise the first visit could silently clip up to 2 days of real executions.
@@ -50,7 +49,9 @@ export function navigateToMonitorsApp(): void {
   }
 }
 
-export function handleMonitorsLinkClick(event: MouseEvent<HTMLElement>): void {
+export function handleMonitorsLinkClick(
+  event: MouseEvent<HTMLElement>
+): void {
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
     return; // let the browser handle open in new tab
   }
@@ -105,9 +106,7 @@ function buildActiveResponseExecutionsPath(name: string): string {
           type: 'phrase',
           index: ACTIVE_RESPONSES_INDEX_PATTERN_ID,
         },
-        query: {
-          match_phrase: { [ACTIVE_RESPONSE_NAME_FIELD]: { query: name } },
-        },
+        query: { match_phrase: { [ACTIVE_RESPONSE_NAME_FIELD]: { query: name } } },
         $state: { store: 'appState' },
       },
     ],
@@ -118,9 +117,7 @@ function buildActiveResponseExecutionsPath(name: string): string {
 
 function isIncidentResponseAppAvailable(): boolean {
   try {
-    return Boolean(
-      getApplication().capabilities.navLinks[INCIDENT_RESPONSE_APP_ID]
-    );
+    return Boolean(getApplication().capabilities.navLinks[INCIDENT_RESPONSE_APP_ID]);
   } catch {
     return false;
   }
