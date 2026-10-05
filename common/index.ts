@@ -5,6 +5,9 @@
 
 export const PLUGIN_ID = 'notificationsDashboards';
 export const PLUGIN_NAME = 'notifications-dashboards';
+// Wazuh: add active responses constants
+export const PLUGIN_ACTIVE_RESPONSES_ID = 'active-responses';
+export const PLUGIN_ACTIVE_RESPONSES_NAME = 'active-responses';
 
 // after delete operation returns, a delay is needed before the change reflects in another request
 export const SERVER_DELAY = 1000;

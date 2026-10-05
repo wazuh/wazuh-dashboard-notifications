@@ -3,12 +3,22 @@
   "version": "3.9.0.0",
   "description": "OpenSearch Dashboards Notifications Plugin",
   "license": "Apache-2.0",
+  "opensearchDashboards": {
+    "version": "3.9.0",
+    "templateVersion": "3.9.0"
+  },
+  "wazuh": {
+    "version": "5.1.0",
+    "revision": "00"
+  },
   "main": "index.ts",
   "config": {
     "id": "notificationsDashboards",
     "zip_name": "notifications-dashboards"
   },
   "scripts": {
+    "prepare": "husky",
+    "lint-staged": "lint-staged",
     "osd": "node ../../scripts/osd",
     "opensearch": "node ../../scripts/opensearch",
     "lint": "node ../../scripts/eslint . && node ../../scripts/stylelint",
@@ -21,7 +31,12 @@
     "postbuild": "echo Renaming build artifact to [$npm_package_config_zip_name-$npm_package_version.zip] && mv build/$npm_package_config_id*.zip build/$npm_package_config_zip_name-$npm_package_version.zip"
   },
   "devDependencies": {
-    "cypress": "^13.6.0"
+    "@types/showdown": "^1.9.3",
+    "cypress": "^13.6.0",
+    "enzyme-adapter-react-16": "^1.15.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "^2.1.1"
   },
   "resolutions": {
     "qs": "^6.15.2",

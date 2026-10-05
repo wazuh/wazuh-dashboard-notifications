@@ -1,3 +1,5 @@
+import { wazuh } from '../package.json';
+
 export const BACKEND_CHANNEL_TYPE = Object.freeze({
   SLACK: 'slack',
   EMAIL: 'email',
@@ -6,6 +8,8 @@ export const BACKEND_CHANNEL_TYPE = Object.freeze({
   CUSTOM_WEBHOOK: 'webhook',
   SNS: 'sns',
   MATTERMOST: 'mattermost',
+  // Wazuh
+  ACTIVE_RESPONSE: 'active_response',
 });
 export const CHANNEL_TYPE = Object.freeze({
   [BACKEND_CHANNEL_TYPE.SLACK]: 'Slack',
@@ -15,6 +19,8 @@ export const CHANNEL_TYPE = Object.freeze({
   [BACKEND_CHANNEL_TYPE.CUSTOM_WEBHOOK]: 'Custom webhook',
   [BACKEND_CHANNEL_TYPE.SNS]: 'Amazon SNS',
   [BACKEND_CHANNEL_TYPE.MATTERMOST]: 'Mattermost',
+  // Wazuh
+  [BACKEND_CHANNEL_TYPE.ACTIVE_RESPONSE]: 'Active response',
 }) as {
   slack: string;
   email: string;
@@ -23,4 +29,63 @@ export const CHANNEL_TYPE = Object.freeze({
   webhook: string;
   sns: string;
   mattermost: string;
+  // Wazuh
+  active_response: string;
 };
+
+// Wazuh
+export const ACTIVE_RESPONSE_TYPE = Object.freeze({
+  STATELESS: 'stateless',
+  STATEFUL: 'stateful',
+});
+
+export const ACTIVE_RESPONSE_TYPE_LABEL = Object.freeze({
+  [ACTIVE_RESPONSE_TYPE.STATELESS]: 'Stateless',
+  [ACTIVE_RESPONSE_TYPE.STATEFUL]: 'Stateful',
+});
+
+export const ACTIVE_RESPONSE_TYPE_DESCRIPTION = Object.freeze({
+  [ACTIVE_RESPONSE_TYPE.STATELESS]: 'Runs once. Nothing is reverted — a false positive stays in effect until someone intervenes.',
+  [ACTIVE_RESPONSE_TYPE.STATEFUL]: 'Runs, then asks the agent to revert after a timeout. Only works if the executable supports reversal.',
+});
+
+export const ACTIVE_RESPONSE_DEFAULT_STATEFUL_TIMEOUT = 180;
+
+export const ACTIVE_RESPONSE_LOCATION = Object.freeze({
+  ALL: 'all',
+  DEFINED_AGENT: 'defined-agent',
+  LOCAL: 'local',
+});
+
+export const ACTIVE_RESPONSE_LOCATION_LABEL = Object.freeze({
+  [ACTIVE_RESPONSE_LOCATION.ALL]: 'All agents',
+  [ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT]: 'Defined agent',
+  [ACTIVE_RESPONSE_LOCATION.LOCAL]: 'Local',
+});
+
+/* This constant defines the categories of channels that are considered "managed" by the system.
+Managed channels are those that have specific handling, as opposed
+to generic notification channels. By categorizing channels into managed and notification types,
+the system can apply different logic or UI elements based on the channel category. */
+export const MANAGED_CHANNEL_CATEGORIES = Object.freeze([
+  BACKEND_CHANNEL_TYPE.ACTIVE_RESPONSE,
+] as const);
+
+// This constant defines the default category for channels that do not fall under the managed categories.
+export const DEFAULT_CHANNEL_CATEGORY = 'notification';
+
+export const ACTIVE_RESPONSE_LOCATION_DESCRIPTION = Object.freeze({
+  [ACTIVE_RESPONSE_LOCATION.LOCAL]:
+    'The agent that reported the event. The safe default for most remediations.',
+  [ACTIVE_RESPONSE_LOCATION.DEFINED_AGENT]:
+    'One named agent, whatever reported the event.',
+  [ACTIVE_RESPONSE_LOCATION.ALL]: 'Every agent in the environment.',
+});
+
+export const WAZUH_VERSION = wazuh.version;
+
+export const PLUGIN_VERSION_SHORT = WAZUH_VERSION.split('.')
+  .splice(0, 2)
+  .join('.');
+
+export const DOCUMENTATION_WEB_BASE_URL = 'https://documentation.wazuh.com';

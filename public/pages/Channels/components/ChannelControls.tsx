@@ -14,11 +14,10 @@ import {
 } from '@elastic/eui';
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  CHANNEL_TYPE,
-} from '../../../../common/constants';
+import { CHANNEL_TYPE } from '../../../../common/constants';
 import { MainContext } from '../../Main/Main';
 import { ChannelFiltersType } from '../types';
+import { isManagedChannelType } from '../../../../common/utils';
 
 interface ChannelControlsProps {
   onSearchChange: (search: string) => void;
@@ -35,18 +34,24 @@ export const ChannelControls = (props: ChannelControlsProps) => {
   ]);
   const [isTypePopoverOpen, setIsTypePopoverOpen] = useState(false);
   const [typeItems, setTypeItems] = useState(
-    Object.entries(mainStateContext.availableChannels).map(([key, value]) => ({
-      field: key,
-      display: value,
-      checked: 'off',
-    }))
+    Object.entries(mainStateContext.availableChannels)
+      .filter(([key]) => !isManagedChannelType(key)) // Wazuh
+      .map(([key, value]) => ({
+        field: key,
+        display: value,
+        checked: 'off',
+      }))
   );
 
   useEffect(() => {
-    const newItems = typeItems.filter(
-      ({ field }) =>
-        !!mainStateContext.availableChannels[field as keyof typeof CHANNEL_TYPE]
-    );
+    const newItems = typeItems.filter(({ field }) => {
+      // Wazuh
+      const channel =
+        mainStateContext.availableChannels?.[
+          field as keyof typeof CHANNEL_TYPE
+        ];
+      return !!channel && !isManagedChannelType(channel);
+    });
     if (newItems.length !== typeItems.length) setTypeItems(newItems);
   }, [mainStateContext.availableChannels]);
 
@@ -75,7 +80,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
     switch (type) {
       case 'state':
         setStateItems(newItems);
-        newFilters.state = checkedItems[0];
+        newFilters.state = checkedItems.length > 0 ? checkedItems : undefined;
         break;
       case 'type':
         setTypeItems(newItems);
@@ -112,9 +117,11 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(stateItems)}
+                numActiveFilters={stateItems.filter((item) => item.checked === 'on').length || undefined}
                 onClick={() => setIsStatePopoverOpen(!isStatePopoverOpen)}
               >
-                {isItemSelected(stateItems) ? <b>Status</b> : 'Status'}
+                Status
               </EuiSmallFilterButton>
             }
             isOpen={isStatePopoverOpen}
@@ -126,10 +133,7 @@ export const ChannelControls = (props: ChannelControlsProps) => {
                 <EuiFilterSelectItem
                   key={`channel-state-filter-${index}`}
                   checked={item.checked === 'on' ? 'on' : undefined}
-                  onClick={() => {
-                    updateItem(stateItems, index, 'state', true);
-                    setIsStatePopoverOpen(false);
-                  }}
+                  onClick={() => updateItem(stateItems, index, 'state')}
                 >
                   {item.display}
                 </EuiFilterSelectItem>
@@ -145,9 +149,11 @@ export const ChannelControls = (props: ChannelControlsProps) => {
               <EuiSmallFilterButton
                 iconType="arrowDown"
                 grow={false}
+                hasActiveFilters={isItemSelected(typeItems)}
+                numActiveFilters={typeItems.filter((item) => item.checked === 'on').length || undefined}
                 onClick={() => setIsTypePopoverOpen(!isTypePopoverOpen)}
               >
-                {isItemSelected(typeItems) ? <b>Type</b> : 'Type'}
+                Type
               </EuiSmallFilterButton>
             }
             isOpen={isTypePopoverOpen}

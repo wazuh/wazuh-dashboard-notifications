@@ -57,13 +57,15 @@ describe('<ChannelControls /> spec', () => {
     );
     fireEvent.click(utils.getByText('Status'));
     fireEvent.click(utils.getByText('Active'));
-    expect(onFiltersChange).toHaveBeenCalledWith({ state: 'true' });
+    expect(onFiltersChange).toBeCalledWith({ state: ['true'] });
+    fireEvent.click(utils.getByText('Muted'));
+    expect(onFiltersChange).toBeCalledWith({ state: ['true', 'false'] });
 
     fireEvent.click(utils.getByText('Type'));
     fireEvent.click(utils.getByText('Email'));
     fireEvent.click(utils.getByText('Chime'));
     expect(onFiltersChange).toHaveBeenCalledWith({ type: ['email', 'chime'] });
 
-    expect(onFiltersChange).toHaveBeenCalledTimes(3);
+    expect(onFiltersChange).toBeCalledTimes(4);
   });
 });

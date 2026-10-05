@@ -1,17 +1,22 @@
 ##
- # Copyright OpenSearch Contributors
- # SPDX-License-Identifier: Apache-2.0
+# Copyright OpenSearch Contributors
+# SPDX-License-Identifier: Apache-2.0
 ##
 
 name: Link Checker
 
 on:
-  push:
   pull_request:
+    branches: ['*']
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   linkchecker:
-
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
 
     steps:
@@ -25,4 +30,3 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Fail if there were link errors
         run: exit ${{ steps.lychee.outputs.exit_code }}
-
