@@ -92,6 +92,59 @@ export function handleMonitorDetailsLinkClick(
   navigateToMonitorDetails(monitorId);
 }
 
+// Wazuh: the alerting create monitor form opens set up to send new findings to
+// the channel given in the URL.
+const FINDINGS_MONITOR_PRESET = 'findings';
+
+function getAlertingAppId(): string {
+  return getUseUpdatedUx() ? MONITORS_APP_ID : ALERTING_APP_ID;
+}
+
+function getFindingsMonitorPath(channelId: string): string {
+  return `#/create-monitor?preset=${FINDINGS_MONITOR_PRESET}&channelId=${encodeURIComponent(
+    channelId
+  )}`;
+}
+
+// The alerting plugin is optional, so links to it are only offered when its
+// app is registered.
+export function isAlertingAppAvailable(): boolean {
+  try {
+    return Boolean(getApplication().capabilities.navLinks[getAlertingAppId()]);
+  } catch {
+    return false;
+  }
+}
+
+export function getFindingsMonitorUrl(channelId: string): string {
+  if (!channelId || !isAlertingAppAvailable()) return '';
+  try {
+    return getApplication().getUrlForApp(getAlertingAppId(), {
+      path: getFindingsMonitorPath(channelId),
+    });
+  } catch {
+    return '';
+  }
+}
+
+export function navigateToFindingsMonitor(channelId: string): void {
+  if (!isAlertingAppAvailable()) return;
+  getApplication().navigateToApp(getAlertingAppId(), {
+    path: getFindingsMonitorPath(channelId),
+  });
+}
+
+export function handleFindingsMonitorLinkClick(
+  event: MouseEvent<HTMLElement>,
+  channelId: string
+): void {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
+    return; // let the browser handle open in new tab
+  }
+  event.preventDefault();
+  navigateToFindingsMonitor(channelId);
+}
+
 function buildActiveResponseExecutionsPath(name: string): string {
   const filterState = rison.encode({
     filters: [

@@ -5,8 +5,15 @@
 
 import rison from 'rison-node';
 import { applicationServiceMock } from '../../../../../src/core/public/application/application_service.mock';
-import { setApplication } from '../../services/utils/constants';
-import { getActiveResponseExecutionsUrl, getErrorMessage, renderTime } from '../helpers';
+import { uiSettingsServiceMock } from '../../../../../src/core/public/ui_settings/ui_settings_service.mock';
+import { setApplication, setUISettings } from '../../services/utils/constants';
+import {
+  getActiveResponseExecutionsUrl,
+  getErrorMessage,
+  getFindingsMonitorUrl,
+  isAlertingAppAvailable,
+  renderTime,
+} from '../helpers';
 
 describe('test helper functions', () => {
   it('returns default message if error not valid', () => {
@@ -59,5 +66,56 @@ describe('getActiveResponseExecutionsUrl', () => {
     const appState: any = rison.decode(decodeURIComponent(encodedAppState));
     expect(appState.filters[0].meta.key).toBe('wazuh.active_response.name');
     expect(appState.filters[0].meta.value).toBe('my-response');
+  });
+});
+
+// Wazuh
+describe('getFindingsMonitorUrl', () => {
+  const setupApplication = (navLinks: Record<string, boolean>) => {
+    const app = applicationServiceMock.createStartContract();
+    app.capabilities = { ...app.capabilities, navLinks };
+    (app.getUrlForApp as jest.Mock).mockImplementation(
+      (appId: string, options: { path: string }) =>
+        `http://localhost/app/${appId}${options.path}`
+    );
+    setApplication(app);
+  };
+  const setUseUpdatedUx = (useUpdatedUx: boolean) => {
+    const uiSettings = uiSettingsServiceMock.createStartContract();
+    (uiSettings.get as jest.Mock).mockReturnValue(useUpdatedUx);
+    setUISettings(uiSettings);
+  };
+
+  beforeEach(() => setUseUpdatedUx(false));
+
+  it('returns an empty string when the alerting app is not installed', () => {
+    setupApplication({});
+
+    expect(isAlertingAppAvailable()).toBe(false);
+    expect(getFindingsMonitorUrl('channel_id')).toBe('');
+  });
+
+  it('returns an empty string without a channel', () => {
+    setupApplication({ alerting: true });
+
+    expect(getFindingsMonitorUrl('')).toBe('');
+  });
+
+  it('opens the create monitor form with the findings preset for the channel', () => {
+    setupApplication({ alerting: true });
+
+    expect(isAlertingAppAvailable()).toBe(true);
+    expect(getFindingsMonitorUrl('channel id/1')).toBe(
+      'http://localhost/app/alerting#/create-monitor?preset=findings&channelId=channel%20id%2F1'
+    );
+  });
+
+  it('uses the monitors app with the updated UX', () => {
+    setUseUpdatedUx(true);
+    setupApplication({ monitors: true });
+
+    expect(getFindingsMonitorUrl('channel_id')).toBe(
+      'http://localhost/app/monitors#/create-monitor?preset=findings&channelId=channel_id'
+    );
   });
 });

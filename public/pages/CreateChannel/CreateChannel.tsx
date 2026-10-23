@@ -30,7 +30,11 @@ import {
   setBreadcrumbs,
 } from '../../utils/constants';
 import { BACKEND_CHANNEL_TYPE, CHANNEL_TYPE } from '../../../common/constants'
-import { getErrorMessage } from '../../utils/helpers';
+import { getErrorMessage, isAlertingAppAvailable } from '../../utils/helpers';
+import {
+  mountSendFindingsToast,
+  SEND_FINDINGS_TOAST_LIFETIME_MS,
+} from '../Channels/components/details/SendFindingsButton';
 import { HeaderItemType, WebhookHttpType, WebhookMethodType } from '../Channels/types';
 import { MainContext } from '../Main/Main';
 import { ChannelNamePanel } from './components/ChannelNamePanel';
@@ -537,10 +541,23 @@ export function CreateChannel(props: CreateChannelsProps) {
                   : servicesContext.notificationService.createConfig(config);
                 await request
                   .then((response) => {
-                    coreContext.notifications.toasts.addSuccess(
-                      `Channel ${name} successfully ${props.edit ? 'updated' : 'created'
-                      }.`
-                    );
+                    const message = `Channel ${name} successfully ${
+                      props.edit ? 'updated' : 'created'
+                    }.`;
+                    // Wazuh: lead from a new channel to a monitor that uses it
+                    const channelId = response?.config_id;
+                    if (!props.edit && channelId && isAlertingAppAvailable()) {
+                      const { toasts } = coreContext.notifications;
+                      const toast = toasts.addSuccess({
+                        title: message,
+                        text: mountSendFindingsToast(channelId, () =>
+                          toasts.remove(toast)
+                        ),
+                        toastLifeTimeMs: SEND_FINDINGS_TOAST_LIFETIME_MS,
+                      });
+                    } else {
+                      coreContext.notifications.toasts.addSuccess(message);
+                    }
                     setTimeout(() => (location.hash = prevURL), SERVER_DELAY);
                   })
                   .catch((error) => {
