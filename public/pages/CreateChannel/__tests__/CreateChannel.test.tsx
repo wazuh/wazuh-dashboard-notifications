@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { MOCK_DATA } from '../../../../test/mocks/mockData';
@@ -17,6 +17,8 @@ import { ServicesContext } from '../../../services';
 import { MainContext } from '../../Main/Main';
 import { CreateChannel } from '../CreateChannel';
 import { setupCoreStart } from '../../../../test/utils/helpers';
+import { applicationServiceMock } from '../../../../../../src/core/public/application/application_service.mock';
+import { setApplication } from '../../../services/utils/constants';
 
 beforeAll(() => {
   setupCoreStart();
@@ -346,6 +348,68 @@ describe('<CreateChannel/> spec', () => {
     utilsSNS.getByTestId('create-channel-create-button').click();
     await waitFor(() => {
       expect(updateConfigSuccess).toBeCalled();
+    });
+  });
+});
+
+// Wazuh
+describe('<CreateChannel/> after creating a channel', () => {
+  const createChannel = (navLinks: Record<string, boolean>) => {
+    const app = applicationServiceMock.createStartContract();
+    app.capabilities = { ...app.capabilities, navLinks };
+    setApplication(app);
+
+    const services = {
+      notificationService: {
+        createConfig: jest.fn(async () => ({ config_id: 'new_channel_id' })),
+      },
+    } as any;
+    const props: any = { match: { params: {} }, location: { search: '' } };
+    const utils = render(
+      <MainContext.Provider value={mainStateMock}>
+        <ServicesContext.Provider value={services}>
+          <CoreServicesContext.Provider value={coreServicesMock}>
+            <CreateChannel {...props} />
+          </CoreServicesContext.Provider>
+        </ServicesContext.Provider>
+      </MainContext.Provider>
+    );
+    fireEvent.change(utils.getByTestId('create-channel-name-input'), {
+      target: { value: 'SOC Slack' },
+    });
+    fireEvent.change(utils.getByTestId('create-channel-slack-webhook-input'), {
+      target: { value: 'https://hooks.slack.com/services/test' },
+    });
+    fireEvent.click(utils.getByTestId('create-channel-create-button'));
+    return services.notificationService.createConfig;
+  };
+
+  beforeEach(() => {
+    (coreServicesMock.notifications.toasts.addSuccess as jest.Mock).mockClear();
+  });
+
+  it('offers to send findings to the new channel', async () => {
+    const createConfig = createChannel({ alerting: true });
+
+    await waitFor(() => {
+      expect(
+        coreServicesMock.notifications.toasts.addSuccess
+      ).toHaveBeenCalledWith({
+        title: 'Channel SOC Slack successfully created.',
+        text: expect.any(Function),
+        toastLifeTimeMs: 20000,
+      });
+    });
+    expect(createConfig).toHaveBeenCalled();
+  });
+
+  it('only confirms the creation when the alerting app is not installed', async () => {
+    createChannel({});
+
+    await waitFor(() => {
+      expect(
+        coreServicesMock.notifications.toasts.addSuccess
+      ).toHaveBeenCalledWith('Channel SOC Slack successfully created.');
     });
   });
 });

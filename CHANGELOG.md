@@ -5,6 +5,7 @@
 | Issue | Comment |
 | ----- | ------- |
 | [#6](https://github.com/wazuh/wazuh-dashboard-notifications/issues/6) | Added Active responses app |
+| [#9436](https://github.com/wazuh/wazuh-dashboard-plugins/issues/9436) | Added "Send findings to this channel" to the channel details page and to the channel created message |
 
 ### Changed
 

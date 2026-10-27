@@ -31,6 +31,7 @@ import { MuteChannelModal } from '../modals/MuteChannelModal';
 import { ChannelDetailItems } from './ChannelDetailItems';
 import { ChannelDetailsActions } from './ChannelDetailsActions';
 import { ChannelSettingsDetails } from './ChannelSettingsDetails';
+import { SendFindingsButton } from './SendFindingsButton';
 import PageHeader from "../../../../components/PageHeader/PageHeader";
 import { TopNavControlButtonData } from '../../../../../../../src/plugins/navigation/public';
 import { getUseUpdatedUx } from '../../../../services/utils/constants';
@@ -184,6 +185,17 @@ export function ChannelDetails(props: ChannelDetailsProps) {
         </ModalConsumer>
       )}
     </EuiFlexItem>
+    {/* Wazuh: the next step after a channel works is a monitor that uses it */}
+    {channel && (
+      <EuiFlexItem grow={false}>
+        <SendFindingsButton
+          channelId={channel.config_id}
+          isMuted={!channel.is_enabled}
+          // The updated UX header already has a primary "Send test message"
+          fill={!getUseUpdatedUx()}
+        />
+      </EuiFlexItem>
+    )}
   </EuiFlexGroup>;
   const rightControls = [
     {
