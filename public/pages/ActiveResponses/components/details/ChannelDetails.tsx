@@ -30,6 +30,7 @@ import {
 import {
   getActiveResponseExecutionsUrl,
   getMonitorDetailsUrl,
+  getTestMessageError,
   handleActiveResponseExecutionsLinkClick,
   handleMonitorDetailsLinkClick,
   renderTime,
@@ -67,11 +68,16 @@ export function ChannelDetails(props: ChannelDetailsProps) {
         'Successfully sent a test message.'
       );
     } catch (error) {
-      coreContext.notifications.toasts.addError(error?.body || error, {
-        title: 'Failed to send the test message.',
-        toastMessage:
-          'View error details and adjust the active response settings.',
-      });
+      const testMessageError = getTestMessageError(error);
+      coreContext.notifications.toasts.addError(
+        testMessageError || error?.body || error,
+        {
+          title: 'Failed to send the test message.',
+          toastMessage:
+            testMessageError?.message ||
+            'View error details and adjust the active response settings.',
+        }
+      );
     }
   };
 

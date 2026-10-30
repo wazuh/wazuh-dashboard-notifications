@@ -30,7 +30,11 @@ import {
   setBreadcrumbs,
 } from '../../utils/constants';
 import { BACKEND_CHANNEL_TYPE, CHANNEL_TYPE } from '../../../common/constants'
-import { getErrorMessage, isAlertingAppAvailable } from '../../utils/helpers';
+import {
+  getErrorMessage,
+  getTestMessageError,
+  isAlertingAppAvailable,
+} from '../../utils/helpers';
 import {
   mountSendFindingsToast,
   SEND_FINDINGS_TOAST_LIFETIME_MS,
@@ -370,10 +374,16 @@ export function CreateChannel(props: CreateChannelsProps) {
         'Successfully sent a test message.'
       );
     } catch (error: any) {
-      coreContext.notifications.toasts.addError(error?.body || error, {
-        title: 'Failed to send the test message.',
-        toastMessage: 'View error details and adjust the channel settings.',
-      });
+      const testMessageError = getTestMessageError(error);
+      coreContext.notifications.toasts.addError(
+        testMessageError || error?.body || error,
+        {
+          title: 'Failed to send the test message.',
+          toastMessage:
+            testMessageError?.message ||
+            'View error details and adjust the channel settings.',
+        }
+      );
     } finally {
       if (tempChannelId) {
         servicesContext.notificationService
