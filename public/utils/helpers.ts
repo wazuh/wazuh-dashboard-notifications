@@ -233,7 +233,12 @@ function getDeliveryStatusText(details: string): string | undefined {
  * and its stack keeps the raw response, shown under "See the full error".
  */
 export function getTestMessageError(error: any): Error | undefined {
-  const details = error?.body?.message;
+  // A failed request carries the indexer response in its body. A failed
+  // delivery that sendTestMessage throws carries it in its stack.
+  const details =
+    typeof error?.body?.message === 'string'
+      ? error.body.message
+      : error?.stack;
   const statusText =
     typeof details === 'string' ? getDeliveryStatusText(details) : undefined;
   if (!statusText) return undefined;

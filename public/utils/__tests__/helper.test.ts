@@ -151,6 +151,23 @@ describe('getTestMessageError', () => {
     );
   });
 
+  it('reads the failed delivery that sendTestMessage throws', () => {
+    const error = new Error('Failed to send the test message.');
+    error.stack = JSON.stringify(
+      {
+        status_list: [
+          {
+            delivery_status: { status_code: '500', status_text: 'Bad gateway' },
+          },
+        ],
+      },
+      null,
+      2
+    );
+
+    expect(getTestMessageError(error)?.message).toBe('Bad gateway');
+  });
+
   it('returns undefined when the failure has no delivery status', () => {
     expect(
       getTestMessageError({ body: { message: 'Internal Server Error' } })
