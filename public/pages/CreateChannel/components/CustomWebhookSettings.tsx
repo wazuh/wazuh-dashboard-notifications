@@ -11,9 +11,14 @@ import {
   EuiRadioGroupOption,
   EuiSpacer,
   EuiCompressedSuperSelect,
+  EuiLink,
 } from '@elastic/eui';
+import { i18n } from '@osd/i18n';
 import React, { useContext } from 'react';
-import { CUSTOM_WEBHOOK_ENDPOINT_TYPE } from '../../../utils/constants';
+import {
+  CUSTOM_WEBHOOK_ENDPOINT_TYPE,
+  HOST_DENY_LIST_DOCUMENTATION_URL,
+} from '../../../utils/constants';
 import {
   HeaderItemType,
   WebhookHttpType,
@@ -63,6 +68,27 @@ export function CustomWebhookSettings(props: CustomWebhookSettingsProps) {
     return (
       <EuiCompressedFormRow
         label="Webhook URL"
+        helpText={
+          <>
+            {i18n.translate(
+              'notificationsDashboards.customWebhook.webhookUrlHelpText',
+              {
+                defaultMessage:
+                  'Local and private addresses are blocked by default.',
+              }
+            )}{' '}
+            <EuiLink
+              href={HOST_DENY_LIST_DOCUMENTATION_URL}
+              target="_blank"
+              external
+            >
+              {i18n.translate(
+                'notificationsDashboards.customWebhook.webhookUrlHelpLink',
+                { defaultMessage: 'Learn more' }
+              )}
+            </EuiLink>
+          </>
+        }
         error={context.inputErrors.webhookURL.join(' ')}
         isInvalid={context.inputErrors.webhookURL.length > 0}
       >
