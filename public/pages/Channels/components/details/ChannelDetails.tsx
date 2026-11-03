@@ -25,7 +25,8 @@ import {
   ROUTES,
   setBreadcrumbs,
 } from '../../../../utils/constants';
-import { getTestMessageError, renderTime } from '../../../../utils/helpers';
+import { renderTime } from '../../../../utils/helpers';
+import { showTestMessageError } from '../../../../utils/testMessageErrorToast';
 import { ListItemType } from '../../types';
 import { MuteChannelModal } from '../modals/MuteChannelModal';
 import { ChannelDetailItems } from './ChannelDetailItems';
@@ -54,15 +55,10 @@ export function ChannelDetails(props: ChannelDetailsProps) {
         'Successfully sent a test message.'
       );
     } catch (error) {
-      const testMessageError = getTestMessageError(error);
-      coreContext.notifications.toasts.addError(
-        testMessageError || error?.body || error,
-        {
-          title: 'Failed to send the test message.',
-          toastMessage:
-            testMessageError?.message ||
-            'View error details and adjust the channel settings.',
-        }
+      showTestMessageError(
+        coreContext.notifications.toasts,
+        error,
+        'View error details and adjust the channel settings.'
       );
     }
   };

@@ -7,6 +7,7 @@ import rison from 'rison-node';
 import { applicationServiceMock } from '../../../../../src/core/public/application/application_service.mock';
 import { uiSettingsServiceMock } from '../../../../../src/core/public/ui_settings/ui_settings_service.mock';
 import { setApplication, setUISettings } from '../../services/utils/constants';
+import { HOST_DENY_LIST_DOCUMENTATION_URL } from '../constants';
 import {
   getActiveResponseExecutionsUrl,
   getErrorMessage,
@@ -143,12 +144,16 @@ describe('getTestMessageError', () => {
       'The host of the URL is blocked by the indexer setting opensearch.notifications.core.http.host_deny_list. Ask an administrator to update it.'
     );
     expect(testMessageError?.stack).toBe(error.body.message);
+    expect(testMessageError?.documentationUrl).toBe(
+      HOST_DENY_LIST_DOCUMENTATION_URL
+    );
   });
 
   it('uses the delivery status text for other failures', () => {
-    expect(getTestMessageError(failure('Connection refused'))?.message).toBe(
-      'Connection refused'
-    );
+    const testMessageError = getTestMessageError(failure('Connection refused'));
+
+    expect(testMessageError?.message).toBe('Connection refused');
+    expect(testMessageError?.documentationUrl).toBeUndefined();
   });
 
   it('reads the failed delivery that sendTestMessage throws', () => {
