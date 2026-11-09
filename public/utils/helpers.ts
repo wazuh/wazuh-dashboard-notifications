@@ -102,6 +102,7 @@ function getAlertingAppId(): string {
   return getUseUpdatedUx() ? MONITORS_APP_ID : ALERTING_APP_ID;
 }
 
+// Wazuh: shared by the findings preset and the plain Create monitor link
 const CREATE_MONITOR_PATH = '#/create-monitor';
 
 function getFindingsMonitorPath(channelId: string): string {

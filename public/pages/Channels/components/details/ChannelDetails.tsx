@@ -32,6 +32,7 @@ import { ChannelDetailItems } from './ChannelDetailItems';
 import { ChannelDetailsActions } from './ChannelDetailsActions';
 import { ChannelSettingsDetails } from './ChannelSettingsDetails';
 import { SendFindingsButton } from './SendFindingsButton';
+// Wazuh: the status explains "Muted" with a tooltip
 import { ChannelStatus } from '../ChannelStatus';
 import PageHeader from "../../../../components/PageHeader/PageHeader";
 import { TopNavControlButtonData } from '../../../../../../../src/plugins/navigation/public';
@@ -217,6 +218,7 @@ export function ChannelDetails(props: ChannelDetailsProps) {
 
   const badgeComponent = (
     <EuiFlexItem grow={false} style={{ paddingTop: '5px' }}>
+      {/* Wazuh: the status explains "Muted" with a tooltip */}
       {channel?.is_enabled === undefined ? null : (
         <ChannelStatus isEnabled={channel.is_enabled} />
       )}

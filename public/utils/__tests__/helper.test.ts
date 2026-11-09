@@ -10,7 +10,7 @@ import { setApplication, setUISettings } from '../../services/utils/constants';
 import { HOST_DENY_LIST_DOCUMENTATION_URL } from '../constants';
 import {
   getActiveResponseExecutionsUrl,
-  getCreateMonitorUrl,
+  getCreateMonitorUrl, // Wazuh
   getErrorMessage,
   getFindingsMonitorUrl,
   getTestMessageError,
@@ -73,6 +73,7 @@ describe('getActiveResponseExecutionsUrl', () => {
 });
 
 // Wazuh
+// Wazuh: shared by the getCreateMonitorUrl and getFindingsMonitorUrl tests
 const setupAlertingApplication = (navLinks: Record<string, boolean>) => {
   const app = applicationServiceMock.createStartContract();
   app.capabilities = { ...app.capabilities, navLinks };
@@ -88,6 +89,7 @@ const setUseUpdatedUx = (useUpdatedUx: boolean) => {
   setUISettings(uiSettings);
 };
 
+// Wazuh: link from the Channels page to the alerting Create monitor page
 describe('getCreateMonitorUrl', () => {
   beforeEach(() => setUseUpdatedUx(false));
 

@@ -43,6 +43,7 @@ import { getErrorMessage } from '../../utils/helpers';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '../Notifications/utils/constants';
 import { ChannelActions } from './components/ChannelActions';
 import { ChannelControls } from './components/ChannelControls';
+// Wazuh: explain what a channel is for and what "Muted" means
 import {
   ChannelsDescription,
   getChannelsDescriptionControls,
@@ -105,6 +106,7 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
         field: 'is_enabled',
         name: 'Notification status',
         sortable: true,
+        // Wazuh: the status explains "Muted" with a tooltip
         render: (enabled: boolean) => <ChannelStatus isEnabled={enabled} />,
       },
       {
@@ -346,6 +348,7 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
                   <PageHeader
                     appRightControls={headerControls}
                     appLeftControls={[{ renderComponent: totalChannels }]}
+                    // Wazuh: say what a channel is for and link to Create monitor
                     appDescriptionControls={getChannelsDescriptionControls()}
                   />
                   <ContentPanel
@@ -390,6 +393,7 @@ export class Channels extends MDSEnabledComponent<ChannelsProps, ChannelsState> 
                   title="Channels"
                   titleSize="s"
                   total={this.state.total}
+                  // Wazuh: say what a channel is for and link to Create monitor
                   description={<ChannelsDescription />}
                 >
                   {channelControlsComponent}

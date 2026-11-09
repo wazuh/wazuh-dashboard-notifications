@@ -11,6 +11,7 @@ import { CoreServicesContext } from './components/coreServices';
 import Main from './pages/Main';
 import { DataSourceManagementPluginSetup } from '../../../src/plugins/data_source_management/public';
 import { AppPluginStartDependencies } from "./types";
+// Wazuh: adds the Notifications docs to the Help menu
 import { setNotificationsHelpExtension } from './utils/helpExtension';
 
 export const renderApp = (
