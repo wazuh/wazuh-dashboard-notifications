@@ -6,6 +6,7 @@
 | ----- | ------- |
 | [#6](https://github.com/wazuh/wazuh-dashboard-notifications/issues/6) | Added Active responses app |
 | [#9436](https://github.com/wazuh/wazuh-dashboard-plugins/issues/9436) | Added "Send findings to this channel" to the channel details page and to the channel created message |
+| [#9450](https://github.com/wazuh/wazuh-dashboard-plugins/issues/9450) | Added a line to the Channels page that says what a channel is for and links to Create monitor, a tooltip on "Muted", and a link to the Notifications docs in the Help menu |
 
 ### Changed
 

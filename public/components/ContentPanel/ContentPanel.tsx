@@ -18,7 +18,7 @@ interface ContentPanelProps {
   title?: string;
   titleSize?: 'xs' | 's' | 'm';
   total?: number;
-  description?: string;
+  description?: React.ReactNode;
   bodyStyles?: object;
   panelStyles?: object;
   horizontalRuleClassName?: string;
