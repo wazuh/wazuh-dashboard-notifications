@@ -102,8 +102,11 @@ function getAlertingAppId(): string {
   return getUseUpdatedUx() ? MONITORS_APP_ID : ALERTING_APP_ID;
 }
 
+// Wazuh: shared by the findings preset and the plain Create monitor link
+const CREATE_MONITOR_PATH = '#/create-monitor';
+
 function getFindingsMonitorPath(channelId: string): string {
-  return `#/create-monitor?preset=${FINDINGS_MONITOR_PRESET}&channelId=${encodeURIComponent(
+  return `${CREATE_MONITOR_PATH}?preset=${FINDINGS_MONITOR_PRESET}&channelId=${encodeURIComponent(
     channelId
   )}`;
 }
@@ -145,6 +148,32 @@ export function handleFindingsMonitorLinkClick(
   }
   event.preventDefault();
   navigateToFindingsMonitor(channelId);
+}
+
+// Wazuh: the alerting Create monitor page, without a preset, for where no
+// channel is chosen yet.
+export function getCreateMonitorUrl(): string {
+  if (!isAlertingAppAvailable()) return '';
+  try {
+    return getApplication().getUrlForApp(getAlertingAppId(), {
+      path: CREATE_MONITOR_PATH,
+    });
+  } catch {
+    return '';
+  }
+}
+
+export function handleCreateMonitorLinkClick(
+  event: MouseEvent<HTMLElement>
+): void {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
+    return; // let the browser handle open in new tab
+  }
+  if (!isAlertingAppAvailable()) return;
+  event.preventDefault();
+  getApplication().navigateToApp(getAlertingAppId(), {
+    path: CREATE_MONITOR_PATH,
+  });
 }
 
 function buildActiveResponseExecutionsPath(name: string): string {

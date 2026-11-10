@@ -10,6 +10,7 @@ import { setApplication, setUISettings } from '../../services/utils/constants';
 import { HOST_DENY_LIST_DOCUMENTATION_URL } from '../constants';
 import {
   getActiveResponseExecutionsUrl,
+  getCreateMonitorUrl, // Wazuh
   getErrorMessage,
   getFindingsMonitorUrl,
   getTestMessageError,
@@ -72,21 +73,52 @@ describe('getActiveResponseExecutionsUrl', () => {
 });
 
 // Wazuh
-describe('getFindingsMonitorUrl', () => {
-  const setupApplication = (navLinks: Record<string, boolean>) => {
-    const app = applicationServiceMock.createStartContract();
-    app.capabilities = { ...app.capabilities, navLinks };
-    (app.getUrlForApp as jest.Mock).mockImplementation(
-      (appId: string, options: { path: string }) =>
-        `http://localhost/app/${appId}${options.path}`
+// Wazuh: shared by the getCreateMonitorUrl and getFindingsMonitorUrl tests
+const setupAlertingApplication = (navLinks: Record<string, boolean>) => {
+  const app = applicationServiceMock.createStartContract();
+  app.capabilities = { ...app.capabilities, navLinks };
+  (app.getUrlForApp as jest.Mock).mockImplementation(
+    (appId: string, options: { path: string }) =>
+      `http://localhost/app/${appId}${options.path}`
+  );
+  setApplication(app);
+};
+const setUseUpdatedUx = (useUpdatedUx: boolean) => {
+  const uiSettings = uiSettingsServiceMock.createStartContract();
+  (uiSettings.get as jest.Mock).mockReturnValue(useUpdatedUx);
+  setUISettings(uiSettings);
+};
+
+// Wazuh: link from the Channels page to the alerting Create monitor page
+describe('getCreateMonitorUrl', () => {
+  beforeEach(() => setUseUpdatedUx(false));
+
+  it('returns an empty string when the alerting app is not installed', () => {
+    setupAlertingApplication({});
+
+    expect(getCreateMonitorUrl()).toBe('');
+  });
+
+  it('opens the create monitor form without a preset', () => {
+    setupAlertingApplication({ alerting: true });
+
+    expect(getCreateMonitorUrl()).toBe(
+      'http://localhost/app/alerting#/create-monitor'
     );
-    setApplication(app);
-  };
-  const setUseUpdatedUx = (useUpdatedUx: boolean) => {
-    const uiSettings = uiSettingsServiceMock.createStartContract();
-    (uiSettings.get as jest.Mock).mockReturnValue(useUpdatedUx);
-    setUISettings(uiSettings);
-  };
+  });
+
+  it('uses the monitors app with the updated UX', () => {
+    setUseUpdatedUx(true);
+    setupAlertingApplication({ monitors: true });
+
+    expect(getCreateMonitorUrl()).toBe(
+      'http://localhost/app/monitors#/create-monitor'
+    );
+  });
+});
+
+describe('getFindingsMonitorUrl', () => {
+  const setupApplication = setupAlertingApplication;
 
   beforeEach(() => setUseUpdatedUx(false));
 

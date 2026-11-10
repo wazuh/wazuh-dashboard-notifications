@@ -11,6 +11,8 @@ import { CoreServicesContext } from './components/coreServices';
 import Main from './pages/Main';
 import { DataSourceManagementPluginSetup } from '../../../src/plugins/data_source_management/public';
 import { AppPluginStartDependencies } from "./types";
+// Wazuh: adds the Notifications docs to the Help menu
+import { setNotificationsHelpExtension } from './utils/helpExtension';
 
 export const renderApp = (
   coreStart: CoreStart,
@@ -19,6 +21,8 @@ export const renderApp = (
   pluginStartDependencies: AppPluginStartDependencies,
   defaultRoute?: string,
 ) => {
+  // Wazuh: link the docs of this screen from the Help menu
+  setNotificationsHelpExtension(coreStart.chrome, 'Notifications');
   const root = createRoot(params.element);
   root.render(
     <Router>

@@ -7,7 +7,6 @@ import {
   EuiButton,
   EuiFlexGroup,
   EuiFlexItem,
-  EuiHealth,
   EuiSmallButton,
   EuiSpacer,
   EuiText,
@@ -33,6 +32,8 @@ import { ChannelDetailItems } from './ChannelDetailItems';
 import { ChannelDetailsActions } from './ChannelDetailsActions';
 import { ChannelSettingsDetails } from './ChannelSettingsDetails';
 import { SendFindingsButton } from './SendFindingsButton';
+// Wazuh: the status explains "Muted" with a tooltip
+import { ChannelStatus } from '../ChannelStatus';
 import PageHeader from "../../../../components/PageHeader/PageHeader";
 import { TopNavControlButtonData } from '../../../../../../../src/plugins/navigation/public';
 import { getUseUpdatedUx } from '../../../../services/utils/constants';
@@ -215,13 +216,14 @@ export function ChannelDetails(props: ChannelDetailsProps) {
     } as TopNavControlButtonData,
   ];
 
-  const badgeComponent = <EuiFlexItem grow={false} style={{ paddingTop: '5px' }}>
-    {channel?.is_enabled === undefined ? null : channel.is_enabled ? (
-      <EuiHealth color="success">Active</EuiHealth>
-    ) : (
-      <EuiHealth color="subdued">Muted</EuiHealth>
-    )}
-  </EuiFlexItem>;
+  const badgeComponent = (
+    <EuiFlexItem grow={false} style={{ paddingTop: '5px' }}>
+      {/* Wazuh: the status explains "Muted" with a tooltip */}
+      {channel?.is_enabled === undefined ? null : (
+        <ChannelStatus isEnabled={channel.is_enabled} />
+      )}
+    </EuiFlexItem>
+  );
 
   const badgeControls = [
     {
