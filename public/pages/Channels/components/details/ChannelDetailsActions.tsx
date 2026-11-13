@@ -16,6 +16,7 @@ import { CoreServicesContext } from '../../../../components/coreServices';
 import { ModalConsumer } from '../../../../components/Modal';
 import { ServicesContext } from '../../../../services';
 import { ROUTES } from '../../../../utils/constants';
+import { showTestMessageError } from '../../../../utils/testMessageErrorToast';
 import { DeleteChannelModal } from '../modals/DeleteChannelModal';
 import { getUseUpdatedUx } from '../../../../services/utils/constants';
 
@@ -47,10 +48,11 @@ export function ChannelDetailsActions(props: ChannelDetailsActionsProps) {
         'Successfully sent a test message.'
       );
     } catch (error) {
-      coreContext.notifications.toasts.addError(error?.body || error, {
-        title: 'Failed to send the test message.',
-        toastMessage: 'View error details and adjust the channel settings.',
-      });
+      showTestMessageError(
+        coreContext.notifications.toasts,
+        error,
+        'View error details and adjust the channel settings.'
+      );
     }
   };
 
