@@ -7,7 +7,6 @@ import {
   EuiButton,
   EuiFlexGroup,
   EuiFlexItem,
-  EuiHealth,
   EuiSmallButton,
   EuiSpacer,
   EuiText,
@@ -26,11 +25,15 @@ import {
   setBreadcrumbs,
 } from '../../../../utils/constants';
 import { renderTime } from '../../../../utils/helpers';
+import { showTestMessageError } from '../../../../utils/testMessageErrorToast';
 import { ListItemType } from '../../types';
 import { MuteChannelModal } from '../modals/MuteChannelModal';
 import { ChannelDetailItems } from './ChannelDetailItems';
 import { ChannelDetailsActions } from './ChannelDetailsActions';
 import { ChannelSettingsDetails } from './ChannelSettingsDetails';
+import { SendFindingsButton } from './SendFindingsButton';
+// Wazuh: the status explains "Muted" with a tooltip
+import { ChannelStatus } from '../ChannelStatus';
 import PageHeader from "../../../../components/PageHeader/PageHeader";
 import { TopNavControlButtonData } from '../../../../../../../src/plugins/navigation/public';
 import { getUseUpdatedUx } from '../../../../services/utils/constants';
@@ -53,10 +56,11 @@ export function ChannelDetails(props: ChannelDetailsProps) {
         'Successfully sent a test message.'
       );
     } catch (error) {
-      coreContext.notifications.toasts.addError(error?.body || error, {
-        title: 'Failed to send the test message.',
-        toastMessage: 'View error details and adjust the channel settings.',
-      });
+      showTestMessageError(
+        coreContext.notifications.toasts,
+        error,
+        'View error details and adjust the channel settings.'
+      );
     }
   };
 
@@ -184,6 +188,17 @@ export function ChannelDetails(props: ChannelDetailsProps) {
         </ModalConsumer>
       )}
     </EuiFlexItem>
+    {/* Wazuh: the next step after a channel works is a monitor that uses it */}
+    {channel && (
+      <EuiFlexItem grow={false}>
+        <SendFindingsButton
+          channelId={channel.config_id}
+          isMuted={!channel.is_enabled}
+          // The updated UX header already has a primary "Send test message"
+          fill={!getUseUpdatedUx()}
+        />
+      </EuiFlexItem>
+    )}
   </EuiFlexGroup>;
   const rightControls = [
     {
@@ -201,13 +216,14 @@ export function ChannelDetails(props: ChannelDetailsProps) {
     } as TopNavControlButtonData,
   ];
 
-  const badgeComponent = <EuiFlexItem grow={false} style={{ paddingTop: '5px' }}>
-    {channel?.is_enabled === undefined ? null : channel.is_enabled ? (
-      <EuiHealth color="success">Active</EuiHealth>
-    ) : (
-      <EuiHealth color="subdued">Muted</EuiHealth>
-    )}
-  </EuiFlexItem>;
+  const badgeComponent = (
+    <EuiFlexItem grow={false} style={{ paddingTop: '5px' }}>
+      {/* Wazuh: the status explains "Muted" with a tooltip */}
+      {channel?.is_enabled === undefined ? null : (
+        <ChannelStatus isEnabled={channel.is_enabled} />
+      )}
+    </EuiFlexItem>
+  );
 
   const badgeControls = [
     {

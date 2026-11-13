@@ -7,7 +7,6 @@ import {
   EuiBasicTable,
   EuiSmallButton,
   EuiEmptyPrompt,
-  EuiHealth,
   EuiHorizontalRule,
   EuiLink,
   EuiTableActionsColumnType,
@@ -37,6 +36,12 @@ import { getErrorMessage } from '../../utils/helpers';
 import { DEFAULT_PAGE_SIZE_OPTIONS } from '../Notifications/utils/constants';
 import { ChannelActions } from './components/ChannelActions';
 import { ChannelControls } from './components/ChannelControls';
+// Wazuh: explain what a channel is for and what "Muted" means
+import {
+  ChannelsDescription,
+  getChannelsDescriptionControls,
+} from './components/ChannelsDescription';
+import { ChannelStatus } from './components/ChannelStatus';
 import { DeleteChannelModal } from './components/modals/DeleteChannelModal';
 import { MuteChannelModal } from './components/modals/MuteChannelModal';
 import { ChannelFiltersType } from './types';
@@ -99,11 +104,8 @@ export class Channels extends MDSEnabledComponent<
         field: 'is_enabled',
         name: 'Notification status',
         sortable: true,
-        render: (enabled: boolean) => {
-          const color = enabled ? 'success' : 'subdued';
-          const label = enabled ? 'Active' : 'Muted';
-          return <EuiHealth color={color}>{label}</EuiHealth>;
-        },
+        // Wazuh: the status explains "Muted" with a tooltip
+        render: (enabled: boolean) => <ChannelStatus isEnabled={enabled} />,
       },
       {
         field: 'config_type',
@@ -342,55 +344,65 @@ export class Channels extends MDSEnabledComponent<
 
           return (
             <>
-            {getUseUpdatedUx() ? (
-              <>
-                <PageHeader
-                  appRightControls={headerControls}
-                  appLeftControls={[{ renderComponent: totalChannels }]}
-                />
-                <ContentPanel panelStyles={{ padding: this.state.total < 1? '16px 16px 0px' : '16px' }}>
-                  <div style={{ marginBottom: '10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      {channelControlsComponent}
-                      <div style={{ marginLeft: '16px' }}>
-                        {channelActionsComponent}
+              {getUseUpdatedUx() ? (
+                <>
+                  <PageHeader
+                    appRightControls={headerControls}
+                    appLeftControls={[{ renderComponent: totalChannels }]}
+                    // Wazuh: say what a channel is for and link to Create monitor
+                    appDescriptionControls={getChannelsDescriptionControls()}
+                  />
+                  <ContentPanel
+                    panelStyles={{
+                      padding: this.state.total < 1 ? '16px 16px 0px' : '16px',
+                    }}
+                  >
+                    <div style={{ marginBottom: '10px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        {channelControlsComponent}
+                        <div style={{ marginLeft: '16px' }}>
+                          {channelActionsComponent}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                    <EuiHorizontalRule margin="s" />
+                    {basicTableComponent}
+                  </ContentPanel>
+                </>
+              ) : (
+                <ContentPanel
+                  actions={
+                    <ContentPanelActions
+                      actions={[
+                        {
+                          component: channelActionsComponent,
+                        },
+                        {
+                          component: (
+                            <EuiSmallButton
+                              fill
+                              href={`#${ROUTES.CREATE_CHANNEL}`}
+                            >
+                              Create channel
+                            </EuiSmallButton>
+                          ),
+                        },
+                      ]}
+                    />
+                  }
+                  bodyStyles={{ padding: 'initial' }}
+                  title="Channels"
+                  titleSize="s"
+                  total={this.state.total}
+                  // Wazuh: say what a channel is for and link to Create monitor
+                  description={<ChannelsDescription />}
+                >
+                  {channelControlsComponent}
                   <EuiHorizontalRule margin="s" />
                   {basicTableComponent}
                 </ContentPanel>
-              </>
-            ) : (
-              <ContentPanel
-                actions={
-                  <ContentPanelActions
-                    actions={[
-                      {
-                        component: channelActionsComponent,
-                      },
-                      {
-                        component: (
-                          <EuiSmallButton fill href={`#${ROUTES.CREATE_CHANNEL}`}>
-                            Create channel
-                          </EuiSmallButton>
-                        ),
-                      },
-                    ]}
-                  />
-                }
-                bodyStyles={{ padding: 'initial' }}
-                title="Channels"
-                titleSize="s"
-                total={this.state.total}
-              >
-                {channelControlsComponent}
-                <EuiHorizontalRule margin="s" />
-                {basicTableComponent}
-              </ContentPanel>
-            )}
-          </>
-
+              )}
+            </>
           );
         }}
       </ModalConsumer>

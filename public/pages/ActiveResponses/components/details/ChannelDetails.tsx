@@ -34,6 +34,7 @@ import {
   handleMonitorDetailsLinkClick,
   renderTime,
 } from '../../../../utils/helpers';
+import { showTestMessageError } from '../../../../utils/testMessageErrorToast';
 import { ListItemType } from '../../types';
 import { MuteChannelModal } from '../modals/MuteChannelModal';
 import { ChannelDetailItems } from './ChannelDetailItems';
@@ -67,11 +68,11 @@ export function ChannelDetails(props: ChannelDetailsProps) {
         'Successfully sent a test message.'
       );
     } catch (error) {
-      coreContext.notifications.toasts.addError(error?.body || error, {
-        title: 'Failed to send the test message.',
-        toastMessage:
-          'View error details and adjust the active response settings.',
-      });
+      showTestMessageError(
+        coreContext.notifications.toasts,
+        error,
+        'View error details and adjust the active response settings.'
+      );
     }
   };
 
