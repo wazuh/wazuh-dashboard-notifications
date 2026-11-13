@@ -3,11 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { i18n } from '@osd/i18n';
 import moment from 'moment';
 import 'moment-timezone';
 import rison from 'rison-node';
 import type { MouseEvent } from 'react';
 import { getApplication, getUseUpdatedUx } from '../services/utils/constants';
+import { HOST_DENY_LIST_DOCUMENTATION_URL } from './constants';
 
 const ALERTING_APP_ID = 'alerting';
 const MONITORS_APP_ID = 'monitors';
@@ -92,6 +94,88 @@ export function handleMonitorDetailsLinkClick(
   navigateToMonitorDetails(monitorId);
 }
 
+// Wazuh: the alerting create monitor form opens set up to send new findings to
+// the channel given in the URL.
+const FINDINGS_MONITOR_PRESET = 'findings';
+
+function getAlertingAppId(): string {
+  return getUseUpdatedUx() ? MONITORS_APP_ID : ALERTING_APP_ID;
+}
+
+// Wazuh: shared by the findings preset and the plain Create monitor link
+const CREATE_MONITOR_PATH = '#/create-monitor';
+
+function getFindingsMonitorPath(channelId: string): string {
+  return `${CREATE_MONITOR_PATH}?preset=${FINDINGS_MONITOR_PRESET}&channelId=${encodeURIComponent(
+    channelId
+  )}`;
+}
+
+// The alerting plugin is optional, so links to it are only offered when its
+// app is registered.
+export function isAlertingAppAvailable(): boolean {
+  try {
+    return Boolean(getApplication().capabilities.navLinks[getAlertingAppId()]);
+  } catch {
+    return false;
+  }
+}
+
+export function getFindingsMonitorUrl(channelId: string): string {
+  if (!channelId || !isAlertingAppAvailable()) return '';
+  try {
+    return getApplication().getUrlForApp(getAlertingAppId(), {
+      path: getFindingsMonitorPath(channelId),
+    });
+  } catch {
+    return '';
+  }
+}
+
+export function navigateToFindingsMonitor(channelId: string): void {
+  if (!isAlertingAppAvailable()) return;
+  getApplication().navigateToApp(getAlertingAppId(), {
+    path: getFindingsMonitorPath(channelId),
+  });
+}
+
+export function handleFindingsMonitorLinkClick(
+  event: MouseEvent<HTMLElement>,
+  channelId: string
+): void {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
+    return; // let the browser handle open in new tab
+  }
+  event.preventDefault();
+  navigateToFindingsMonitor(channelId);
+}
+
+// Wazuh: the alerting Create monitor page, without a preset, for where no
+// channel is chosen yet.
+export function getCreateMonitorUrl(): string {
+  if (!isAlertingAppAvailable()) return '';
+  try {
+    return getApplication().getUrlForApp(getAlertingAppId(), {
+      path: CREATE_MONITOR_PATH,
+    });
+  } catch {
+    return '';
+  }
+}
+
+export function handleCreateMonitorLinkClick(
+  event: MouseEvent<HTMLElement>
+): void {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
+    return; // let the browser handle open in new tab
+  }
+  if (!isAlertingAppAvailable()) return;
+  event.preventDefault();
+  getApplication().navigateToApp(getAlertingAppId(), {
+    path: CREATE_MONITOR_PATH,
+  });
+}
+
 function buildActiveResponseExecutionsPath(name: string): string {
   const filterState = rison.encode({
     filters: [
@@ -156,6 +240,57 @@ export function getErrorMessage(err: any, defaultMessage?: string) {
   if (defaultMessage) return defaultMessage;
   if (err && err.message) console.error(defaultMessage, err);
   return '';
+}
+
+// Wazuh: explain why a test message failed instead of showing the raw response.
+const HOST_DENY_LIST_SETTING =
+  'opensearch.notifications.core.http.host_deny_list';
+
+function getDeliveryStatusText(details: string): string | undefined {
+  try {
+    // The indexer reports the failure as `[status_exception] {"event_status_list":[...]}`
+    const payload = JSON.parse(details.slice(details.indexOf('{')));
+    const status = (payload.event_status_list ?? payload.status_list)?.[0];
+    return status?.delivery_status?.status_text || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export type TestMessageError = Error & { documentationUrl?: string };
+
+/**
+ * Returns the error to show when a test message fails, or undefined when the
+ * failure doesn't report a delivery status. Its message explains the failure,
+ * its stack keeps the raw response, shown under "See the full error", and its
+ * documentationUrl, when set, explains how to fix it.
+ */
+export function getTestMessageError(error: any): TestMessageError | undefined {
+  // A failed request carries the indexer response in its body. A failed
+  // delivery that sendTestMessage throws carries it in its stack.
+  const details =
+    typeof error?.body?.message === 'string'
+      ? error.body.message
+      : error?.stack;
+  const statusText =
+    typeof details === 'string' ? getDeliveryStatusText(details) : undefined;
+  if (!statusText) return undefined;
+
+  const isHostDenied = statusText.includes('host_deny_list');
+  const testMessageError: TestMessageError = new Error(
+    isHostDenied
+      ? i18n.translate('notificationsDashboards.testMessage.hostDeniedError', {
+          defaultMessage:
+            'The host of the URL is blocked by the indexer setting {setting}. Ask an administrator to update it.',
+          values: { setting: HOST_DENY_LIST_SETTING },
+        })
+      : statusText
+  );
+  testMessageError.stack = details;
+  if (isHostDenied) {
+    testMessageError.documentationUrl = HOST_DENY_LIST_DOCUMENTATION_URL;
+  }
+  return testMessageError;
 }
 
 export const renderTime = (time: number): string => {
