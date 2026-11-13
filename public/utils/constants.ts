@@ -18,6 +18,14 @@ export const DOCUMENTATION_LINK = '';
 export const ACTIVE_RESPONSE_DOCUMENTATION_URL = webDocumentationLink(
   'user-manual/wazuh-dashboard/wazuh-dashboard-configurations.html#active-response'
 );
+// Wazuh
+export const HOST_DENY_LIST_DOCUMENTATION_URL = webDocumentationLink(
+  'user-manual/wazuh-indexer/modules/notifications.html#http-connection-settings'
+);
+// Wazuh: explains that channels are destinations other plugins send to
+export const NOTIFICATIONS_DOCUMENTATION_URL = webDocumentationLink(
+  'user-manual/wazuh-indexer/modules/notifications.html'
+);
 export const ALERTING_DOCUMENTATION_LINK =
   'https://opensearch.org/docs/monitoring-plugins/alerting/monitors/#authenticate-sender-account';
 

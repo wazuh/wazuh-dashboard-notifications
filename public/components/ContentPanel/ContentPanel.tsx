@@ -18,7 +18,8 @@ interface ContentPanelProps {
   title?: string;
   titleSize?: 'xs' | 's' | 'm';
   total?: number;
-  description?: string;
+  // Wazuh: a node instead of a string, so the description can hold links
+  description?: React.ReactNode;
   bodyStyles?: object;
   panelStyles?: object;
   horizontalRuleClassName?: string;
