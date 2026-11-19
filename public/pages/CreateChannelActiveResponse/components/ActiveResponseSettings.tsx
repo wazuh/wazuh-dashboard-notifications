@@ -5,6 +5,7 @@
 
 import {
   EuiCallOut,
+  EuiCode,
   EuiCompressedFieldNumber,
   EuiCompressedFieldText,
   EuiIconTip,
@@ -94,13 +95,18 @@ export function ActiveResponseSettings(props: ActiveResponseSettingsProps) {
         error={context.inputErrors.extraArgs.join(' ')}
         isInvalid={context.inputErrors.extraArgs.length > 0}
         fullWidth
-        helpText="Passed verbatim to the executable."
+        helpText={
+          <>
+            Sent to the script as text in{' '}
+            <EuiCode>wazuh.active_response.extra_arguments</EuiCode> of the JSON
+            message it reads on STDIN, not as command-line arguments.
+          </>
+        }
       >
         <EuiCompressedTextArea
           style={{ height: '4.1rem' }}
           fullWidth
           data-test-subj="create-channel-active-response-extra-args"
-          placeholder="e.g. --verbose"
           value={props.attributes.extraArgs}
           onChange={(e) => props.setAttribute('extraArgs', e.target.value)}
         />

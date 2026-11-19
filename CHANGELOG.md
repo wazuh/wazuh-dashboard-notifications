@@ -19,6 +19,7 @@
 | Issue | Comment |
 | ----- | ------- |
 | [#169](https://github.com/wazuh/wazuh-dashboard-notifications/issues/169) | Fixed the error of a failed test message, which showed the raw response instead of the reason, and explained how to allow a host blocked by the deny list |
+| [#177](https://github.com/wazuh/wazuh-dashboard-notifications/issues/177) | Fixed the help of the Extra arguments field of an active response, which said the value is passed to the executable, and explained that the script reads it from `wazuh.active_response.extra_arguments` of the JSON message on STDIN |
 
 ## Prior versions
 

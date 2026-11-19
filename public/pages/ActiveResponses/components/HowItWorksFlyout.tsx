@@ -4,6 +4,7 @@
  */
 
 import {
+  EuiCode,
   EuiFlyout,
   EuiFlyoutBody,
   EuiFlyoutHeader,
@@ -62,7 +63,13 @@ const SETTINGS = [
   },
   {
     term: 'Extra arguments',
-    detail: <>Optional. Passed verbatim to the executable.</>,
+    detail: (
+      <>
+        Optional. Sent to the script as text in{' '}
+        <EuiCode>wazuh.active_response.extra_arguments</EuiCode> of the JSON
+        message it reads on STDIN, not as command-line arguments.
+      </>
+    ),
   },
   {
     term: 'Type',
