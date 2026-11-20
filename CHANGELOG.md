@@ -13,6 +13,7 @@
 | Issue | Comment |
 | ----- | ------- |
 | [#3](https://github.com/wazuh/wazuh-dashboard-notifications/issues/3) | Changed category in the side menu to `Explore` |
+| [wazuh-dashboard#1779](https://github.com/wazuh/wazuh-dashboard/issues/1779) | Changed the Node.js version used for development and CI from `22.22.0` to `22.23.4` |
 
 ### Fixed
 
