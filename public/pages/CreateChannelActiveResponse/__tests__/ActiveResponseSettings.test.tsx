@@ -63,6 +63,51 @@ describe('<ChimeSettings /> spec', () => {
     expect(utils.container.firstChild).toMatchSnapshot();
   });
 
+  it('explains that extra arguments reach the script on STDIN, not as argv', () => {
+    const utils = render(
+      <CreateChannelContext.Provider
+        value={{
+          edit: false,
+          inputErrors: {
+            executable: [],
+            extraArgs: [],
+            agentId: [],
+            statefulTimeout: [],
+            location: [],
+            type: [],
+          },
+          setInputErrors: jest.fn(),
+        }}
+      >
+        <ActiveResponseSettings
+          attributes={{
+            type: 'stateless',
+            executable: 'test.exe',
+            extraArgs: '',
+            location: 'local',
+            agentId: '',
+            statefulTimeout: 60,
+          }}
+          setAttribute={jest.fn()}
+        />
+      </CreateChannelContext.Provider>
+    );
+    const textArea = utils.getByTestId(
+      'create-channel-active-response-extra-args'
+    );
+    const helpText = utils.container.querySelector(
+      `#${textArea.getAttribute('aria-describedby')}`
+    );
+    expect(helpText?.textContent).toBe(
+      'Sent to the script as text in wazuh.active_response.extra_arguments of the JSON message it reads on STDIN, not as command-line arguments.'
+    );
+    expect(helpText?.querySelector('code')?.textContent).toBe(
+      'wazuh.active_response.extra_arguments'
+    );
+    expect(textArea.getAttribute('placeholder')).toBeNull();
+    expect(utils.queryByText(/verbatim/)).toBeNull();
+  });
+
   it('changes input', () => {
     const setInputErrors = jest.fn();
     const setAttribute = jest.fn();
